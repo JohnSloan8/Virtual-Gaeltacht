@@ -1,0 +1,38 @@
+<div style="height: 95vh; width: 100%" class="border"> 
+  <div class="row mt-4">
+    <div class="col">
+    </div>
+    <div class="col-6">
+      <ol>
+        <li>Create/modify your avatar below</li>
+        <li>When finished, copy the url into the box at the bottom of the page and submit</li>
+      </ol>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+  <iframe style="margin-left: 5%;" height="67%" width="90%" id="avatarIframe" src="https://fullbody.readyplayer.me" allow="camera *; microphone *"></iframe>
+  <div class="row mt-4">
+    <div class="col">
+    </div>
+    <div class="col-6">
+      <form action="/users/avatar" method="POST">
+        <div class="form-group">
+          <!--<label for="avatarURL">avatar URL</label>-->
+          <input
+            type="text"
+            id="avatarURL"
+            name="avatarURL"
+            class="form-control"
+            placeholder="e.g. https://d1a370nemizbjq.cloudfront.net/d52fe419-3465-4d45-9242-32737f96a9ab.glb"
+            value="https://d1a370nemizbjq.cloudfront.net/d52fe419-3465-4d45-9242-32737f96a9ab.glb"
+            required
+          />
+          <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </div>
+      </form>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+</div>

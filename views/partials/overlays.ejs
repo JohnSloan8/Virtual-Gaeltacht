@@ -1,0 +1,24 @@
+<div class="modal" id="joinChatModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Join a chat in progress</h5>
+			</div>
+			<div class="modal-body">
+				<form action="/users/login" method="POST">
+					<div class="form-group">
+						<label for="email">Enter URL or Chat ID:</label>
+						<input
+							type="text"
+							id="url"
+							name="url"
+							class="form-control"
+							placeholder="e.g. https://chathere.ie/chat/12345 or 12345"
+						/>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block">Join</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

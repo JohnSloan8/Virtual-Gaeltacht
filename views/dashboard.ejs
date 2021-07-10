@@ -1,0 +1,36 @@
+<%- include('./partials/overlays') %>
+<style>
+<% /* %>
+<% */ %>
+body {overflow: hidden}
+</style>
+	<% if ( avatarURL !== null ) { %>
+		<div id="avatarCanvas" style="position:absolute; height: 150%; width: 150%; z-index: -1; left: -25%; bottom: 0%;"></div>
+		<div class="container" style="position:absolute; bottom: 5%;">
+			<div class="row">
+				<div class="col-sm"></div>
+				<div class="col-sm">
+					<h1 class= "text-center"><small>Welcome</small> <strong><%= name %></strong></h1>
+					<div class="container">
+						<div class="row">
+							<div class="col-sm d-flex justify-content-center">
+								<a href="#" data-toggle="modal" data-target="#createChatModal" class="btn btn-lg btn-primary btn-block">Create chat</a>
+							</div>
+							<div class="col-sm d-flex justify-content-center">
+								<a href="#" data-toggle="modal" data-target="#joinChatModal" class="btn btn-lg btn-light btn-block">Join chat</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm"></div>
+			</div>
+		</div>
+	<% } else { %>
+		<h5 class="text-center">To begin using this site, you must first create your avatar</h5>
+		<a href="/users/avatar" class="btn btn-primary btn-block">Create avatar</a>
+	<% } %>
+
+<script>
+	var avatarURL = "<%= avatarURL %>"
+</script>
+<script src="javascripts/three-js-files/main.js" type="module"></script>
