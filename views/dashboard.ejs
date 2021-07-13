@@ -1,15 +1,15 @@
 <%- include('./partials/overlays') %>
+<%- include('./partials/messages') %>
 <style>
 <% /* %>
 <% */ %>
 body {overflow: hidden}
 </style>
 	<% if ( avatarURL !== null ) { %>
-		<div id="avatarCanvas" style="position:absolute; height: 150%; width: 150%; z-index: -1; left: -25%; bottom: 0%;"></div>
-		<div class="container" style="position:absolute; bottom: 5%;">
-			<div class="row">
-				<div class="col-sm"></div>
-				<div class="col-sm">
+		<div id="avatarCanvas" style="position:absolute; height: 150%; width: 150%; z-index: -1; left: -25%; top: -35%;"></div>
+		<div class="row mt-4">
+			<div class="col-md-6 m-auto">
+				<div class="card card-body text-center">
 					<h1 class= "text-center"><small>Welcome</small> <strong><%= name %></strong></h1>
 					<div class="container">
 						<div class="row">
@@ -22,7 +22,6 @@ body {overflow: hidden}
 						</div>
 					</div>
 				</div>
-				<div class="col-sm"></div>
 			</div>
 		</div>
 	<% } else { %>
@@ -33,4 +32,4 @@ body {overflow: hidden}
 <script>
 	var avatarURL = "<%= avatarURL %>"
 </script>
-<script src="javascripts/three-js-files/main.js" type="module"></script>
+<script src="/javascripts/three-js-files/dashboard/main.js" type="module"></script>

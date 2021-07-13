@@ -5,9 +5,9 @@
 				<h5 class="modal-title">Join a chat in progress</h5>
 			</div>
 			<div class="modal-body">
-				<form action="/users/login" method="POST">
+				<form action="/joinChat" method="POST">
 					<div class="form-group">
-						<label for="email">Enter URL or Chat ID:</label>
+						<label for="url">Enter URL or Chat ID:</label>
 						<input
 							type="text"
 							id="url"
@@ -17,6 +17,21 @@
 						/>
 					</div>
 					<button type="submit" class="btn btn-primary btn-block">Join</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="createChatModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Create a new chat</h5>
+			</div>
+			<div class="modal-body">
+				<form action="/createChat" method="POST">
+					<button type="submit" class="btn btn-primary btn-block">Create</button>
 				</form>
 			</div>
 		</div>

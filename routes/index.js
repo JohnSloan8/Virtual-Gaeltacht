@@ -2,9 +2,11 @@ const express = require('express')
 const router = express.Router()
 const {ensureAuthenticated, loggedIn} = require('../config/auth')
 const path = require('path')
+const randomWords = require('random-words')
 
-// User Model
+// Models
 const User = require('../models/User')
+const Chat = require('../models/Chat')
 
 router.get('/', (req, res) => {
 	res.render('welcome', {
@@ -14,12 +16,82 @@ router.get('/', (req, res) => {
 
 router.get('/dashboard', ensureAuthenticated, async (req, res) => {
 	let u = await User.findOne({email: req.user.email}).exec()
-	//console.log('u: ', u.avatarURL)
+	console.log('u: ', u.avatarURL)
+	if (u.avatarURL !== null) {
+		avatarURL = req.user.name + '_' + path.basename(u.avatarURL)
+	} else {
+		avatarURL = null
+	}
 	res.render('dashboard', {
 		loggedIn: loggedIn(req),
 		name: req.user.name,
-		avatarURL: req.user.name + '_' + path.basename(u.avatarURL)
+		avatarURL: avatarURL
 	})
 })
+
+router.post('/createChat', ensureAuthenticated, (req, res) => {
+
+	// create reandom 3-word string with hyphens for url
+	const generateUniqueRandomThreeWordURL = async () => {
+		let randomURL = randomWords({ exactly: 3, join: '-' })
+		let nameExists = await Chat.exists({chatURL: randomURL})
+		if ( nameExists ) {
+			generateUniqueRandomThreeWordURL();
+		} else {
+			createChat(randomURL)
+		}
+	}
+
+	const createChat = randomURL => {
+		const newChat = new Chat({
+			chatURL: randomURL,
+			createdBy: req.user.name
+		})
+		newChat.participants.push({
+			name: req.user.name,
+			endTime: null
+		})
+		newChat.save()
+			.then(user => {
+				//req.flash('success_msg', 'You are now registered and can log in')
+				res.redirect('/chat/' + randomURL)
+			})
+			.catch(err => console.log(err))
+	}
+
+	generateUniqueRandomThreeWordURL();
+
+})
+
+router.post('/joinChat', ensureAuthenticated, (req, res) => {
+
+	const {url} = req.body;
+	res.redirect('/chat/' + url)
+
+})
+
+router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
+	let c = await Chat.findOne({chatURL: req.params.id})
+	if (c) {
+		c.participants.push({
+			//name: req.user.name,
+			name: 'l',
+			endTime: null
+		})
+		c.save();
+		
+		res.render('chat', {
+			loggedIn: loggedIn(req),
+			//name: req.user.name,
+			name: 'l',
+			//avatarURL: req.user.name + '_' + path.basename(u.avatarURL)
+		})
+	} else {
+		req.flash('error_msg', `the conversation ${req.params.id} does not exist`)
+		res.redirect('/dashboard')
+	}
+})
+		
+
 
 module.exports = router

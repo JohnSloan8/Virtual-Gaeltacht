@@ -19,7 +19,7 @@ router.get('/register', ensureNotAuthenticated, (req, res) => {
 })
 
 // REGISTER HANDLE
-router.post('/register', ensureNotAuthenticated, (req, res) => {
+router.post('/register', ensureNotAuthenticated, async (req, res) => {
 	const {name, email, password, password2 } = req.body
 	let errors = []
 
@@ -38,50 +38,45 @@ router.post('/register', ensureNotAuthenticated, (req, res) => {
 		errors.push({msg: "password should be at least 6 characters"})
 	}
 
+	let nameExists = await User.exists({name: name})
+	if ( nameExists ) {
+		errors.push({msg: `The name '${name}' is taken. Please choose another`})
+	}
+
+	let emailExists = await User.exists({email: email})
+	if ( emailExists ) {
+		errors.push({msg: "Email is already registered"})
+	}
+
 	if (errors.length > 0) {
 		res.render('register', {
 			errors,
 			name,
 			email,
 			password,
-			password2
+			password2,
+			loggedIn: loggedIn(req)
 		})
 	} else {
 		// Validation passed
-		User.findOne({email: email})
-			.then(user => {
-				if(user) {
-					// User exists
-					errors.push({msg: "Email is already registered"})
-					res.render('register', {
-						errors,
-						name,
-						email,
-						password,
-						password2,
-						loggedIn: loggedIn(req)
+		const newUser = new User({
+			name,
+			email,
+			password,
+			avatarURL: null
+		})
+		// Hash password
+		bcrypt.genSalt(10, (error, salt) => 
+			bcrypt.hash(newUser.password, salt, (err, hash) => {
+				if (err) throw err;
+				newUser.password = hash;
+				newUser.save()
+					.then(user => {
+						req.flash('success_msg', 'You are now registered and can log in')
+						res.redirect('/users/login')
 					})
-				} else {
-					const newUser = new User({
-						name,
-						email,
-						password,
-						avatarURL: null
-					})
-					// Hash password
-					bcrypt.genSalt(10, (error, salt) => 
-						bcrypt.hash(newUser.password, salt, (err, hash) => {
-							if (err) throw err;
-							newUser.password = hash;
-							newUser.save()
-								.then(user => {
-									req.flash('success_msg', 'You are now registered and can log in')
-									res.redirect('/users/login')
-								})
-								.catch(err => console.log(err))
-					}))
-				}
-			})
+					.catch(err => console.log(err))
+		}))
 	}
 })
 
@@ -147,7 +142,6 @@ router.post('/avatar', ensureAuthenticated, (req, res) => {
 	});
 	console.log('user: ', req.user)
 	console.log('avatarURL: ', avatarURL)
-	// example: https://d1a370nemizbjq.cloudfront.net/d52fe419-3465-4d45-9242-32737f96a9ab.glb
 	let dest = path.dirname(require.main.filename) + '/public/avatars/'
 	download(avatarURL, dest, req.user.name, res)
 })
