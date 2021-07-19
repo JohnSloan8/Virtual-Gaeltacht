@@ -17,10 +17,9 @@ window.participants = participants
 var me = {};
 
 let avatarCount = 0
-let curAvatar
+//let curAvatar
 export default function setupAvatar() {
-	curAvatar = parseInt(userID)
-	participantNames = participantNames.split(',')
+	//curAvatar = parseInt(userID)
 	loadModelGLTF('root-avatar-poses', iterateAvatar)
 	scene.add( group )
 }
@@ -29,13 +28,15 @@ function iterateAvatar() {
 	if (avatarCount < noParticipants) {
 		//let randAvatar = avatars.splice(Math.floor(Math.random()*avatars.length), 1)
 		console.log('participantNames:', participantNames)
-		let myAvatar = participantNames[curAvatar]
+		console.log('noParticipants:', noParticipants)
+		console.log('avatarCount', avatarCount)
+		let myAvatar = participantNames[avatarCount]
 		loadIndividualGLTF(myAvatar, avatarCount, iterateAvatar)
 		avatarCount += 1
-		curAvatar += 1
-		if ( curAvatar === noParticipants ) {
-			curAvatar = 0;
-		}
+		//curAvatar += 1
+		//if ( curAvatar === noParticipants ) {
+			//curAvatar = 0;
+		//}
 	} else {
 		calculateLookAngles();
 	};

@@ -1,5 +1,5 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
-import { noParticipants } from "./settings.js"
+import { noParticipants, setNoParticipants } from "./settings.js"
 import calculatePosRot from "./components/pos-rot.js"
 import setupBackground from "./components/background.js";
 import setupLights from "./components/lights.js";
@@ -11,6 +11,8 @@ let group
 
 export default function loadScene() {
 	group = new THREE.Group();
+	participantNames = participantNames.split(',')
+	setNoParticipants(participantNames.length)
 	calculatePosRot(noParticipants)
 	setupScene();
 	setupCamera();

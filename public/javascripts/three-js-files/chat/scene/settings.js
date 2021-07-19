@@ -1,4 +1,8 @@
-const noParticipants = 5
+var noParticipants
+const setNoParticipants = n => {
+	noParticipants = n;
+}
+
 const showTable = false
 const showAxesHelper = false
 const showColumn = false
@@ -74,6 +78,7 @@ const cameraSettings = {
 
 export {
 	noParticipants,
+	setNoParticipants,
 	showTable,
 	showAxesHelper,
 	showColumn,
