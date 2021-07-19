@@ -34,9 +34,9 @@ router.post('/register', ensureNotAuthenticated, async (req, res) => {
 	}
 
 	// check password length
-	if (password.length < 6) {
-		errors.push({msg: "password should be at least 6 characters"})
-	}
+	//if (password.length < 6) {
+		//errors.push({msg: "password should be at least 6 characters"})
+	//}
 
 	let nameExists = await User.exists({name: name})
 	if ( nameExists ) {
@@ -113,7 +113,8 @@ router.get('/avatar', ensureAuthenticated, (req, res) => {
 // STORE AVATAR
 
 var download = function(url, dest, name, res, cb) {
-  var file = fs.createWriteStream(dest + name +  '_' + path.basename(url));
+  //var file = fs.createWriteStream(dest + name +  '_' + path.basename(url));
+  var file = fs.createWriteStream(dest + name + '.glb');
   var request = https.get(url, function(response) {
     response.pipe(file);
     file.on('finish', function() {
@@ -140,8 +141,6 @@ router.post('/avatar', ensureAuthenticated, (req, res) => {
         console.log("Original Doc : ",docs);
     }
 	});
-	console.log('user: ', req.user)
-	console.log('avatarURL: ', avatarURL)
 	let dest = path.dirname(require.main.filename) + '/public/avatars/'
 	download(avatarURL, dest, req.user.name, res)
 })

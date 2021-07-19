@@ -4,7 +4,7 @@ import { group } from "../../scene/load-scene.js";
 import { scene } from "../../scene/components/scene.js";
 import { camera } from "../../scene/components/camera.js";
 import { noParticipants, cameraSettings, showSkeleton } from "../../scene/settings.js"
-import { avatars, baseActions, additiveActions } from "../settings.js"
+import { baseActions, additiveActions } from "../settings.js"
 import { animate, userID } from "../../main.js";
 import { posRot } from "../../scene/components/pos-rot.js"
 import initAnimations from '../../animations/init.js'
@@ -20,6 +20,7 @@ let avatarCount = 0
 let curAvatar
 export default function setupAvatar() {
 	curAvatar = parseInt(userID)
+	participantNames = participantNames.split(',')
 	loadModelGLTF('root-avatar-poses', iterateAvatar)
 	scene.add( group )
 }
@@ -27,8 +28,9 @@ export default function setupAvatar() {
 function iterateAvatar() {
 	if (avatarCount < noParticipants) {
 		//let randAvatar = avatars.splice(Math.floor(Math.random()*avatars.length), 1)
-		let randAvatar = avatars[curAvatar]
-		loadIndividualGLTF(randAvatar, avatarCount, iterateAvatar)
+		console.log('participantNames:', participantNames)
+		let myAvatar = participantNames[curAvatar]
+		loadIndividualGLTF(myAvatar, avatarCount, iterateAvatar)
 		avatarCount += 1
 		curAvatar += 1
 		if ( curAvatar === noParticipants ) {
@@ -56,7 +58,8 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 
 	gltfLoader = new GLTFLoader();
 	//added slash at start cause was getting wrong url
-	gltfLoader.load("/javascripts/three-js-files/models/resources/" + avatarName + ".glb", function(
+	console.log('avatarName2:', avatarName)
+	gltfLoader.load("/avatars/" + avatarName + ".glb", function(
 		gltf
 	) {
 		participants[i] = {}

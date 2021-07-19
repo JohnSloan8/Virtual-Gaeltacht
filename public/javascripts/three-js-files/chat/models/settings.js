@@ -1,4 +1,3 @@
-const avatars = []
 const baseActions = {
 	//idle: { weight: 1 },
 };
@@ -12,7 +11,6 @@ const additiveActions = {
 };
 
 export {
-	avatars,
 	baseActions,
 	additiveActions,
 }

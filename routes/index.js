@@ -25,7 +25,7 @@ router.get('/dashboard', ensureAuthenticated, async (req, res) => {
 	res.render('dashboard', {
 		loggedIn: loggedIn(req),
 		name: req.user.name,
-		avatarURL: avatarURL
+		//avatarURL: avatarURL
 	})
 })
 
@@ -46,10 +46,6 @@ router.post('/createChat', ensureAuthenticated, (req, res) => {
 		const newChat = new Chat({
 			chatURL: randomURL,
 			createdBy: req.user.name
-		})
-		newChat.participants.push({
-			name: req.user.name,
-			endTime: null
 		})
 		newChat.save()
 			.then(user => {
@@ -73,18 +69,21 @@ router.post('/joinChat', ensureAuthenticated, (req, res) => {
 router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 	let c = await Chat.findOne({chatURL: req.params.id})
 	if (c) {
-		c.participants.push({
-			//name: req.user.name,
-			name: 'l',
-			endTime: null
-		})
-		c.save();
-		
+		let thisParticipant = c.participants.find(p => p.name === 'l' )
+		if (thisParticipant === undefined || thisParticipant.endTime !== null) {
+			c.participants.push({
+				//name: req.user.name,
+				name: 'l',
+				endTime: null
+			})
+			c.save();
+		}
+
 		res.render('chat', {
 			loggedIn: loggedIn(req),
 			//name: req.user.name,
 			name: 'l',
-			//avatarURL: req.user.name + '_' + path.basename(u.avatarURL)
+			participantNames: c.participants.map(({ name }) => name)
 		})
 	} else {
 		req.flash('error_msg', `the conversation ${req.params.id} does not exist`)

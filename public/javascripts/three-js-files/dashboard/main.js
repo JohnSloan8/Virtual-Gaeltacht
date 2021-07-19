@@ -46,7 +46,7 @@ function loadScene() {
 function loadIndividualGLTF() {
 
 	gltfLoader = new GLTFLoader();
-	gltfLoader.load("avatars/"+avatarURL, function(gltf) {
+	gltfLoader.load("avatars/" + userName + '.glb', function(gltf) {
 		model = gltf.scene;
 		scene.add( model );
 		let direction = new THREE.Vector3();
