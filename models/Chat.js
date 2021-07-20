@@ -14,6 +14,13 @@ const ChatSchema = new mongoose.Schema({
 		}, 
 		endTime: Date
 	}],
+	lookingAt: [{
+		who: String,
+		whom: String,
+		timestamp: {
+			type: Date
+		}
+	}]
 })
 
 const Chat = mongoose.model('Chat', ChatSchema)

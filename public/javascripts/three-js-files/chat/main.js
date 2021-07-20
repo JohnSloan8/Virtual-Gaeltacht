@@ -17,12 +17,10 @@ import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tw
 import { mouth } from './animations/random/mouth.js'
 import initSocket from '../socket-logic.js'
 
-let userID;
 setAvatarNo();
 
 window.setAvatarNo = setAvatarNo
 function setAvatarNo() {
-	userID = 0;
 	initSocket();
 	init();
 }
@@ -43,4 +41,4 @@ function animate() {
 		requestAnimationFrame(animate);
 }
 
-export { animate, userID }
+export { animate }

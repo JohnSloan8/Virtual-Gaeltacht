@@ -3,7 +3,6 @@ import { noParticipants } from "../../scene/settings.js"
 import { participants } from "../../models/components/avatar.js"
 import { posRot } from "../../scene/components/pos-rot.js"
 import { table } from "../../scene/components/table.js"
-import { userID } from "../../models/components/avatar.js"
 import avatarLookAt from "../look.js"
 import { sendChangeLook } from '../../../socket-logic.js'
 
@@ -47,24 +46,14 @@ export default function createKeyBindings() {
   document.addEventListener("keydown", function(event) {
     if ( ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes( event.key ) ) {
       event.preventDefault();
-      lookControl(parseInt(userID), event.key)
-      //fetch('/chat/' + userID.toString(), {
-        //headers: {
-          //"Content-Type": "application/json"
-        //},
-        //method: "POST",
-        //body: JSON.stringify({
-          //user: userID,
-          //keyStroke: event.key
-        //})
-      //})
+      lookControl(0, event.key)
     }
   });
 }
 
 window.lookControl = lookControl
 function lookControl(who, k) {
-  console.log(' in look control: ', who)
+  console.log(' in  new look control: ', who)
   if (participants[who].states.currentlyLookingAt === -1) { // table
     if ( k === 'ArrowUp' ) {
       participants[who].states.currentlyLookingAt = participants[who].states.previouslyLookingAt;

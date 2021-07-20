@@ -5,6 +5,7 @@ const app = express()
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
+const MongoStore = require('connect-mongo');
 
 // Passport config
 require('./config/passport')(passport)
@@ -30,8 +31,9 @@ app.use(express.urlencoded({extended: false}))
 // Express Session Middleware
 app.use(session({
   secret: 'keyboard dog',
-  resave: true,
-  saveUninitialized: true,
+	resave: true,
+	saveUninitialized: true,
+	store: MongoStore.create( { mongoUrl: db } ) // added this to persist sessions (from https://www.youtube.com/watch?v=K9uBynMc_Ys and the connect-mongo docs)
 }))
 
 // Passport Middleware

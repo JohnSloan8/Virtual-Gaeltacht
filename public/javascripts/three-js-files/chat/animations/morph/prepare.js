@@ -42,7 +42,7 @@ export default function prepareExpressions() {
 			})
 		})
 	}
-	lenMorphs = participants[1].movableBodyParts.face.morphTargetInfluences.length
+	lenMorphs = participants[0].movableBodyParts.face.morphTargetInfluences.length
 
 }
 

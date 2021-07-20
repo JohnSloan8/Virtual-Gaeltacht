@@ -3,6 +3,9 @@ const router = express.Router()
 const {ensureAuthenticated, loggedIn} = require('../config/auth')
 const path = require('path')
 const randomWords = require('random-words')
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8080 });
 
 // Models
 const User = require('../models/User')
@@ -45,7 +48,8 @@ router.post('/createChat', ensureAuthenticated, (req, res) => {
 	const createChat = randomURL => {
 		const newChat = new Chat({
 			chatURL: randomURL,
-			createdBy: req.user.name
+			createdBy: req.user.name,
+			lookingAt: []
 		})
 		newChat.save()
 			.then(user => {
@@ -59,7 +63,7 @@ router.post('/createChat', ensureAuthenticated, (req, res) => {
 
 })
 
-router.post('/joinChat', ensureAuthenticated, (req, res) => {
+router.post('/joinChat', /*ensureAuthenticated,*/ (req, res) => {
 
 	const {url} = req.body;
 	res.redirect('/chat/' + url)
@@ -67,13 +71,14 @@ router.post('/joinChat', ensureAuthenticated, (req, res) => {
 })
 
 router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
+	//let uname = "l"
+	let uname = req.user.name
 	let c = await Chat.findOne({chatURL: req.params.id})
 	if (c) {
-		let thisParticipant = c.participants.find(p => p.name === 'l' )
+		let thisParticipant = c.participants.find(p => p.name === uname )
 		if (thisParticipant === undefined || thisParticipant.endTime !== null) {
 			c.participants.push({
-				//name: req.user.name,
-				name: 'l',
+				name: uname,
 				endTime: null
 			})
 			c.save();
@@ -81,8 +86,7 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 
 		res.render('chat', {
 			loggedIn: loggedIn(req),
-			//name: req.user.name,
-			name: 'l',
+			name: uname,
 			participantNames: c.participants.map(({ name }) => name)
 		})
 	} else {
@@ -90,7 +94,32 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 		res.redirect('/dashboard')
 	}
 })
-		
+
+var c
+wss.on('connection', function connection(ws) {
+
+  ws.on('message', async function incoming(message) {
+		let data = JSON.parse(message)
+		if ( data.newConnection ) {
+			c = await Chat.findOne({chatURL: path.basename(data.chatURL)})
+			console.log('c:', c)
+		} else {
+			wss.clients.forEach(function each(client) {
+				if (client !== ws && client.readyState === WebSocket.OPEN) {
+					client.send(message);
+				}
+			});
+			c.lookingAt.push({
+				who: data.who,
+				whom: data.whom,
+				timestamp: new Date(data.timestamp)
+			})
+			c.save();
+		}
+	});
+
+});
+
 
 
 module.exports = router

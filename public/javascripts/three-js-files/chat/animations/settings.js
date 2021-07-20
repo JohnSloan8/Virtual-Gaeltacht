@@ -6,7 +6,7 @@ var mouthedVisemes = []
 var easings = []
 
 function initialiseVisemeMorphIndexes() {
-	Object.entries(participants[1].movableBodyParts.face.morphTargetDictionary).forEach(function (e) {
+	Object.entries(participants[0].movableBodyParts.face.morphTargetDictionary).forEach(function (e) {
 		if ( e[0].split("_")[0] === "viseme" ) mouthedVisemes.push(e[0]);
 	})
 	easings = Object.keys(easingDict)

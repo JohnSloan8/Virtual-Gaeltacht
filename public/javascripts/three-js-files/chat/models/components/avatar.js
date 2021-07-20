@@ -5,7 +5,7 @@ import { scene } from "../../scene/components/scene.js";
 import { camera } from "../../scene/components/camera.js";
 import { noParticipants, cameraSettings, showSkeleton } from "../../scene/settings.js"
 import { baseActions, additiveActions } from "../settings.js"
-import { animate, userID } from "../../main.js";
+import { animate } from "../../main.js";
 import { posRot } from "../../scene/components/pos-rot.js"
 import initAnimations from '../../animations/init.js'
 import prepareExpressions from '../../animations/morph/prepare.js'
@@ -19,24 +19,15 @@ var me = {};
 let avatarCount = 0
 //let curAvatar
 export default function setupAvatar() {
-	//curAvatar = parseInt(userID)
 	loadModelGLTF('root-avatar-poses', iterateAvatar)
 	scene.add( group )
 }
 
 function iterateAvatar() {
 	if (avatarCount < noParticipants) {
-		//let randAvatar = avatars.splice(Math.floor(Math.random()*avatars.length), 1)
-		console.log('participantNames:', participantNames)
-		console.log('noParticipants:', noParticipants)
-		console.log('avatarCount', avatarCount)
 		let myAvatar = participantNames[avatarCount]
 		loadIndividualGLTF(myAvatar, avatarCount, iterateAvatar)
 		avatarCount += 1
-		//curAvatar += 1
-		//if ( curAvatar === noParticipants ) {
-			//curAvatar = 0;
-		//}
 	} else {
 		calculateLookAngles();
 	};
@@ -226,4 +217,4 @@ function calculateLookAngles() {
 	initAnimations();
 }
 
-export { participants, userID }
+export { participants }

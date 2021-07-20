@@ -20,6 +20,12 @@ const showShadows = false
 
 const cameraSettings = {
 	neutralFocus: (0, 1.59, 0),
+	1: {
+		radius: 0.5,
+		cameraZPos: 0.2,
+		cameraFov: 40,
+		angle: 0,
+	},
 	2: {
 		radius: 0.5,
 		cameraZPos: 0.2,

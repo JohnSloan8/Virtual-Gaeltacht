@@ -42,4 +42,12 @@ export default function calculatePosRot(noP) {
 	return posRot
 }
 
-export { posRot }
+function organiseParticipants() {
+	participantNames = participantNames.split(',')
+	let indexOfParticipant = participantNames.indexOf(username)
+	let y = participantNames.splice(indexOfParticipant)
+	participantNames = y.concat(participantNames)
+
+}
+
+export { posRot, organiseParticipants }
