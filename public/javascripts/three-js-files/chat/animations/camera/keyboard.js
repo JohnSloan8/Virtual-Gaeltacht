@@ -53,7 +53,6 @@ export default function createKeyBindings() {
 
 window.lookControl = lookControl
 function lookControl(who, k) {
-  console.log(' in  new look control: ', who)
   if (participants[who].states.currentlyLookingAt === -1) { // table
     if ( k === 'ArrowUp' ) {
       participants[who].states.currentlyLookingAt = participants[who].states.previouslyLookingAt;
@@ -80,8 +79,11 @@ function lookControl(who, k) {
   } else if ( participants[who].states.currentlyLookingAt >= noParticipants ) {
     participants[who].states.currentlyLookingAt = 1;
   }
-  avatarLookAt( 0, participants[who].states.currentlyLookingAt, 500 )
-  sendChangeLook( who, participants[who].states.currentlyLookingAt )
+  if (participants[who].states.previouslyLookingAt !== -1 && k === 'ArrowUp' ) { 
+  } else {
+    avatarLookAt( 0, participants[who].states.currentlyLookingAt, 500 )
+    sendChangeLook( who, participants[who].states.currentlyLookingAt )
+  }
 }
 
 export { cameraLookAt }

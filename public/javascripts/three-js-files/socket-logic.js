@@ -4,10 +4,6 @@ import avatarLookAt from "./chat/animations/look.js"
 var socket
 
 export default function initSocket() {
-    // Connection opened
-    //let data = {
-        url: window.location.pathname
-    //}
     
     socket = new WebSocket('ws://localhost:8080')
     socket.addEventListener('open', function (event) {
@@ -23,12 +19,12 @@ export default function initSocket() {
         console.log('Message from server ', event.data);
         let messageData = JSON.parse(event.data)
         console.log('messageData: ', messageData)
-        avatarLookAt(participantNames.indexOf(messageData.user), participantNames.indexOf(messageData.lookTo), 500)
+        avatarLookAt(participantNames.indexOf(messageData.who), participantNames.indexOf(messageData.whom), 500)
     });
 
-    const sendMessage = (arrow) => {
-        socket.send('Hello from C1')
-    }
+    //const sendMessage = (arrow) => {
+        //socket.send('Hello from C1')
+    //}
 
 }
 

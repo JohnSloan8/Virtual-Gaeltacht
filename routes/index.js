@@ -101,8 +101,8 @@ wss.on('connection', function connection(ws) {
   ws.on('message', async function incoming(message) {
 		let data = JSON.parse(message)
 		if ( data.newConnection ) {
+			console.log('new connection')
 			c = await Chat.findOne({chatURL: path.basename(data.chatURL)})
-			console.log('c:', c)
 		} else {
 			wss.clients.forEach(function each(client) {
 				if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -115,6 +115,7 @@ wss.on('connection', function connection(ws) {
 				timestamp: new Date(data.timestamp)
 			})
 			c.save();
+			console.log('lookingAt updated')
 		}
 	});
 
