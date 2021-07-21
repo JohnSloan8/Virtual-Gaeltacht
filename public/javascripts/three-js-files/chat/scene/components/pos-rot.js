@@ -16,7 +16,7 @@ export default function calculatePosRot(noP) {
 			position: {
 				x: 0,
 				y: 2,
-				z: cameraSettings[noP].radius*2
+				z: cameraSettings[noP].radius*2.5
 			},
 		},
 		0: {

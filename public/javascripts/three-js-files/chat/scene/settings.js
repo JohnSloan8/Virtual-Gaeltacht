@@ -8,6 +8,7 @@ const showAxesHelper = false
 const showColumn = false
 const showSkeleton = false
 const showEntranceAnimation = false
+const showMe = true
 const orbitControls = true
 	
 const background = {
@@ -90,6 +91,7 @@ export {
 	showColumn,
 	showSkeleton,
 	showEntranceAnimation,
+	showMe,
 	orbitControls,
 	background,
 	showShadows,

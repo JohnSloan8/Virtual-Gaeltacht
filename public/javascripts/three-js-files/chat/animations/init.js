@@ -3,7 +3,8 @@ import {allLookAt} from "./test.js"
 import avatarLookAt from "./look.js"
 import cameraLookAt from "./camera/keyboard.js"
 import createKeyBindings from "./camera/keyboard.js"
-import { showEntranceAnimation, noParticipants, cameraSettings, orbitControls } from "../scene/settings.js"
+import createClickActions from "./click/main.js"
+import { showEntranceAnimation, showMe, noParticipants, cameraSettings, orbitControls } from "../scene/settings.js"
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
 import { renderer, scene } from "../scene/components/scene.js"
 import { camera } from "../scene/components/camera.js"
@@ -15,11 +16,14 @@ import { table } from "../scene/components/table.js"
 let controls 
 export default function initAnimations() {
 	createKeyBindings();
+	createClickActions();
 	if ( showEntranceAnimation ) {
 		camera.position.set(posRot[noParticipants].cameraStart.position.x, posRot[noParticipants].cameraStart.position.y, posRot[noParticipants].cameraStart.position.z);
 		setTimeout(cameraEnter, 1000);
 	} else {
-		participants[0].model.visible = false
+		if ( !showMe ) {
+			participants[0].model.visible = false
+		}
 		camera.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z);
 		camera.lookAt(cameraSettings.neutralFocus)
 	}

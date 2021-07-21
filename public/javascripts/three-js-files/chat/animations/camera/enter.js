@@ -14,13 +14,14 @@ export default function cameraEnter(amount=0.7, duration=6000, easing="cubicIn")
 	.easing(easingDict["cubicInOut"])
 	.start()
 
-	let cameraEnterPositionTween = new TWEEN.Tween(camera.position).to({z: posRot[noParticipants][0].z+0.1, y: posRot[noParticipants].camera.y+0.05 }, duration)
+	let cameraEnterPositionTween = new TWEEN.Tween(camera.position).to({z: posRot[noParticipants][0].z, y: posRot[noParticipants].camera.y+0.05 }, duration)
 	.easing(easingDict["quinticIn"])
 	.start()
 
-	// put fadeIn of black and then dashboard appearing here
-	//setTimeout( function(){
+	//fadeIn of black and then dashboard appearing
+	setTimeout( function(){
 
-	//}, )
+
+	}, )
 
 }

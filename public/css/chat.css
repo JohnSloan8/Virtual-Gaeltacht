@@ -1,0 +1,11 @@
+.emotion-button-container {
+}
+
+.emotion-image {
+	max-width: 100%;
+	height: auto;
+}
+
+.emotion-image:hover {
+	cursor: pointer;
+}

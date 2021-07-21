@@ -18,11 +18,14 @@ function allExpression(e) {
 window.expression = expression
 export default function expression(who, e) {
 
-	//console.log('expression:', expression)
+	console.log('e:', e)
 	let faceMorphsTo = new Array(lenMorphs).fill(0);
 	//let faceMorphsHalf = new Array(lenMorphs).fill(0);
-	faceMorphsTo[participants[who].movableBodyParts.face.morphTargetDictionary[e]] = 1
+	console.log('faceMorphsTo:', faceMorphsTo)
+	let indexOfExpression = participants[who].movableBodyParts.face.morphTargetDictionary[e]
+	faceMorphsTo[indexOfExpression] = 1
 	//faceMorphsHalf[participants[who].movableBodyParts.face.morphTargetDictionary["half_" + e]] = 1
+	console.log('faceMorphsTo:', faceMorphsTo)
 
 	let expressionIn = new TWEEN.Tween(participants[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsTo, 500)
 		.easing(easingDict["cubicOut"])
