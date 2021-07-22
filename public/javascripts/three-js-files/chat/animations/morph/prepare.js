@@ -12,7 +12,7 @@ let lenMorphs
 export default function prepareExpressions() {
 
 	addHalfAndBlinkExpressions();
-	for(let i=1; i<noParticipants; i++) {
+	for(let i=0; i<noParticipants; i++) {
 		Object.entries(expressionMorphs).forEach( function(e) {
 			let lengthArray = participants[i].movableBodyParts.face.morphTargetInfluences.length
 			participants[i].movableBodyParts.face.morphTargetDictionary[e[0]] = lengthArray

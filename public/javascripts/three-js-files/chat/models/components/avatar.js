@@ -50,7 +50,6 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 
 	gltfLoader = new GLTFLoader();
 	//added slash at start cause was getting wrong url
-	console.log('avatarName2:', avatarName)
 	gltfLoader.load("/avatars/" + avatarName + ".glb", function(
 		gltf
 	) {
@@ -67,9 +66,6 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 		participants[i].model = gltf.scene;
 		participants[i].model.rotation.set(0, posRot[noParticipants][i].neutralYrotation, 0);
 		participants[i].model.position.set(posRot[noParticipants][i].x, 0, posRot[noParticipants][i].z);
-		//if(i===2) {
-			//participants[i].model.scale.set(1, 0.9, 1);
-		//}
 		group.add(participants[i].model);
 		participants[i].model.traverse(function(object) {
 			if (object.isMesh) {

@@ -1,10 +1,10 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import Stats from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/libs/stats.module.js";
 import { camera } from "./camera.js"
-import { showAxesHelper } from "../settings.js"
+import { cameraMe } from "./cameraMe.js"
+import { showAxesHelper, noParticipants } from "../settings.js"
 
-let	scene, renderer, clock, container, stats
-
+let	scene, renderer, clock, container, stats, windowWidth, windowHeight
 export default function setupScene() {
 
 	container = document.getElementById("threeCanvas");
@@ -14,7 +14,9 @@ export default function setupScene() {
 	scene = new THREE.Scene();
 	stats = new Stats();
 	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth, window.innerHeight);
+	windowWidth = window.innerWidth
+	windowHeight = window.innerHeight
+	renderer.setSize(windowWidth, windowHeight);
 	renderer.outputEncoding = THREE.sRGBEncoding;
 	renderer.shadowMap.enabled = true;
 
@@ -26,13 +28,17 @@ export default function setupScene() {
 		scene.add( axesHelper );
 	}
 
+
 	window.addEventListener("resize", onWindowResize);
 }
 
 function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
+	windowWidth = window.innerWidth
+	windowHeight = window.innerHeight
+	camera.aspect = windowWidth / windowHeight;
+	cameraMe.aspect = windowWidth / windowHeight;
 	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setSize(windowWidth, windowHeight);
 }
 
-export { scene, renderer, clock, container, stats }
+export { scene, renderer, clock, container, stats, windowWidth, windowHeight }

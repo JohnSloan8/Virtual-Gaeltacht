@@ -3,7 +3,7 @@ import { noParticipants } from "../../scene/settings.js"
 
 window.beginRandomBlinking = beginRandomBlinking
 export default function beginRandomBlinking() {
-	for (let par=1; par<noParticipants; par++) {
+	for (let par=0; par<noParticipants; par++) {
 		randomBlink(par)
 	}
 }

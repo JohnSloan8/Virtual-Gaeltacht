@@ -1,4 +1,5 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
+import { Reflector } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/objects/Reflector.js";
 import {allLookAt} from "./test.js"
 import avatarLookAt from "./look.js"
 import cameraLookAt from "./camera/keyboard.js"
@@ -6,14 +7,16 @@ import createKeyBindings from "./camera/keyboard.js"
 import createClickActions from "./click/main.js"
 import { showEntranceAnimation, showMe, noParticipants, cameraSettings, orbitControls } from "../scene/settings.js"
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
-import { renderer, scene } from "../scene/components/scene.js"
+import { renderer, scene, windowWidth, windowHeight } from "../scene/components/scene.js"
 import { camera } from "../scene/components/camera.js"
+import { cameraMe } from "../scene/components/cameraMe.js"
 import beginRandomBlinking from "./random/blink.js"
 import beginRandomSwaying from "./random/sway.js"
 import { initialiseVisemeMorphIndexes, randomBlinking, randomSwaying } from "./settings.js"
 import { table } from "../scene/components/table.js"
 
-let controls 
+let controls, verticalMirror
+
 export default function initAnimations() {
 	createKeyBindings();
 	createClickActions();
@@ -25,6 +28,23 @@ export default function initAnimations() {
 			participants[0].model.visible = false
 		}
 		camera.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z);
+
+		// cameraMe
+		cameraMe.position.set(0, posRot[noParticipants].camera.y-0.1, posRot[noParticipants].camera.z+1.95);
+		let geometry = new THREE.PlaneGeometry( 2, 2 );
+		verticalMirror = new Reflector( geometry, {
+			clipBias: 0.003,
+			textureWidth: windowWidth * window.devicePixelRatio,
+			textureHeight: windowHeight * window.devicePixelRatio,
+			color: 0x889999
+		} );
+		verticalMirror.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z+1.9);
+		verticalMirror.rotation.x = -0.1
+		scene.add( verticalMirror );
+		participants[0].model.position.z += 2.667
+		//
+
+
 		camera.lookAt(cameraSettings.neutralFocus)
 	}
 	for (let k=1; k<noParticipants; k++) {
@@ -56,9 +76,7 @@ export default function initAnimations() {
 	if ( randomSwaying ) {
 		beginRandomSwaying();
 	}
-	allLookAt(-1, false)
-
-
+	allLookAt(0, false)
 }
 
 export { controls }

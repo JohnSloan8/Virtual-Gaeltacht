@@ -10,13 +10,9 @@ import { cameraLookAt } from "./camera/keyboard.js"
 
 window.avatarLookAt = avatarLookAt
 export default function avatarLookAt(who, toWhom, duration) {
-
 	if ( who === 0 ) {
 		cameraLookAt(toWhom, duration)
 	}
-
-	console.log('who:', who)
-	console.log('toWhom:', toWhom)
 	let head = new TWEEN.Tween(participants[who].movableBodyParts.head.rotation).to(participants[who].rotations[toWhom].head, 0.8*duration)
 	let spine2 = new TWEEN.Tween(participants[who].movableBodyParts.spine2.rotation).to(participants[who].rotations[toWhom].spine2, 0.9*duration)
 	let spine1 = new TWEEN.Tween(participants[who].movableBodyParts.spine1.rotation).to(participants[who].rotations[toWhom].spine1, duration)

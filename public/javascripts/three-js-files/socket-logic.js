@@ -19,7 +19,16 @@ export default function initSocket() {
         console.log('Message from server ', event.data);
         let messageData = JSON.parse(event.data)
         console.log('messageData: ', messageData)
-        avatarLookAt(participantNames.indexOf(messageData.who), participantNames.indexOf(messageData.whom), 500)
+        console.log('messageData.type: ', messageData.type)
+        if (messageData.type === "look" ) {
+          avatarLookAt(participantNames.indexOf(messageData.who), participantNames.indexOf(messageData.whom), 500)
+        } else if (messageData.type === "expression" ) {
+          console.log('who:', participantNames.indexOf(messageData.who))
+          console.log('expression:', messageData.expression)
+          expression(participantNames.indexOf(messageData.who), messageData.expression)
+        } else if (messageData.type === "gesture" ) {
+          gesture(participantNames.indexOf(messageData.who), messageData.gesture, 2000)
+        }
     });
 
     //const sendMessage = (arrow) => {
@@ -33,8 +42,29 @@ function sendChangeLook( who, whom ) {
     chatID: window.location.pathname,
     who: username,
     whom: participantNames[whom] ? participantNames[whom] : "table",
+    type: "look",
     timestamp: new Date()
   }))
 }
 
-export { sendChangeLook }
+function sendExpression( who, expression ) {
+  socket.send( JSON.stringify({
+    chatID: window.location.pathname,
+    who: username,
+    expression: expression,
+    type: "expression",
+    timestamp: new Date()
+  }))
+}
+
+function sendGesture( who, gesture ) {
+  socket.send( JSON.stringify({
+    chatID: window.location.pathname,
+    who: username,
+    gesture: gesture,
+    type: "gesture",
+    timestamp: new Date()
+  }))
+}
+
+export { sendChangeLook, sendExpression, sendGesture }

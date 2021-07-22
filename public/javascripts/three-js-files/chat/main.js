@@ -1,7 +1,8 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import Stats from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/libs/stats.module.js";
-import { renderer, scene, stats, clock } from "./scene/components/scene.js"
+import { renderer, scene, stats, clock, windowWidth, windowHeight } from "./scene/components/scene.js"
 import { camera } from "./scene/components/camera.js"
+import { cameraMe } from "./scene/components/cameraMe.js"
 import { participants } from "./models/components/avatar.js"
 import loadScene from "./scene/load-scene.js"
 import loadModels from "./models/load-models.js"
@@ -36,8 +37,20 @@ function animate() {
 			p.mixer.update(mixerUpdateDelta);
 		})
 		stats.update();
-		TWEEN.update()
+		TWEEN.update();
+
+		renderer.setViewport(0, 0, windowWidth, windowHeight);
+		renderer.setScissor(0, 0, windowWidth, windowHeight);
+		renderer.setScissorTest( true );
+		camera.updateProjectionMatrix()	
 		renderer.render(scene, camera);
+
+		renderer.setViewport(windowWidth*0.4, 0, windowWidth*0.2, windowHeight*0.2);
+		renderer.setScissor(windowWidth*0.4, 0, windowWidth*0.2, windowHeight*0.2);
+		renderer.setScissorTest( true );
+		cameraMe.updateProjectionMatrix()	
+		renderer.render(scene, camera);
+		renderer.render(scene, cameraMe);
 		requestAnimationFrame(animate);
 }
 

@@ -8,9 +8,7 @@ import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tw
 
 window.blink = blink
 export default function blink(who, delay=0) {
-
 	if ( !participants[who].states.changingExpression && !participants[who].states.blinking ) {
-
 		let lenMorphs = participants[who].movableBodyParts.face.morphTargetInfluences.length
 		let blinkTo = new Array(lenMorphs).fill(0);
 		let partKey = participants[who].movableBodyParts.face.morphTargetDictionary[participants[who].states.expression + "_blink"]
@@ -21,11 +19,11 @@ export default function blink(who, delay=0) {
 			.repeat(1)
 			.start()
 			.delay(delay)
-	blinking.onStart( function() {
-		participants[who].states.blinking = true	
-	})
-	blinking.onComplete( function() {
-		participants[who].states.blinking = false	
-	})
+		blinking.onStart( function() {
+			participants[who].states.blinking = true	
+		})
+		blinking.onComplete( function() {
+			participants[who].states.blinking = false	
+		})
 	}
 }

@@ -104,17 +104,34 @@ wss.on('connection', function connection(ws) {
 			console.log('new connection')
 			c = await Chat.findOne({chatURL: path.basename(data.chatURL)})
 		} else {
+			console.log('message: ', message)
 			wss.clients.forEach(function each(client) {
 				if (client !== ws && client.readyState === WebSocket.OPEN) {
 					client.send(message);
 				}
 			});
-			c.lookingAt.push({
-				who: data.who,
-				whom: data.whom,
-				timestamp: new Date(data.timestamp)
-			})
-			c.save();
+			if (data.type === "look") {
+				c.lookingAt.push({
+					who: data.who,
+					whom: data.whom,
+					timestamp: new Date(data.timestamp)
+				})
+				c.save();
+			} else if (data.type === "expression") {
+				c.expressions.push({
+					who: data.who,
+					expression: data.expression,
+					timestamp: new Date(data.timestamp)
+				})
+				c.save();
+			} else if (data.type === "gesture") {
+				c.gestures.push({
+					who: data.who,
+					gesture: data.gesture,
+					timestamp: new Date(data.timestamp)
+				})
+				c.save();
+			}
 			console.log('lookingAt updated')
 		}
 	});

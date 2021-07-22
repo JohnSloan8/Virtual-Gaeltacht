@@ -6,6 +6,7 @@ import setupBackground from "./components/background.js";
 import setupLights from "./components/lights.js";
 import setupScene from "./components/scene.js";
 import setupCamera from "./components/camera.js";
+import setupCameraMe from "./components/cameraMe.js";
 import addTable from "./components/table.js";
 
 let group
@@ -17,6 +18,7 @@ export default function loadScene() {
 	calculatePosRot(noParticipants)
 	setupScene();
 	setupCamera();
+	setupCameraMe();
 	setupBackground();
 	setupLights();
 	addTable();

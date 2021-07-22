@@ -20,6 +20,20 @@ const ChatSchema = new mongoose.Schema({
 		timestamp: {
 			type: Date
 		}
+	}],
+	expressions: [{
+		who: String,
+		expression: String,
+		timestamp: {
+			type: Date
+		}
+	}],
+	gestures: [{
+		who: String,
+		gesture: String,
+		timestamp: {
+			type: Date
+		}
 	}]
 })
 

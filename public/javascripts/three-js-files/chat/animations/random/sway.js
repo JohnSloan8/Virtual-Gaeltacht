@@ -5,7 +5,7 @@ import { noParticipants } from "../../scene/settings.js"
 
 window.beginRandomSwaying = beginRandomSwaying
 export default function beginRandomSwaying() {
-	for (let par=1; par<noParticipants; par++) {
+	for (let par=0; par<noParticipants; par++) {
 		randomSway(par);
 		randomNeckTurn(par);
 	}
