@@ -45,11 +45,13 @@ function animate() {
 		camera.updateProjectionMatrix()	
 		renderer.render(scene, camera);
 
-		renderer.setViewport(windowWidth*0.4, 0, windowWidth*0.2, windowHeight*0.2);
-		renderer.setScissor(windowWidth*0.4, 0, windowWidth*0.2, windowHeight*0.2);
+		renderer.setViewport(windowWidth*0.375, windowWidth*0.06, windowWidth*0.25, windowHeight*0.25);
+		renderer.setScissor(windowWidth*0.375, windowWidth*0.06, windowWidth*0.25, windowHeight*0.25);
 		renderer.setScissorTest( true );
+		renderer.setClearColor( 0xffffff, 1 )
+		renderer.clearColor( 0xffffff, 1 )
 		cameraMe.updateProjectionMatrix()	
-		renderer.render(scene, camera);
+		//renderer.render(scene, camera);
 		renderer.render(scene, cameraMe);
 		requestAnimationFrame(animate);
 }

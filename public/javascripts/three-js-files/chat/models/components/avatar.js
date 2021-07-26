@@ -61,7 +61,8 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 			speaking: false,
 			speakingViseme: null,
 			blinking: false,
-			changingExpression: false
+			changingExpression: false,
+			gesturing: false
 		}
 		participants[i].model = gltf.scene;
 		participants[i].model.rotation.set(0, posRot[noParticipants][i].neutralYrotation, 0);
