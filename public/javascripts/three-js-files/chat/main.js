@@ -1,6 +1,6 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import Stats from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/libs/stats.module.js";
-import { renderer, scene, stats, clock, windowWidth, windowHeight } from "./scene/components/scene.js"
+import { renderer, scene, stats, clock, windowWidth, windowHeight, controlPanelHeight } from "./scene/components/scene.js"
 import { camera } from "./scene/components/camera.js"
 import { cameraMe } from "./scene/components/cameraMe.js"
 import { participants } from "./models/components/avatar.js"
@@ -45,8 +45,8 @@ function animate() {
 		camera.updateProjectionMatrix()	
 		renderer.render(scene, camera);
 
-		renderer.setViewport(windowWidth*0.375, windowWidth*0.06, windowWidth*0.25, windowHeight*0.25);
-		renderer.setScissor(windowWidth*0.375, windowWidth*0.06, windowWidth*0.25, windowHeight*0.25);
+		renderer.setViewport(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
+		renderer.setScissor(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
 		renderer.setScissorTest( true );
 		renderer.setClearColor( 0xffffff, 1 )
 		renderer.clearColor( 0xffffff, 1 )

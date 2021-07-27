@@ -2,7 +2,27 @@
 	max-width: 100%;
 	height: auto;
 }
-
 .emotion-image:hover {
 	cursor: pointer;
 }
+
+#nod_head {
+	margin-left: 2px solid yellow;
+}
+
+.frame {
+	position: absolute;
+}
+
+.frameSide {
+	width: 1%;
+}
+
+#frameLeftSkew {
+	transform: skew(-2.5deg);
+}
+
+#frameRightSkew {
+	transform: skew(2.5deg);
+}
+

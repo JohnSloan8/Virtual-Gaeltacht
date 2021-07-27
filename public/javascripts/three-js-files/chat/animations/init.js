@@ -39,9 +39,9 @@ export default function initAnimations() {
 			color: 0x889999
 		} );
 		verticalMirror.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z+1.9);
-		verticalMirror.rotation.x = -0.1
+		verticalMirror.rotation.x = -0.05
 		scene.add( verticalMirror );
-		participants[0].model.position.z += 2.667
+		participants[0].model.position.z += 2.85
 		//
 
 

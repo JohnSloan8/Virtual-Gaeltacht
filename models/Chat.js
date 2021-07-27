@@ -34,6 +34,13 @@ const ChatSchema = new mongoose.Schema({
 		timestamp: {
 			type: Date
 		}
+	}],
+	nodShakes: [{
+		who: String,
+		nodShake: String,
+		timestamp: {
+			type: Date
+		}
 	}]
 })
 

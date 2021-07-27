@@ -131,8 +131,15 @@ wss.on('connection', function connection(ws) {
 					timestamp: new Date(data.timestamp)
 				})
 				c.save();
+			} else if (data.type === "nodShake") {
+				c.nodShakes.push({
+					who: data.who,
+					nodShake: data.nodShake,
+					timestamp: new Date(data.timestamp)
+				})
+				c.save();
+				console.log('nodShake updated')
 			}
-			console.log('lookingAt updated')
 		}
 	});
 

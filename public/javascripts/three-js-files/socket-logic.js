@@ -16,18 +16,16 @@ export default function initSocket() {
 
     // Listen for messages
     socket.addEventListener('message', function (event) {
-        console.log('Message from server ', event.data);
         let messageData = JSON.parse(event.data)
-        console.log('messageData: ', messageData)
-        console.log('messageData.type: ', messageData.type)
+        console.log('messageData:', messageData)
         if (messageData.type === "look" ) {
           avatarLookAt(participantNames.indexOf(messageData.who), participantNames.indexOf(messageData.whom), 500)
         } else if (messageData.type === "expression" ) {
-          console.log('who:', participantNames.indexOf(messageData.who))
-          console.log('expression:', messageData.expression)
           expression(participantNames.indexOf(messageData.who), messageData.expression)
         } else if (messageData.type === "gesture" ) {
           gesture(participantNames.indexOf(messageData.who), messageData.gesture, 2000)
+        } else if (messageData.type === "nodShake" ) {
+          avatarNodShake(participantNames.indexOf(messageData.who), messageData.nodShake)
         }
     });
 
@@ -67,4 +65,14 @@ function sendGesture( who, gesture ) {
   }))
 }
 
-export { sendChangeLook, sendExpression, sendGesture }
+function sendNodShake( who, nodShake ) {
+  socket.send( JSON.stringify({
+    chatID: window.location.pathname,
+    who: username,
+    nodShake: nodShake,
+    type: "nodShake",
+    timestamp: new Date()
+  }))
+}
+
+export { sendChangeLook, sendExpression, sendGesture, sendNodShake }

@@ -4,7 +4,7 @@ import { camera } from "./camera.js"
 import { cameraMe } from "./cameraMe.js"
 import { showAxesHelper, noParticipants } from "../settings.js"
 
-let	scene, renderer, clock, container, stats, windowWidth, windowHeight
+let	scene, renderer, clock, container, stats, windowWidth, windowHeight, controlPanelHeight
 export default function setupScene() {
 
 	container = document.getElementById("threeCanvas");
@@ -23,6 +23,10 @@ export default function setupScene() {
 	container.appendChild(renderer.domElement);
 	container.appendChild(stats.dom);
 
+	controlPanelHeight = $('#controlPanel').height()
+	console.log('controlPanelHeight:', controlPanelHeight)
+	resizeFrame()
+
 	if (showAxesHelper) {
 		const axesHelper = new THREE.AxesHelper( 5 );
 		scene.add( axesHelper );
@@ -35,10 +39,41 @@ export default function setupScene() {
 function onWindowResize() {
 	windowWidth = window.innerWidth
 	windowHeight = window.innerHeight
+	controlPanelHeight = $('#controlPanel').height()
+	resizeFrame()
 	camera.aspect = windowWidth / windowHeight;
 	cameraMe.aspect = windowWidth / windowHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(windowWidth, windowHeight);
 }
 
-export { scene, renderer, clock, container, stats, windowWidth, windowHeight }
+function resizeFrame() {
+	$('#frameLeft').css({
+		"bottom": controlPanelHeight + "px",
+		"left": 0.37*windowWidth + "px",
+		"height": 0.25*windowHeight + "px",
+	})
+	$('#frameRight').css({
+		"bottom": controlPanelHeight + "px",
+		"right": 0.37*windowWidth + "px",
+		"height": 0.25*windowHeight + "px",
+	})
+	$('#frameTop').css({
+		"bottom": controlPanelHeight + windowHeight*0.25 + "px",
+		"right": 0.37*windowWidth + "px",
+		"left": 0.37*windowWidth + "px",
+		"height": 0.005*windowWidth + "px",
+	})
+	$('#frameLeftSkew').css({
+		"bottom": controlPanelHeight + "px",
+		"left": 0.365*windowWidth + "px",
+		"height": 0.25*windowHeight + 0.005*windowWidth + "px",
+	})
+	$('#frameRightSkew').css({
+		"bottom": controlPanelHeight + "px",
+		"right": 0.365*windowWidth + "px",
+		"height": 0.25*windowHeight + 0.005*windowWidth + "px",
+	})
+}
+
+export { scene, renderer, clock, container, stats, windowWidth, windowHeight, controlPanelHeight }

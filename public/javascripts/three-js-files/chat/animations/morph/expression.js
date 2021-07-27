@@ -8,6 +8,7 @@ import { expressionMorphs, jawNeeded } from "./morph-targets.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { lenMorphs } from "./prepare.js"
+import { sendExpression } from '../../../socket-logic.js'
 
 window.allExpression = allExpression
 function allExpression(e) {
@@ -44,7 +45,10 @@ export default function expression(who, e) {
 			baseExpression = splitExpressionName[1]
 		}
 		expressionIn.onStart( function() {
-			dealWithCSSExpressionGestureEvent('emotion', e, true)
+			if (who === 0 ) {
+				sendExpression(0, e)
+				dealWithCSSExpressionGestureEvent('emotion', e, true)
+			}
 			participants[who].states.changingExpression = true
 			participants[who].states.expression = 'changing'
 			if ( jawNeeded[splitExpressionName[0]] || jawNeeded[splitExpressionName[1]] ) {
@@ -70,7 +74,9 @@ export default function expression(who, e) {
 			participants[who].states.expression = e
 		})
 		expressionOut.onComplete( function() {
-			dealWithCSSExpressionGestureEvent('emotion', e, false)
+			if (who === 0 ) {
+				dealWithCSSExpressionGestureEvent('emotion', e, false)
+			}
 			participants[who].states.changingExpression = false
 			participants[who].states.expression = "half_" + e
 		})
