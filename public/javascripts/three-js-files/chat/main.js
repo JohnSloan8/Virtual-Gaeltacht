@@ -34,7 +34,9 @@ function init() {
 function animate() {
 		const mixerUpdateDelta = clock.getDelta();
 		Object.values(participants).forEach( function(p) {
-			p.mixer.update(mixerUpdateDelta);
+			if (p.mixer !== undefined) {
+				p.mixer.update(mixerUpdateDelta);
+			}
 		})
 		stats.update();
 		TWEEN.update();

@@ -29,7 +29,7 @@ function iterateAvatar() {
 		loadIndividualGLTF(myAvatar, avatarCount, iterateAvatar)
 		avatarCount += 1
 	} else {
-		calculateLookAngles();
+		calculateLookAngles(true);
 	};
 }
 
@@ -67,7 +67,9 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 		participants[i].model = gltf.scene;
 		participants[i].model.rotation.set(0, posRot[noParticipants][i].neutralYrotation, 0);
 		participants[i].model.position.set(posRot[noParticipants][i].x, 0, posRot[noParticipants][i].z);
-		group.add(participants[i].model);
+		if (i !== 0) {
+			group.add(participants[i].model);
+		}
 		participants[i].model.traverse(function(object) {
 			if (object.isMesh) {
 				object.castShadow = false;
@@ -81,9 +83,6 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 			skeleton.visible = true;
 			scene.add(skeleton);
 		}
-		//if (avatarCount === 0) {
-			//animations = gltf.animations;
-		//}
 		participants[i].mixer = new THREE.AnimationMixer(participants[i].model);
 		numAnimations = animations.length;
 		participants[i]['allActions'] = [];
@@ -158,7 +157,7 @@ function addMovableBodyParts(i) {
 	})
 }
 
-function calculateLookAngles() {
+function calculateLookAngles(firstLoad) {
 	let headMult = 0.1;
 	let spine2Mult = 0.0667;
 	let spine1Mult = 0.0667;
@@ -207,11 +206,12 @@ function calculateLookAngles() {
 		}
 	}
 
-
-	initialiseVisemeMorphIndexes();
-	prepareExpressions()
-	animate()
-	initAnimations();
+  if (firstLoad) {
+		initialiseVisemeMorphIndexes();
+		prepareExpressions()
+		animate()
+		initAnimations();
+	}
 }
 
-export { participants }
+export { participants, calculateLookAngles }

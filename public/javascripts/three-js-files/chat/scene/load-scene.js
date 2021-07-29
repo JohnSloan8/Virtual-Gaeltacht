@@ -8,6 +8,7 @@ import setupScene from "./components/scene.js";
 import setupCamera from "./components/camera.js";
 import setupCameraMe from "./components/cameraMe.js";
 import addTable from "./components/table.js";
+import addAvatar from "../models/components/addAvatar.js"
 
 let group
 

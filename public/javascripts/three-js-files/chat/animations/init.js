@@ -12,10 +12,10 @@ import { camera } from "../scene/components/camera.js"
 import { cameraMe } from "../scene/components/cameraMe.js"
 import beginRandomBlinking from "./random/blink.js"
 import beginRandomSwaying from "./random/sway.js"
-import { initialiseVisemeMorphIndexes, randomBlinking, randomSwaying } from "./settings.js"
+import { participant0ZOffset, cameraMeOffset, /*verticalMirrorOffset,*/ initialiseVisemeMorphIndexes, randomBlinking, randomSwaying } from "./settings.js"
 import { table } from "../scene/components/table.js"
 
-let controls, verticalMirror
+let controls, verticalMirror, cameraMeGroup
 
 export default function initAnimations() {
 	createKeyBindings();
@@ -30,7 +30,7 @@ export default function initAnimations() {
 		camera.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z);
 
 		// cameraMe
-		cameraMe.position.set(0, posRot[noParticipants].camera.y-0.1, posRot[noParticipants].camera.z+1.95);
+		cameraMe.position.set(0, posRot[noParticipants].camera.y-0.1, cameraMeOffset);
 		let geometry = new THREE.PlaneGeometry( 2, 2 );
 		verticalMirror = new Reflector( geometry, {
 			clipBias: 0.003,
@@ -38,15 +38,20 @@ export default function initAnimations() {
 			textureHeight: windowHeight * window.devicePixelRatio,
 			color: 0x889999
 		} );
-		verticalMirror.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z+1.9);
+		verticalMirror.position.set(0, posRot[noParticipants].camera.y, 0);
 		verticalMirror.rotation.x = -0.05
-		scene.add( verticalMirror );
-		participants[0].model.position.z += 2.85
-		//
-
+		participants[0].model.position.z = participant0ZOffset
+		cameraMeGroup = new THREE.Group()
+		cameraMeGroup.add(cameraMe)
+		cameraMeGroup.add(verticalMirror)
+		cameraMeGroup.add(participants[0].model)
+		cameraMeGroup.position.z = camera.position.z
+		scene.add( cameraMeGroup );
+		window.cameraMeGroup = cameraMeGroup
 
 		camera.lookAt(cameraSettings.neutralFocus)
 	}
+	window.verticalMirror = verticalMirror
 	for (let k=1; k<noParticipants; k++) {
 		let direction = new THREE.Vector3();
 		let headPos = participants[k].movableBodyParts.head.getWorldPosition(direction)
@@ -76,7 +81,7 @@ export default function initAnimations() {
 	if ( randomSwaying ) {
 		beginRandomSwaying();
 	}
-	allLookAt(0, false)
+	allLookAt(-1, false)
 }
 
-export { controls }
+export { controls, cameraMeGroup }
