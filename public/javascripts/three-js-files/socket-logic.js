@@ -5,7 +5,7 @@ var socket
 
 export default function initSocket() {
     
-    socket = new WebSocket('ws://localhost:8080')
+    socket = new WebSocket('ws://localhost:8088')
     socket.addEventListener('open', function (event) {
         socket.send(JSON.stringify({
             newConnection: true,

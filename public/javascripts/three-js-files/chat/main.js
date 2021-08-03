@@ -17,6 +17,8 @@ import cameraEnter from "./animations/camera/enter.js"
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { mouth } from './animations/random/mouth.js'
 import initSocket from '../socket-logic.js'
+import resetAll from "./animations/reset.js"
+import returnAll from "./animations/returnToBeforeReset.js"
 
 setAvatarNo();
 
@@ -31,7 +33,10 @@ function init() {
 	loadModels();
 }
 
+var animateScene = true
 function animate() {
+	if (animateScene) { 
+		//console.log('in animate')
 		const mixerUpdateDelta = clock.getDelta();
 		Object.values(participants).forEach( function(p) {
 			if (p.mixer !== undefined) {
@@ -56,6 +61,24 @@ function animate() {
 		//renderer.render(scene, camera);
 		renderer.render(scene, cameraMe);
 		requestAnimationFrame(animate);
+	}
+}
+window.startAnimation = startAnimation
+function stopAnimation() {
+	animateScene = false
 }
 
-export { animate }
+window.stopAnimation = stopAnimation
+function startAnimation() {
+	animateScene = true
+	animate()
+}
+
+window.stopStart = stopStart
+function stopStart() {
+	stopAnimation()
+	startAnimation()
+}
+
+
+export { startAnimation, stopAnimation }

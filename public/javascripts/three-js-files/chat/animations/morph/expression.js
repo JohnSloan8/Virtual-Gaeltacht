@@ -28,15 +28,15 @@ export default function expression(who, e) {
 		faceMorphsTo[indexOfExpression] = 1
 		faceMorphsHalf[participants[who].movableBodyParts.face.morphTargetDictionary["half_" + e]] = 1
 
-		let expressionIn = new TWEEN.Tween(participants[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsTo, 500)
+		participants[who].expressionIn = new TWEEN.Tween(participants[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsTo, 500)
 			.easing(easingDict["cubicOut"])
 
-		let expressionOut = new TWEEN.Tween(participants[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsHalf, 1500)
+		participants[who].expressionOut = new TWEEN.Tween(participants[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsHalf, 1500)
 			.easing(easingDict["cubicOut"])
 			.delay(3000)
 		
-		expressionIn.chain(expressionOut)
-		expressionIn.start()
+		participants[who].expressionIn.chain(participants[who].expressionOut)
+		participants[who].expressionIn.start()
 
 		let splitExpressionName = e.split('_')
 		//console.log('splitExpressionName:', splitExpressionName)
@@ -44,7 +44,7 @@ export default function expression(who, e) {
 		if (splitExpressionName[0] === 'half') {
 			baseExpression = splitExpressionName[1]
 		}
-		expressionIn.onStart( function() {
+		participants[who].expressionIn.onStart( function() {
 			if (who === 0 ) {
 				sendExpression(0, e)
 				dealWithCSSExpressionGestureEvent('emotion', e, true)
@@ -54,26 +54,26 @@ export default function expression(who, e) {
 			if ( jawNeeded[splitExpressionName[0]] || jawNeeded[splitExpressionName[1]] ) {
 				let indexOfMouthOpenInTeeth = participants[who].movableBodyParts.teeth.morphTargetDictionary["mouthOpen"]
 				// dunno why have to hard code the "0" below
-				new TWEEN.Tween(participants[who].movableBodyParts.teeth.morphTargetInfluences).to({"0": expressionMorphs[e].jawOpen*1.5}, 500)
+				participants[who].expressionInTeeth = new TWEEN.Tween(participants[who].movableBodyParts.teeth.morphTargetInfluences).to({"0": expressionMorphs[e].jawOpen*1.5}, 500)
 				.easing(easingDict["cubicOut"])
 				.start()
 			}
 		})
-		expressionOut.onStart( function() {
+		participants[who].expressionOut.onStart( function() {
 			participants[who].states.changingExpression = true
 			participants[who].states.expression = 'changing'
 
 			if ( jawNeeded[baseExpression] ) {
-				new TWEEN.Tween(participants[who].movableBodyParts.teeth.morphTargetInfluences).to({"0": expressionMorphs['half_' + e].jawOpen}, 1500)
+				participants[who].expressionOutTeeth = new TWEEN.Tween(participants[who].movableBodyParts.teeth.morphTargetInfluences).to({"0": expressionMorphs['half_' + e].jawOpen}, 1500)
 				.easing(easingDict["cubicOut"])
 				.start()
 			}
 		})
-		expressionIn.onComplete( function() {
+		participants[who].expressionIn.onComplete( function() {
 			//participants[who].states.changingExpression = false
 			participants[who].states.expression = e
 		})
-		expressionOut.onComplete( function() {
+		participants[who].expressionOut.onComplete( function() {
 			if (who === 0 ) {
 				dealWithCSSExpressionGestureEvent('emotion', e, false)
 			}

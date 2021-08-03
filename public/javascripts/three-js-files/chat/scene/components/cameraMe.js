@@ -12,7 +12,7 @@ export default function setupCameraMe() {
 	cameraMe.position.set(0, 0, 0)
 	scene.add(cameraMe)
 	const helper = new THREE.CameraHelper( cameraMe );
-	scene.add( helper );
+	//scene.add( helper );
 	window.cameraMe = cameraMe
 }
 

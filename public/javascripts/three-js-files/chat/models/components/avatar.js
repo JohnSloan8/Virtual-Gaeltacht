@@ -5,7 +5,7 @@ import { scene } from "../../scene/components/scene.js";
 import { camera } from "../../scene/components/camera.js";
 import { noParticipants, cameraSettings, showSkeleton } from "../../scene/settings.js"
 import { baseActions, additiveActions } from "../settings.js"
-import { animate } from "../../main.js";
+import { startAnimation } from "../../main.js";
 import { posRot } from "../../scene/components/pos-rot.js"
 import initAnimations from '../../animations/init.js'
 import prepareExpressions from '../../animations/morph/prepare.js'
@@ -26,7 +26,7 @@ export default function setupAvatar() {
 function iterateAvatar() {
 	if (avatarCount < noParticipants) {
 		let myAvatar = participantNames[avatarCount]
-		loadIndividualGLTF(myAvatar, avatarCount, iterateAvatar)
+		loadIndividualGLTF(myAvatar, avatarCount, true, iterateAvatar)
 		avatarCount += 1
 	} else {
 		calculateLookAngles(true);
@@ -46,7 +46,7 @@ function loadModelGLTF(avatarName, cb=null) {
 }
 
 window.loadIndividualGLTF = loadIndividualGLTF
-function loadIndividualGLTF(avatarName, i, cb=null) {
+function loadIndividualGLTF(avatarName, i, visible, cb=null) {
 
 	gltfLoader = new GLTFLoader();
 	//added slash at start cause was getting wrong url
@@ -70,6 +70,7 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 		if (i !== 0) {
 			group.add(participants[i].model);
 		}
+		participants[i].model.visible = visible
 		participants[i].model.traverse(function(object) {
 			if (object.isMesh) {
 				object.castShadow = false;
@@ -157,7 +158,9 @@ function addMovableBodyParts(i) {
 	})
 }
 
+window.calculateLookAngles = calculateLookAngles
 function calculateLookAngles(firstLoad) {
+	console.log('in calculateLookAngles', firstLoad)
 	let headMult = 0.1;
 	let spine2Mult = 0.0667;
 	let spine1Mult = 0.0667;
@@ -209,7 +212,7 @@ function calculateLookAngles(firstLoad) {
   if (firstLoad) {
 		initialiseVisemeMorphIndexes();
 		prepareExpressions()
-		animate()
+		startAnimation()
 		initAnimations();
 	}
 }

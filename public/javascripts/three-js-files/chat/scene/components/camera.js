@@ -1,5 +1,4 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
 import { renderer, scene } from "./scene.js"
 import { posRot } from "./pos-rot.js"
 import { noParticipants } from "../settings.js"
@@ -16,6 +15,8 @@ export default function setupCamera() {
 	centralPivotGroup = new THREE.Group()
 	centralPivotGroup.add(camera)
 	scene.add(centralPivotGroup)
+	const cameraHelper = new THREE.CameraHelper( camera );
+	scene.add( cameraHelper );
 	window.camera = camera
 
 }

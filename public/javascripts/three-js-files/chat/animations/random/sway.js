@@ -18,10 +18,12 @@ function randomSway(who, direction=1) {
 		randomDuration /= 2;
 		randomRotation *= 2;
 	}
-	let sway = new TWEEN.Tween(participants[who].movableBodyParts.spine.rotation).to({z: randomRotation}, randomDuration)
+	participants[who].sway = new TWEEN.Tween(participants[who].movableBodyParts.spine.rotation).to({z: randomRotation}, randomDuration)
 		.easing(easingDict["cubicInOut"])
 		.start()
-	setTimeout(function(){randomSway(who, direction*=-1)}, randomDuration)
+	participants[who].sway.onComplete( function() {
+		randomSway(who, direction*=-1)
+	})
 }
 
 function randomNeckTurn(who, direction=1) {
@@ -31,15 +33,17 @@ function randomNeckTurn(who, direction=1) {
 		randomDuration /= 2;
 		randomRotation *= 2;
 	}
-	let turn = new TWEEN.Tween(participants[who].movableBodyParts.neck.rotation).to({y: randomRotation}, randomDuration)
+	participants[who].neckTurn = new TWEEN.Tween(participants[who].movableBodyParts.neck.rotation).to({y: randomRotation}, randomDuration)
 		.easing(easingDict["cubicInOut"])
 		.start()
-	turn.onUpdate(function (object) {
+	participants[who].neckTurn.onUpdate(function (object) {
 		if ( participants[who].states.focalPoint !== undefined ) {
 			participants[who].movableBodyParts.leftEye.lookAt(participants[who].states.focalPoint)
 			participants[who].movableBodyParts.rightEye.lookAt(participants[who].states.focalPoint)
 		}
 	})
-	setTimeout(function(){randomNeckTurn(who, direction*=-1)}, randomDuration)
+	participants[who].neckTurn.onComplete( function() {
+		randomNeckTurn(who, direction*=-1)
+	})
 }
 

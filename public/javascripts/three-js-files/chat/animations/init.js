@@ -28,30 +28,44 @@ export default function initAnimations() {
 			participants[0].model.visible = false
 		}
 		camera.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z);
-
-		// cameraMe
-		cameraMe.position.set(0, posRot[noParticipants].camera.y-0.1, cameraMeOffset);
-		let geometry = new THREE.PlaneGeometry( 2, 2 );
-		verticalMirror = new Reflector( geometry, {
-			clipBias: 0.003,
-			textureWidth: windowWidth * window.devicePixelRatio,
-			textureHeight: windowHeight * window.devicePixelRatio,
-			color: 0x889999
-		} );
-		verticalMirror.position.set(0, posRot[noParticipants].camera.y, 0);
-		verticalMirror.rotation.x = -0.05
-		participants[0].model.position.z = participant0ZOffset
-		cameraMeGroup = new THREE.Group()
-		cameraMeGroup.add(cameraMe)
-		cameraMeGroup.add(verticalMirror)
-		cameraMeGroup.add(participants[0].model)
-		cameraMeGroup.position.z = camera.position.z
-		scene.add( cameraMeGroup );
-		window.cameraMeGroup = cameraMeGroup
-
 		camera.lookAt(cameraSettings.neutralFocus)
+		addCameraMe();
+
 	}
+	calculateCameraRotations();
+	if ( randomBlinking ) {
+		beginRandomBlinking();
+	}
+	if ( randomSwaying ) {
+		beginRandomSwaying();
+	}
+	allLookAt(-1, false)
+}
+
+function addCameraMe() {
+	// cameraMe
+	cameraMe.position.set(0, posRot[noParticipants].camera.y-0.1, cameraMeOffset);
+	let geometry = new THREE.PlaneGeometry( 2, 2 );
+	verticalMirror = new Reflector( geometry, {
+		clipBias: 0.003,
+		textureWidth: windowWidth * window.devicePixelRatio,
+		textureHeight: windowHeight * window.devicePixelRatio,
+		color: 0x889999
+	} );
+	verticalMirror.position.set(0, posRot[noParticipants].camera.y, 0);
+	verticalMirror.rotation.x = -0.05
+	participants[0].model.position.z = participant0ZOffset
+	cameraMeGroup = new THREE.Group()
+	cameraMeGroup.add(cameraMe)
+	cameraMeGroup.add(verticalMirror)
+	cameraMeGroup.add(participants[0].model)
+	cameraMeGroup.position.z = camera.position.z
+	scene.add( cameraMeGroup );
+	window.cameraMeGroup = cameraMeGroup
 	window.verticalMirror = verticalMirror
+}
+
+function calculateCameraRotations() {
 	for (let k=1; k<noParticipants; k++) {
 		let direction = new THREE.Vector3();
 		let headPos = participants[k].movableBodyParts.head.getWorldPosition(direction)
@@ -73,15 +87,10 @@ export default function initAnimations() {
 		controls = new OrbitControls(camera, renderer.domElement);
 		controls.target.set(0, 1.59, 0);
 		controls.update();
-		window.controls = controls
+		controls = new OrbitControls(camera, renderer.domElement);
+		controls.target.set(0, 1.59, 0);
+		controls.update();
 	}
-	if ( randomBlinking ) {
-		beginRandomBlinking();
-	}
-	if ( randomSwaying ) {
-		beginRandomSwaying();
-	}
-	allLookAt(-1, false)
 }
 
-export { controls, cameraMeGroup }
+export { controls, cameraMeGroup, calculateCameraRotations }

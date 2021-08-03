@@ -13,17 +13,18 @@ export default function blink(who, delay=0) {
 		let blinkTo = new Array(lenMorphs).fill(0);
 		let partKey = participants[who].movableBodyParts.face.morphTargetDictionary[participants[who].states.expression + "_blink"]
 		blinkTo[partKey] = 1
-		let blinking = new TWEEN.Tween(participants[who].movableBodyParts.face.morphTargetInfluences).to(blinkTo, 100)
+		participants[who].blinking = new TWEEN.Tween(participants[who].movableBodyParts.face.morphTargetInfluences).to(blinkTo, 100)
 			.easing(easingDict["cubicOut"])
 			.yoyo(true)
 			.repeat(1)
 			.start()
 			.delay(delay)
-		blinking.onStart( function() {
+		participants[who].blinking.onStart( function() {
 			participants[who].states.blinking = true	
 		})
-		blinking.onComplete( function() {
+		participants[who].blinking.onComplete( function() {
 			participants[who].states.blinking = false	
 		})
 	}
 }
+

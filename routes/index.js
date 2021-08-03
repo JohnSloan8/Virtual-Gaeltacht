@@ -5,7 +5,7 @@ const path = require('path')
 const randomWords = require('random-words')
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 8088 });
 
 // Models
 const User = require('../models/User')
