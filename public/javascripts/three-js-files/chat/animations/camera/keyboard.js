@@ -38,7 +38,6 @@ function cameraLookAt(toWhom, duration) {
   }
   let cameraTweenRotation = new TWEEN.Tween(camera.rotation).to(posRot[noParticipants].camera.rotations[toWhom], duration)
     .easing(TWEEN.Easing.Quintic.Out)
-    .easing(TWEEN.Easing.Quintic.Out)
   cameraTweenRotation.start()
 }
 

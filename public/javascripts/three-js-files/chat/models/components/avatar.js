@@ -6,10 +6,11 @@ import { camera } from "../../scene/components/camera.js";
 import { noParticipants, cameraSettings, showSkeleton } from "../../scene/settings.js"
 import { baseActions, additiveActions } from "../settings.js"
 import { animate } from "../../main.js";
-import { posRot } from "../../scene/components/pos-rot.js"
+import { posRot, participantNamesArray } from "../../scene/components/pos-rot.js"
 import initAnimations from '../../animations/init.js'
 import prepareExpressions from '../../animations/morph/prepare.js'
 import { initialiseVisemeMorphIndexes } from "../../animations/settings.js"
+import { lookingAtEnter } from "../../scene/components/pos-rot.js"
 
 let numAnimations, clip, name, animations, action, gltfLoader, skeleton;
 var participants = {};
@@ -25,8 +26,8 @@ export default function setupAvatar() {
 
 function iterateAvatar() {
 	if (avatarCount < noParticipants) {
-		let myAvatar = participantNames[avatarCount]
-		loadIndividualGLTF(myAvatar, avatarCount, iterateAvatar)
+		let myAvatar = participantNamesArray[avatarCount]
+		loadIndividualGLTF(myAvatar, avatarCount, true, iterateAvatar)
 		avatarCount += 1
 	} else {
 		calculateLookAngles(true);
@@ -46,7 +47,7 @@ function loadModelGLTF(avatarName, cb=null) {
 }
 
 window.loadIndividualGLTF = loadIndividualGLTF
-function loadIndividualGLTF(avatarName, i, cb=null) {
+function loadIndividualGLTF(avatarName, i, visibility, cb=null) {
 
 	gltfLoader = new GLTFLoader();
 	//added slash at start cause was getting wrong url
@@ -55,8 +56,8 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 	) {
 		participants[i] = {}
 		participants[i].states = {
-			currentlyLookingAt: 0,
-			previouslyLookingAt: 1,
+			currentlyLookingAt: null,
+			previouslyLookingAt: noParticipants-1,
 			expression: 'half_neutral',
 			speaking: false,
 			speakingViseme: null,
@@ -64,7 +65,12 @@ function loadIndividualGLTF(avatarName, i, cb=null) {
 			changingExpression: false,
 			gesturing: false
 		}
+		console.log('avatarName:', avatarName)
+		console.log('lookingAtEnter[avatarName]:', lookingAtEnter[avatarName])
+		participants[i].states.currentlyLookingAt = lookingAtEnter[avatarName]
+		console.log('currentlyLookingAt:', participants[i].states.currentlyLookingAt)
 		participants[i].model = gltf.scene;
+		participants[i].model.visible = visibility
 		participants[i].model.rotation.set(0, posRot[noParticipants][i].neutralYrotation, 0);
 		participants[i].model.position.set(posRot[noParticipants][i].x, 0, posRot[noParticipants][i].z);
 		if (i !== 0) {
@@ -158,13 +164,24 @@ function addMovableBodyParts(i) {
 }
 
 function calculateLookAngles(firstLoad) {
-	let headMult = 0.1;
-	let spine2Mult = 0.0667;
-	let spine1Mult = 0.0667;
-	let xMult = 1
-	let yMult = 1; //more rotation in y axis - avatars not leaning over each other!
-	let zMult = 1;
+	let headMult = 0.3;
+	let spine2Mult = 0.2;
+	let spine1Mult = 0.2;
+	//let xMult = 1
+	//let yMult = 1; //more rotation in y axis - avatars not leaning over each other!
+	//let zMult = 1;
 	for (let j=0; j<noParticipants; j++) {
+		const cubeGroup = new THREE.Group()
+		const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+		const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+		participants[j].cube = new THREE.Mesh( geometry, material );
+		
+		let direction = new THREE.Vector3();
+		let focalPoint = participants[j].movableBodyParts.head.getWorldPosition(direction)
+		cubeGroup.position.set(focalPoint.x, focalPoint.y, focalPoint.z)
+		cubeGroup.rotation.y = posRot[noParticipants][j].neutralYrotation
+		cubeGroup.add(participants[j].cube)
+		//scene.add(cubeGroup)
 		participants[j].rotations =  {}
 		for (let k=-1; k<noParticipants; k++) {
 			if (j===k) {
@@ -181,27 +198,19 @@ function calculateLookAngles(firstLoad) {
 			} else {
 				participants[j].rotations[k] = {}
 				if (k===-1) {
-					xMult = 2.5
-					yMult = 1;
-					zMult = 2.5;
-					participants[j].movableBodyParts.head.lookAt(0, 1, 0)
+					participants[j].cube.rotation.x = 0.33
 				} else if (k===0) {
-					xMult = 1
-					yMult = 3;
-					zMult = 1;
-					participants[j].movableBodyParts.head.lookAt(posRot[noParticipants].camera.x, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z)
+					participants[j].cube.lookAt(posRot[noParticipants].camera.x, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z)
 				} else {
-					xMult = 1
-					yMult = 3;
-					zMult = 1;
 					let direction = new THREE.Vector3();
 					let headPos = participants[k].movableBodyParts.head.getWorldPosition(direction)
-					participants[j].movableBodyParts.head.lookAt(headPos)
+					participants[j].cube.lookAt(headPos)
 				}
-				participants[j].rotations[k].head = {x:participants[j].movableBodyParts.head.rotation.x*headMult*xMult, y:participants[j].movableBodyParts.head.rotation.y*headMult*yMult, z:participants[j].movableBodyParts.head.rotation.z*headMult*zMult}
-				participants[j].rotations[k].spine2 = {x:participants[j].movableBodyParts.head.rotation.x*spine2Mult*xMult, y:participants[j].movableBodyParts.head.rotation.y*spine2Mult*yMult, z:participants[j].movableBodyParts.head.rotation.z*spine2Mult*zMult}
-				participants[j].rotations[k].spine1 = {x:participants[j].movableBodyParts.head.rotation.x*spine1Mult*xMult, y:participants[j].movableBodyParts.head.rotation.y*spine1Mult*yMult, z:participants[j].movableBodyParts.head.rotation.z*spine1Mult*zMult}
-				participants[j].states.currentlyLookingAt = k
+				let yr = participants[j].cube.rotation
+				let y0 = posRot[noParticipants][j].neutralYrotation
+				participants[j].rotations[k].head = {x:yr.x*headMult, y:yr.y*headMult, z:yr.z*headMult}
+				participants[j].rotations[k].spine2 = {x:yr.x*spine2Mult, y:yr.y*spine2Mult, z:yr.z*spine2Mult}
+				participants[j].rotations[k].spine1 = {x:yr.x*spine1Mult, y:yr.y*spine1Mult, z:yr.z*spine1Mult}
 			}
 		}
 	}

@@ -43,3 +43,4 @@ function randomNeckTurn(who, direction=1) {
 	setTimeout(function(){randomNeckTurn(who, direction*=-1)}, randomDuration)
 }
 
+export { randomSway, randomNeckTurn }

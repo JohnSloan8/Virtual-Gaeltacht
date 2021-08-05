@@ -8,8 +8,11 @@ export default function beginRandomBlinking() {
 	}
 }
 
+window.randomBlink = randomBlink
 function randomBlink(who) {
 	blink(who)
 	let randomDelay = 2000 + Math.random() * 5000
 	setTimeout(function(){randomBlink(who)}, randomDelay)
 }
+
+export { randomBlink }

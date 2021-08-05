@@ -13,7 +13,8 @@ export default function calculatePosRot(noP) {
 			rotations: {
 				0: {
 					x: 0,
-					y: 0
+					y: 0,
+					z: 0
 				}
 			}
 		},
@@ -54,12 +55,26 @@ export default function calculatePosRot(noP) {
 	return posRot
 }
 
+let lookingAtEnter = {}
+let participantNamesArray
 function organiseParticipants() {
-	participantNames = participantNames.split(',')
-	let indexOfParticipant = participantNames.indexOf(username)
-	let y = participantNames.splice(indexOfParticipant)
-	participantNames = y.concat(participantNames)
-
+	let names = participantNames.split(',')
+	console.log('names:', names)
+	let namesClone = participantNames.split(',')
+	let lookingAt = participantLookingAt.split(',')
+	console.log('lookingAt:', lookingAt)
+	let indexOfParticipant = names.indexOf(username)
+	let y = namesClone.splice(indexOfParticipant)
+	participantNamesArray = y.concat(namesClone)
+	names.forEach( function(p, i) {
+		if (names.includes(lookingAt[i])) {
+			lookingAtEnter[p] = participantNamesArray.indexOf(lookingAt[i])
+		} else {
+			lookingAtEnter[p] = -1
+		}
+	} )
+	console.log('participantNamesArray:', participantNamesArray)
+	console.log('lookingAtEnter:', lookingAtEnter)
 }
 
-export { posRot, organiseParticipants }
+export { posRot, organiseParticipants, lookingAtEnter, participantNamesArray }

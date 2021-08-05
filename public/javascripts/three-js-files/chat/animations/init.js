@@ -49,31 +49,11 @@ export default function initAnimations() {
 		scene.add( cameraMeGroup );
 		window.cameraMeGroup = cameraMeGroup
 
-		camera.lookAt(cameraSettings.neutralFocus)
+		//camera.lookAt(cameraSettings.neutralFocus)
 	}
-	window.verticalMirror = verticalMirror
-	for (let k=1; k<noParticipants; k++) {
-		let direction = new THREE.Vector3();
-		let headPos = participants[k].movableBodyParts.head.getWorldPosition(direction)
-		camera.lookAt(headPos)
-		posRot[noParticipants].camera.rotations[k] = {
-			x: camera.rotation.x * 0.075 - 0.075,
-			y: camera.rotation.y * 0.15,
-		}
-	}
-	// look at table
-	let tableDirection = new THREE.Vector3();
-	let tablePos = table.getWorldPosition(tableDirection)
-	camera.lookAt(tablePos)
-	posRot[noParticipants].camera.rotations[-1] = {
-		x: camera.rotation.x * 0.5,
-		y: camera.rotation.y * 0.15,
-	}
-	if ( orbitControls ) {
-		controls = new OrbitControls(camera, renderer.domElement);
-		controls.target.set(0, 1.59, 0);
-		controls.update();
-		window.controls = controls
+	calculateCameraRot();
+	for(let i=0; i<noParticipants; i++) {
+		avatarLookAt(i, participants[i].states.currentlyLookingAt, 1)
 	}
 	if ( randomBlinking ) {
 		beginRandomBlinking();
@@ -81,7 +61,32 @@ export default function initAnimations() {
 	if ( randomSwaying ) {
 		beginRandomSwaying();
 	}
-	allLookAt(-1, false)
 }
 
-export { controls, cameraMeGroup }
+function calculateCameraRot() {
+	for (let k=1; k<noParticipants; k++) {
+		let direction = new THREE.Vector3();
+		let headPos = participants[k].movableBodyParts.head.getWorldPosition(direction)
+		camera.lookAt(headPos)
+		posRot[noParticipants].camera.rotations[k] = {
+			x: camera.rotation.x * 0.075 - 0.075,
+			y: camera.rotation.y * 0.15,
+			z: 0
+		}
+	}
+	posRot[noParticipants].camera.rotations[-1] = {
+		x: -0.2,
+		y: 0,
+		z: 0
+	}
+	if ( orbitControls ) {
+		controls = new OrbitControls(camera, renderer.domElement);
+		controls.target.set(0, 1.59, 0);
+		controls.update();
+		window.controls = controls
+	}
+	let r = posRot[noParticipants].camera.rotations[participants[0].states.currentlyLookingAt]
+	camera.rotation.set(r.x, r.y, r.z)
+}
+
+export { controls, cameraMeGroup, calculateCameraRot }

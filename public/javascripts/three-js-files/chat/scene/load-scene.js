@@ -9,13 +9,14 @@ import setupCamera from "./components/camera.js";
 import setupCameraMe from "./components/cameraMe.js";
 import addTable from "./components/table.js";
 import addAvatar from "../models/components/addAvatar.js"
+import { participantNamesArray } from "./components/pos-rot.js"
 
 let group
 
 export default function loadScene() {
 	group = new THREE.Group();
 	organiseParticipants();
-	setNoParticipants(participantNames.length)
+	setNoParticipants(participantNamesArray.length)
 	calculatePosRot(noParticipants)
 	setupScene();
 	setupCamera();

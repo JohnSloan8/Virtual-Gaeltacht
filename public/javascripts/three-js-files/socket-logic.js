@@ -1,4 +1,6 @@
 import avatarLookAt from "./chat/animations/look.js"
+import { participantNamesArray } from "./chat/scene/components/pos-rot.js"
+import addAvatar from "./chat/models/components/addAvatar.js"
 
 // Create WebSocket connection.
 var socket
@@ -8,6 +10,7 @@ export default function initSocket() {
     socket = new WebSocket('ws://localhost:8080')
     socket.addEventListener('open', function (event) {
         socket.send(JSON.stringify({
+            type: "newConnection",
             newConnection: true,
             name: username,
 			      chatURL: window.location.pathname
@@ -18,8 +21,15 @@ export default function initSocket() {
     socket.addEventListener('message', function (event) {
         let messageData = JSON.parse(event.data)
         console.log('messageData:', messageData)
-        if (messageData.type === "look" ) {
-          avatarLookAt(participantNames.indexOf(messageData.who), participantNames.indexOf(messageData.whom), 500)
+        if (messageData.type === "newConnection" ) {
+          // check if it was not just refresh
+          if (participantNamesArray.indexOf(messageData.name) === -1) {
+            addAvatar(messageData.name)
+          } else {
+            console.log('refresh by:', messageData.name)
+          }
+        } else if (messageData.type === "look" ) {
+          avatarLookAt(participantNamesArray.indexOf(messageData.who), participantNames.indexOf(messageData.whom), 500)
         } else if (messageData.type === "expression" ) {
           expression(participantNames.indexOf(messageData.who), messageData.expression)
         } else if (messageData.type === "gesture" ) {
@@ -29,17 +39,13 @@ export default function initSocket() {
         }
     });
 
-    //const sendMessage = (arrow) => {
-        //socket.send('Hello from C1')
-    //}
-
 }
 
 function sendChangeLook( who, whom ) {
   socket.send( JSON.stringify({
     chatID: window.location.pathname,
     who: username,
-    whom: participantNames[whom] ? participantNames[whom] : "table",
+    whom: participantNamesArray[whom] ? participantNamesArray[whom] : "table",
     type: "look",
     timestamp: new Date()
   }))

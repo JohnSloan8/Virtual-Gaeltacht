@@ -13,6 +13,7 @@ export default function avatarLookAt(who, toWhom, duration) {
 	if ( who === 0 ) {
 		cameraLookAt(toWhom, duration)
 	}
+	console.log('toWhom:', toWhom)
 	let head = new TWEEN.Tween(participants[who].movableBodyParts.head.rotation).to(participants[who].rotations[toWhom].head, 0.8*duration)
 	let spine2 = new TWEEN.Tween(participants[who].movableBodyParts.spine2.rotation).to(participants[who].rotations[toWhom].spine2, 0.9*duration)
 	let spine1 = new TWEEN.Tween(participants[who].movableBodyParts.spine1.rotation).to(participants[who].rotations[toWhom].spine1, duration)
@@ -23,13 +24,14 @@ export default function avatarLookAt(who, toWhom, duration) {
 	spine2.start();
 	spine1.start();
 	participants[who].states.currentlyLookingAt = toWhom
+	console.log('currentlyLookingAt:', participants[who].states.currentlyLookingAt)
 	blink(who, duration*0.0667)
 
 	let direction = new THREE.Vector3();
 	let focalPoint;
 	if (toWhom !== who) {
 		if (toWhom === -1) {
-			focalPoint = table.getWorldPosition(direction)
+			focalPoint = new THREE.Vector3(0, 1.2, 0)
 		} else if (toWhom === 0) {
 			focalPoint = camera.getWorldPosition(direction)
 		} else {

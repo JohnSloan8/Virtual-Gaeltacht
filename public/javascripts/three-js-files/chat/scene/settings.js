@@ -6,7 +6,7 @@ const setNoParticipants = n => {
 const showTable = false
 const showAxesHelper = false
 const showColumn = false
-const showSkeleton = true
+const showSkeleton = false
 const showEntranceAnimation = false
 const showMe = true
 const orbitControls = true
