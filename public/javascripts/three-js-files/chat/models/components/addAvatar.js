@@ -1,6 +1,6 @@
 import calculatePosRot from "../../scene/components/pos-rot.js"
 import table from "../../scene/components/table.js"
-import { posRot, participantNamesArray } from "../../scene/components/pos-rot.js"
+import { posRot, participantNamesArray, findPositionOfNewParticipant, positions } from "../../scene/components/pos-rot.js"
 import { noParticipants, setNoParticipants, cameraSettings } from "../../scene/settings.js"
 import { participants, calculateLookAngles } from "./avatar.js"
 import { camera } from "../../scene/components/camera.js"
@@ -15,6 +15,7 @@ window.addAvatar = addAvatar
 export default function addAvatar(u) {
 	setNoParticipants(noParticipants+1);
 	calculatePosRot(noParticipants);
+	findPositionOfNewParticipant(u)
 	///need to add model first
 	loadIndividualGLTF(u, noParticipants-1, false, function(){
 		moveCameraAndMirror();

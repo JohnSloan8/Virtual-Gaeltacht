@@ -97,6 +97,7 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 			participantLookingAt.push(mostRecentWhom)
 		})
 		console.log('participantNames:', participantNames)
+		console.log('participantLookingAt:', participantLookingAt)
 
 		res.render('chat', {
 			loggedIn: loggedIn(req),

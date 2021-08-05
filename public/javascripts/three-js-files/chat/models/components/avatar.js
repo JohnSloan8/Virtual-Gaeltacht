@@ -65,10 +65,10 @@ function loadIndividualGLTF(avatarName, i, visibility, cb=null) {
 			changingExpression: false,
 			gesturing: false
 		}
-		console.log('avatarName:', avatarName)
-		console.log('lookingAtEnter[avatarName]:', lookingAtEnter[avatarName])
+		//console.log('avatarName:', avatarName)
+		//console.log('lookingAtEnter[avatarName]:', lookingAtEnter[avatarName])
 		participants[i].states.currentlyLookingAt = lookingAtEnter[avatarName]
-		console.log('currentlyLookingAt:', participants[i].states.currentlyLookingAt)
+		//console.log('currentlyLookingAt:', participants[i].states.currentlyLookingAt)
 		participants[i].model = gltf.scene;
 		participants[i].model.visible = visibility
 		participants[i].model.rotation.set(0, posRot[noParticipants][i].neutralYrotation, 0);

@@ -1,4 +1,5 @@
 import { cameraSettings } from "../settings.js"
+import { noParticipants	} from "../../scene/settings.js"
 
 var posRot = {}
 window.posRot = posRot
@@ -55,14 +56,15 @@ export default function calculatePosRot(noP) {
 	return posRot
 }
 
+let names
 let lookingAtEnter = {}
 let participantNamesArray
 function organiseParticipants() {
-	let names = participantNames.split(',')
-	console.log('names:', names)
+	names = participantNames.split(',')
+	//console.log('names:', names)
 	let namesClone = participantNames.split(',')
 	let lookingAt = participantLookingAt.split(',')
-	console.log('lookingAt:', lookingAt)
+	//console.log('lookingAt:', lookingAt)
 	let indexOfParticipant = names.indexOf(username)
 	let y = namesClone.splice(indexOfParticipant)
 	participantNamesArray = y.concat(namesClone)
@@ -73,8 +75,32 @@ function organiseParticipants() {
 			lookingAtEnter[p] = -1
 		}
 	} )
-	console.log('participantNamesArray:', participantNamesArray)
-	console.log('lookingAtEnter:', lookingAtEnter)
+	//console.log('participantNamesArray:', participantNamesArray)
+	//console.log('lookingAtEnter:', lookingAtEnter)
+	participantNamesArray.forEach( function(n, i) {
+		positions[i] = n	
+	})
 }
 
-export { posRot, organiseParticipants, lookingAtEnter, participantNamesArray }
+let positions = {
+
+}
+window.positions = positions
+
+function findPositionOfNewParticipant(u) {
+	names.push(u)
+	let namesClone = [...names]
+	console.log('namesClone:', namesClone)
+	let indexOfParticipant = namesClone.indexOf(username)
+	let y = namesClone.splice(indexOfParticipant)
+	console.log('indexOfParticipant:', indexOfParticipant)
+	let newParticipantNamesArray = y.concat(namesClone)
+	let indexOfNewParticipant = newParticipantNamesArray.indexOf(u)
+	console.log('indexOfNewParticipant:', indexOfNewParticipant)
+	for (let i=noParticipants-1; i>indexOfNewParticipant; i--) {
+		positions[i] = positions[i-1]
+	}
+	positions[indexOfNewParticipant] = u
+}
+
+export { posRot, organiseParticipants, lookingAtEnter, participantNamesArray, names, findPositionOfNewParticipant, positions }

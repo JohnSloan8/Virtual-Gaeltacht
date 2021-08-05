@@ -24,7 +24,6 @@ export default function setupScene() {
 	container.appendChild(stats.dom);
 
 	controlPanelHeight = $('#controlPanel').height()
-	console.log('controlPanelHeight:', controlPanelHeight)
 	resizeFrame()
 
 	if (showAxesHelper) {
