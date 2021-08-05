@@ -6,11 +6,11 @@ import { camera } from "../../scene/components/camera.js";
 import { noParticipants, cameraSettings, showSkeleton } from "../../scene/settings.js"
 import { baseActions, additiveActions } from "../settings.js"
 import { animate } from "../../main.js";
-import { posRot, participantNamesArray } from "../../scene/components/pos-rot.js"
+import { posRot, participantNamesArray, positions, reversePositions } from "../../scene/components/pos-rot.js"
 import initAnimations from '../../animations/init.js'
 import prepareExpressions from '../../animations/morph/prepare.js'
 import { initialiseVisemeMorphIndexes } from "../../animations/settings.js"
-import { lookingAtEnter } from "../../scene/components/pos-rot.js"
+//import { lookingAtEnter } from "../../scene/components/pos-rot.js"
 
 let numAnimations, clip, name, animations, action, gltfLoader, skeleton;
 var participants = {};
@@ -27,7 +27,7 @@ export default function setupAvatar() {
 function iterateAvatar() {
 	if (avatarCount < noParticipants) {
 		let myAvatar = participantNamesArray[avatarCount]
-		loadIndividualGLTF(myAvatar, avatarCount, true, iterateAvatar)
+		loadIndividualGLTF(myAvatar, true, iterateAvatar)
 		avatarCount += 1
 	} else {
 		calculateLookAngles(true);
@@ -47,16 +47,16 @@ function loadModelGLTF(avatarName, cb=null) {
 }
 
 window.loadIndividualGLTF = loadIndividualGLTF
-function loadIndividualGLTF(avatarName, i, visibility, cb=null) {
+function loadIndividualGLTF(avatarName, visibility, cb=null) {
 
 	gltfLoader = new GLTFLoader();
 	//added slash at start cause was getting wrong url
 	gltfLoader.load("/avatars/" + avatarName + ".glb", function(
 		gltf
 	) {
-		participants[i] = {}
-		participants[i].states = {
-			currentlyLookingAt: null,
+		participants[avatarName] = {}
+		participants[avatarName].states = {
+			currentlyLookingAt: 0,
 			previouslyLookingAt: noParticipants-1,
 			expression: 'half_neutral',
 			speaking: false,
@@ -67,49 +67,49 @@ function loadIndividualGLTF(avatarName, i, visibility, cb=null) {
 		}
 		//console.log('avatarName:', avatarName)
 		//console.log('lookingAtEnter[avatarName]:', lookingAtEnter[avatarName])
-		participants[i].states.currentlyLookingAt = lookingAtEnter[avatarName]
-		//console.log('currentlyLookingAt:', participants[i].states.currentlyLookingAt)
-		participants[i].model = gltf.scene;
-		participants[i].model.visible = visibility
-		participants[i].model.rotation.set(0, posRot[noParticipants][i].neutralYrotation, 0);
-		participants[i].model.position.set(posRot[noParticipants][i].x, 0, posRot[noParticipants][i].z);
-		if (i !== 0) {
-			group.add(participants[i].model);
+		//participants[avatarName].states.currentlyLookingAt = lookingAtEnter[avatarName]
+		//console.log('currentlyLookingAt:', participants[avatarName].states.currentlyLookingAt)
+		participants[avatarName].model = gltf.scene;
+		participants[avatarName].model.visible = visibility
+		participants[avatarName].model.rotation.set(0, posRot[noParticipants][reversePositions[avatarName]].neutralYrotation, 0);
+		participants[avatarName].model.position.set(posRot[noParticipants][reversePositions[avatarName]].x, 0, posRot[noParticipants][reversePositions[avatarName]].z);
+		if (avatarName !== username) {
+			group.add(participants[avatarName].model);
 		}
-		participants[i].model.traverse(function(object) {
+		participants[avatarName].model.traverse(function(object) {
 			if (object.isMesh) {
 				object.castShadow = false;
 				object.frustumCulled = false;
 			}
 		});
-		addMovableBodyParts(i)
+		addMovableBodyParts(avatarName)
 
 		if ( showSkeleton ) {
-			skeleton = new THREE.SkeletonHelper(participants[i].model);
+			skeleton = new THREE.SkeletonHelper(participants[avatarName].model);
 			skeleton.visible = true;
 			scene.add(skeleton);
 		}
-		participants[i].mixer = new THREE.AnimationMixer(participants[i].model);
+		participants[avatarName].mixer = new THREE.AnimationMixer(participants[avatarName].model);
 		numAnimations = animations.length;
-		participants[i]['allActions'] = [];
+		participants[avatarName]['allActions'] = [];
 		for (let j = 0; j !== numAnimations; ++j) {
 			clip = animations[j].clone();
 			name = clip.name;
 			if ( baseActions[ name ] ) {
-				const action = participants[i].mixer.clipAction( clip );
+				const action = participants[avatarName].mixer.clipAction( clip );
 				activateAction( action );
 				baseActions[ name ].action = action;
-				participants[i]['allActions'].push(action);
+				participants[avatarName]['allActions'].push(action);
 			} else if ( additiveActions[ name ] ) {
 				// Make the clip additive and remove the reference frame
 				THREE.AnimationUtils.makeClipAdditive( clip );
 				if ( clip.name.endsWith( '_pose' ) ) {
 					clip = THREE.AnimationUtils.subclip( clip, clip.name, 2, 3, 30 );
 				}
-				const action = participants[i].mixer.clipAction( clip );
+				const action = participants[avatarName].mixer.clipAction( clip );
 				activateAction( action );
 				additiveActions[ name ].action = action;
-				participants[i]['allActions'].push(action);
+				participants[avatarName]['allActions'].push(action);
 			}
 		}
 		if (cb) {
@@ -137,28 +137,28 @@ function setWeight( action, weight ) {
 
 }
 
-function addMovableBodyParts(i) {
-	participants[i].movableBodyParts = {}
-	participants[i].model.traverse(function(object) {
+function addMovableBodyParts(avatarName) {
+	participants[avatarName].movableBodyParts = {}
+	participants[avatarName].model.traverse(function(object) {
 		//console.log('name:', object.name)
 		if (object.name === "Head") {
-			participants[i].movableBodyParts.head = object;
+			participants[avatarName].movableBodyParts.head = object;
 		} else if (object.name === "Neck") {
-			participants[i].movableBodyParts.neck = object;
+			participants[avatarName].movableBodyParts.neck = object;
 		} else if (object.name === "Spine1") {
-			participants[i].movableBodyParts.spine1 = object;
+			participants[avatarName].movableBodyParts.spine1 = object;
 		} else if (object.name === "Spine2") {
-			participants[i].movableBodyParts.spine2 = object;
+			participants[avatarName].movableBodyParts.spine2 = object;
 		} else if (object.name === "LeftEye") {
-			participants[i].movableBodyParts.leftEye = object;
+			participants[avatarName].movableBodyParts.leftEye = object;
 		} else if (object.name === "RightEye") {
-			participants[i].movableBodyParts.rightEye = object;
+			participants[avatarName].movableBodyParts.rightEye = object;
 		} else if  (object.name === "Wolf3D_Head") {
-			participants[i].movableBodyParts.face = object;
+			participants[avatarName].movableBodyParts.face = object;
 		} else if  (object.name === "Spine") {
-			participants[i].movableBodyParts.spine = object;
+			participants[avatarName].movableBodyParts.spine = object;
 		} else if  (object.name === "Wolf3D_Teeth") {
-			participants[i].movableBodyParts.teeth = object;
+			participants[avatarName].movableBodyParts.teeth = object;
 		}
 	})
 }
@@ -174,43 +174,45 @@ function calculateLookAngles(firstLoad) {
 		const cubeGroup = new THREE.Group()
 		const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
 		const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-		participants[j].cube = new THREE.Mesh( geometry, material );
+		participants[participantNamesArray[j]].cube = new THREE.Mesh( geometry, material );
 		
 		let direction = new THREE.Vector3();
-		let focalPoint = participants[j].movableBodyParts.head.getWorldPosition(direction)
+		let focalPoint = participants[participantNamesArray[j]].movableBodyParts.head.getWorldPosition(direction)
 		cubeGroup.position.set(focalPoint.x, focalPoint.y, focalPoint.z)
 		cubeGroup.rotation.y = posRot[noParticipants][j].neutralYrotation
-		cubeGroup.add(participants[j].cube)
+		cubeGroup.add(participants[participantNamesArray[j]].cube)
 		//scene.add(cubeGroup)
-		participants[j].rotations =  {}
+		participants[participantNamesArray[j]].rotations =  {}
 		for (let k=-1; k<noParticipants; k++) {
 			if (j===k) {
-				participants[j].rotations[k] = {
+				participants[participantNamesArray[j]].rotations[k] = {
 					head: {x: 0, y: 0, z: 0},
 					spine2: {x: 0, y: 0, z: 0},
 					spine1: {x: 0, y: 0, z: 0}
 				}
 				if (j===0) {
 					let direction = new THREE.Vector3();
-					let headPos = participants[k].movableBodyParts.head.getWorldPosition(direction)
+					let headPos = participants[participantNamesArray[k]].movableBodyParts.head.getWorldPosition(direction)
 					posRot[noParticipants].camera.y = headPos.y + 0.1
 				}
 			} else {
-				participants[j].rotations[k] = {}
+				participants[participantNamesArray[j]].rotations[k] = {}
 				if (k===-1) {
-					participants[j].cube.rotation.x = 0.33
+					participants[participantNamesArray[j]].cube.rotation.x = 0.33
 				} else if (k===0) {
-					participants[j].cube.lookAt(posRot[noParticipants].camera.x, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z)
+					participants[participantNamesArray[j]].cube.lookAt(posRot[noParticipants].camera.x, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z)
 				} else {
 					let direction = new THREE.Vector3();
-					let headPos = participants[k].movableBodyParts.head.getWorldPosition(direction)
-					participants[j].cube.lookAt(headPos)
+					let headPos = participants[participantNamesArray[k]].movableBodyParts.head.getWorldPosition(direction)
+					participants[participantNamesArray[j]].cube.lookAt(headPos)
 				}
-				let yr = participants[j].cube.rotation
+				let yr = participants[participantNamesArray[j]].cube.rotation
+				console.log('noParticipants:', noParticipants)
+				console.log('j:', j)
 				let y0 = posRot[noParticipants][j].neutralYrotation
-				participants[j].rotations[k].head = {x:yr.x*headMult, y:yr.y*headMult, z:yr.z*headMult}
-				participants[j].rotations[k].spine2 = {x:yr.x*spine2Mult, y:yr.y*spine2Mult, z:yr.z*spine2Mult}
-				participants[j].rotations[k].spine1 = {x:yr.x*spine1Mult, y:yr.y*spine1Mult, z:yr.z*spine1Mult}
+				participants[participantNamesArray[j]].rotations[k].head = {x:yr.x*headMult, y:yr.y*headMult, z:yr.z*headMult}
+				participants[participantNamesArray[j]].rotations[k].spine2 = {x:yr.x*spine2Mult, y:yr.y*spine2Mult, z:yr.z*spine2Mult}
+				participants[participantNamesArray[j]].rotations[k].spine1 = {x:yr.x*spine1Mult, y:yr.y*spine1Mult, z:yr.z*spine1Mult}
 			}
 		}
 	}

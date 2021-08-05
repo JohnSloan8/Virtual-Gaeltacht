@@ -1,15 +1,15 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { noParticipants } from "../../scene/settings.js"
 import { participants } from "../../models/components/avatar.js"
-import { posRot } from "../../scene/components/pos-rot.js"
+import { participantNamesArray, posRot } from "../../scene/components/pos-rot.js"
 import { table } from "../../scene/components/table.js"
 import avatarLookAt from "../look.js"
 import { sendChangeLook } from '../../../socket-logic.js'
 
 window.cameraLookAt = cameraLookAt
 function cameraLookAt(toWhom, duration) {
-  for (let i=1; i<noParticipants; i++) {
-    participants[i].model.traverse(function(object) {
+  for (let i=1; i<participantNamesArray.length; i++) {
+    participants[participantNamesArray[i]].model.traverse(function(object) {
       if (object.isMesh) {
         if (object.name !== "Wolf3D_Glasses") {
           if (i !== toWhom) {
@@ -80,7 +80,7 @@ function lookControl(who, k) {
   }
   if (participants[who].states.previouslyLookingAt !== -1 && k === 'ArrowUp' ) { 
   } else {
-    avatarLookAt( 0, participants[who].states.currentlyLookingAt, 500 )
+    avatarLookAt( participantNamesArray[0], participants[who].states.currentlyLookingAt, 500 )
     sendChangeLook( who, participants[who].states.currentlyLookingAt )
   }
 }

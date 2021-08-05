@@ -40,11 +40,11 @@ export default function initAnimations() {
 		} );
 		verticalMirror.position.set(0, posRot[noParticipants].camera.y, 0);
 		verticalMirror.rotation.x = -0.05
-		participants[0].model.position.z = participant0ZOffset
+		participants[participantNamesArray[0]].model.position.z = participant0ZOffset
 		cameraMeGroup = new THREE.Group()
 		cameraMeGroup.add(cameraMe)
 		cameraMeGroup.add(verticalMirror)
-		cameraMeGroup.add(participants[0].model)
+		cameraMeGroup.add(participants[participantNamesArray[0]].model)
 		cameraMeGroup.position.z = camera.position.z
 		scene.add( cameraMeGroup );
 		window.cameraMeGroup = cameraMeGroup
@@ -52,8 +52,8 @@ export default function initAnimations() {
 		//camera.lookAt(cameraSettings.neutralFocus)
 	}
 	calculateCameraRot();
-	for(let i=0; i<noParticipants; i++) {
-		avatarLookAt(i, participants[i].states.currentlyLookingAt, 1)
+	for(let i=0; i<participantNamesArray.length; i++) {
+		avatarLookAt(participantNamesArray[i], participants[participantNamesArray[i]].states.currentlyLookingAt, 1)
 	}
 	if ( randomBlinking ) {
 		beginRandomBlinking();
@@ -66,7 +66,7 @@ export default function initAnimations() {
 function calculateCameraRot() {
 	for (let k=1; k<noParticipants; k++) {
 		let direction = new THREE.Vector3();
-		let headPos = participants[k].movableBodyParts.head.getWorldPosition(direction)
+		let headPos = participants[participantNamesArray[k]].movableBodyParts.head.getWorldPosition(direction)
 		camera.lookAt(headPos)
 		posRot[noParticipants].camera.rotations[k] = {
 			x: camera.rotation.x * 0.075 - 0.075,
@@ -85,7 +85,7 @@ function calculateCameraRot() {
 		controls.update();
 		window.controls = controls
 	}
-	let r = posRot[noParticipants].camera.rotations[participants[0].states.currentlyLookingAt]
+	let r = posRot[noParticipants].camera.rotations[participants[participantNamesArray[0]].states.currentlyLookingAt]
 	camera.rotation.set(r.x, r.y, r.z)
 }
 
