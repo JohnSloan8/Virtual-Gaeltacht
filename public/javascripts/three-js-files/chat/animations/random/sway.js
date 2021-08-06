@@ -2,13 +2,14 @@ import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tw
 import easingDict from "../easings.js"
 import { participants } from "../../models/components/avatar.js"
 import { noParticipants } from "../../scene/settings.js"
+import { participantNamesArray } from "../../scene/components/pos-rot.js"
 
 window.beginRandomSwaying = beginRandomSwaying
 export default function beginRandomSwaying() {
-	for (let par=0; par<noParticipants; par++) {
+	participantNamesArray.forEach(function(par) {
 		randomSway(par);
 		randomNeckTurn(par);
-	}
+	})
 }
 
 function randomSway(who, direction=1) {

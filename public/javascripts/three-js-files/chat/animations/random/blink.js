@@ -1,11 +1,12 @@
 import blink from "../morph/blink.js"
 import { noParticipants } from "../../scene/settings.js"
+import { participantNamesArray } from "../../scene/components/pos-rot.js"
 
 window.beginRandomBlinking = beginRandomBlinking
 export default function beginRandomBlinking() {
-	for (let par=0; par<noParticipants; par++) {
+	participantNamesArray.forEach(function(par) {
 		randomBlink(par)
-	}
+	})
 }
 
 window.randomBlink = randomBlink

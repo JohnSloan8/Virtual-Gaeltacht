@@ -29,13 +29,13 @@ export default function initSocket() {
             console.log('refresh by:', messageData.name)
           }
         } else if (messageData.type === "look" ) {
-          avatarLookAt(participantNamesArray.indexOf(messageData.who), participantNames.indexOf(messageData.whom), 500)
+          avatarLookAt(messageData.who, messageData.whom, 500)
         } else if (messageData.type === "expression" ) {
-          expression(participantNames.indexOf(messageData.who), messageData.expression)
+          expression(messageData.who, messageData.expression)
         } else if (messageData.type === "gesture" ) {
-          gesture(participantNames.indexOf(messageData.who), messageData.gesture, 2000)
+          gesture(messageData.who, messageData.gesture, 2000)
         } else if (messageData.type === "nodShake" ) {
-          avatarNodShake(participantNames.indexOf(messageData.who), messageData.nodShake)
+          avatarNodShake(messageData.who, messageData.nodShake)
         }
     });
 
@@ -45,7 +45,7 @@ function sendChangeLook( who, whom ) {
   socket.send( JSON.stringify({
     chatID: window.location.pathname,
     who: username,
-    whom: participantNamesArray[whom] ? participantNamesArray[whom] : "table",
+    whom: whom,
     type: "look",
     timestamp: new Date()
   }))

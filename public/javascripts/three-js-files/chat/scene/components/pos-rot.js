@@ -56,8 +56,11 @@ export default function calculatePosRot(noP) {
 	return posRot
 }
 
-//let lookingAtEnter = {}
 let names
+let lookingAtEnter = {}
+let positions = {}
+let reversePositions = {}
+window.positions = positions
 let participantNamesArray
 function organiseParticipants() {
 	names = participantNames.split(',')
@@ -66,49 +69,45 @@ function organiseParticipants() {
 	let lookingAt = participantLookingAt.split(',')
 	console.log('lookingAt:', lookingAt)
 	let indexOfParticipant = names.indexOf(username)
+
 	let y = namesClone.splice(indexOfParticipant)
 	participantNamesArray = y.concat(namesClone)
+	window.participantNamesArray = participantNamesArray
+	calculatePositions();
+	names.forEach( function(p, i) {
+		if (names.includes(lookingAt[i])) {
+			lookingAtEnter[p] = lookingAt[i]
+		} else {
+			if (participantNamesArray.length === 1) {
+				lookingAtEnter[p] = p
+			} else if (names[0] === p) {
+				lookingAtEnter[p] = names[1]
+			} else {
+				lookingAtEnter[p] = names[0]
+			}
+		}
+	})
+}
+
+function calculatePositions() {
 	participantNamesArray.forEach( function(n, i) {
 		positions[i] = n	
 		reversePositions[n] = i	
 	})
-	window.participantNamesArray = participantNamesArray
+	console.log('positions:', positions)
 }
-	//names.forEach( function(p, i) {
-		//if (names.includes(lookingAt[i])) {
-			//lookingAtEnter[p] = participantNamesArray.indexOf(lookingAt[i])
-		//} else {
-			//lookingAtEnter[p] = -1
-		//}
-	//} )
- // //console.log('participantNamesArray:', participantNamesArray)
-	//console.log('lookingAtEnter:', lookingAtEnter)
-	//participantNamesArray.forEach( function(n, i) {
-		//positions[i] = n	
-	//})
-//}
 
-let positions = {
-
+function findPositionOfNewParticipant(u) {
+	names.push(u)
+	let namesClone = [...names]
+	console.log('namesClone:', namesClone)
+	let indexOfParticipant = namesClone.indexOf(username)
+	let y = namesClone.splice(indexOfParticipant)
+	console.log('indexOfParticipant:', indexOfParticipant)
+	participantNamesArray = y.concat(namesClone)
+	let indexOfNewParticipant = participantNamesArray.indexOf(u)
+	console.log('indexOfNewParticipant:', indexOfNewParticipant)
+	calculatePositions();
 }
-let reversePositions = {
 
-}
-window.positions = positions
-
-//function findPositionOfNewParticipant(u) {
-	//names.push(u)
-	//let namesClone = [...names]
-	//console.log('namesClone:', namesClone)
-	//let indexOfParticipant = namesClone.indexOf(username)
-	//let y = namesClone.splice(indexOfParticipant)
-	//console.log('indexOfParticipant:', indexOfParticipant)
-	//let newParticipantNamesArray = y.concat(namesClone)
-	//let indexOfNewParticipant = newParticipantNamesArray.indexOf(u)
-	//console.log('indexOfNewParticipant:', indexOfNewParticipant)
-	//for (let i=noParticipants-1; i>indexOfNewParticipant; i--) {
-		//positions[i] = positions[i-1]
-	//}
-	//positions[indexOfNewParticipant] = u
-//}
-export { posRot, organiseParticipants, participantNamesArray, positions, reversePositions }
+export { posRot, organiseParticipants, participantNamesArray, positions, reversePositions, lookingAtEnter, names, findPositionOfNewParticipant }

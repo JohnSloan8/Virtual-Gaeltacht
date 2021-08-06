@@ -6,7 +6,7 @@ import { camera } from "../../scene/components/camera.js";
 import { noParticipants, cameraSettings, showSkeleton } from "../../scene/settings.js"
 import { baseActions, additiveActions } from "../settings.js"
 import { animate } from "../../main.js";
-import { posRot, participantNamesArray, positions, reversePositions } from "../../scene/components/pos-rot.js"
+import { posRot, participantNamesArray, positions, reversePositions, lookingAtEnter } from "../../scene/components/pos-rot.js"
 import initAnimations from '../../animations/init.js'
 import prepareExpressions from '../../animations/morph/prepare.js'
 import { initialiseVisemeMorphIndexes } from "../../animations/settings.js"
@@ -56,8 +56,8 @@ function loadIndividualGLTF(avatarName, visibility, cb=null) {
 	) {
 		participants[avatarName] = {}
 		participants[avatarName].states = {
-			currentlyLookingAt: 0,
-			previouslyLookingAt: noParticipants-1,
+			currentlyLookingAt: lookingAtEnter[avatarName],
+			previouslyLookingAt: null,
 			expression: 'half_neutral',
 			speaking: false,
 			speakingViseme: null,
@@ -71,8 +71,8 @@ function loadIndividualGLTF(avatarName, visibility, cb=null) {
 		//console.log('currentlyLookingAt:', participants[avatarName].states.currentlyLookingAt)
 		participants[avatarName].model = gltf.scene;
 		participants[avatarName].model.visible = visibility
-		participants[avatarName].model.rotation.set(0, posRot[noParticipants][reversePositions[avatarName]].neutralYrotation, 0);
-		participants[avatarName].model.position.set(posRot[noParticipants][reversePositions[avatarName]].x, 0, posRot[noParticipants][reversePositions[avatarName]].z);
+		participants[avatarName].model.rotation.set(0, posRot[participantNamesArray.length][reversePositions[avatarName]].neutralYrotation, 0);
+		participants[avatarName].model.position.set(posRot[participantNamesArray.length][reversePositions[avatarName]].x, 0, posRot[participantNamesArray.length][reversePositions[avatarName]].z);
 		if (avatarName !== username) {
 			group.add(participants[avatarName].model);
 		}
@@ -164,58 +164,41 @@ function addMovableBodyParts(avatarName) {
 }
 
 function calculateLookAngles(firstLoad) {
-	let headMult = 0.3;
-	let spine2Mult = 0.2;
-	let spine1Mult = 0.2;
-	//let xMult = 1
-	//let yMult = 1; //more rotation in y axis - avatars not leaning over each other!
-	//let zMult = 1;
-	for (let j=0; j<noParticipants; j++) {
+	let cameraDirection = new THREE.Vector3();
+	let myHeadPos = participants[username].movableBodyParts.head.getWorldPosition(cameraDirection)
+	posRot[participantNamesArray.length].camera.y = myHeadPos.y + 0.1
+	
+	let headMult = 0.2;
+	let spine2Mult = 0.05;
+	let spine1Mult = 0.05;
+	participantNamesArray.forEach(function(p) {
 		const cubeGroup = new THREE.Group()
 		const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
 		const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-		participants[participantNamesArray[j]].cube = new THREE.Mesh( geometry, material );
+		participants[p].cube = new THREE.Mesh( geometry, material );
 		
 		let direction = new THREE.Vector3();
-		let focalPoint = participants[participantNamesArray[j]].movableBodyParts.head.getWorldPosition(direction)
+		let focalPoint = participants[p].movableBodyParts.head.getWorldPosition(direction)
 		cubeGroup.position.set(focalPoint.x, focalPoint.y, focalPoint.z)
-		cubeGroup.rotation.y = posRot[noParticipants][j].neutralYrotation
-		cubeGroup.add(participants[participantNamesArray[j]].cube)
-		//scene.add(cubeGroup)
-		participants[participantNamesArray[j]].rotations =  {}
-		for (let k=-1; k<noParticipants; k++) {
-			if (j===k) {
-				participants[participantNamesArray[j]].rotations[k] = {
-					head: {x: 0, y: 0, z: 0},
-					spine2: {x: 0, y: 0, z: 0},
-					spine1: {x: 0, y: 0, z: 0}
-				}
-				if (j===0) {
-					let direction = new THREE.Vector3();
-					let headPos = participants[participantNamesArray[k]].movableBodyParts.head.getWorldPosition(direction)
-					posRot[noParticipants].camera.y = headPos.y + 0.1
-				}
-			} else {
-				participants[participantNamesArray[j]].rotations[k] = {}
-				if (k===-1) {
-					participants[participantNamesArray[j]].cube.rotation.x = 0.33
-				} else if (k===0) {
-					participants[participantNamesArray[j]].cube.lookAt(posRot[noParticipants].camera.x, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z)
-				} else {
-					let direction = new THREE.Vector3();
-					let headPos = participants[participantNamesArray[k]].movableBodyParts.head.getWorldPosition(direction)
-					participants[participantNamesArray[j]].cube.lookAt(headPos)
-				}
-				let yr = participants[participantNamesArray[j]].cube.rotation
-				console.log('noParticipants:', noParticipants)
-				console.log('j:', j)
-				let y0 = posRot[noParticipants][j].neutralYrotation
-				participants[participantNamesArray[j]].rotations[k].head = {x:yr.x*headMult, y:yr.y*headMult, z:yr.z*headMult}
-				participants[participantNamesArray[j]].rotations[k].spine2 = {x:yr.x*spine2Mult, y:yr.y*spine2Mult, z:yr.z*spine2Mult}
-				participants[participantNamesArray[j]].rotations[k].spine1 = {x:yr.x*spine1Mult, y:yr.y*spine1Mult, z:yr.z*spine1Mult}
+		cubeGroup.rotation.y = posRot[participantNamesArray.length][participantNamesArray.indexOf(p)].neutralYrotation
+		cubeGroup.add(participants[p].cube)
+		participants[p].rotations =  {}
+		participantNamesArray.forEach(function(q) {
+			let direction
+			let	headPos
+			if (q!==p) {	
+				direction = new THREE.Vector3();
+				headPos = participants[q].movableBodyParts.head.getWorldPosition(direction)
+				participants[p].cube.lookAt(headPos)
+				participants[p].rotations[q] = {}
+				let yr = participants[p].cube.rotation
+				let y0 = posRot[participantNamesArray.length][reversePositions[p]].neutralYrotation
+				participants[p].rotations[q].head = {x:yr.x*headMult, y:yr.y*headMult*2, z:yr.z*headMult}
+				participants[p].rotations[q].spine2 = {x:yr.x*spine2Mult, y:yr.y*spine2Mult*2, z:yr.z*spine2Mult}
+				participants[p].rotations[q].spine1 = {x:yr.x*spine1Mult, y:yr.y*spine1Mult*2, z:yr.z*spine1Mult}
 			}
-		}
-	}
+		})
+	})
 
   if (firstLoad) {
 		initialiseVisemeMorphIndexes();

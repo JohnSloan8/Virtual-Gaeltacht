@@ -14,6 +14,7 @@ import beginRandomBlinking from "./random/blink.js"
 import beginRandomSwaying from "./random/sway.js"
 import { participant0ZOffset, cameraMeOffset, /*verticalMirrorOffset,*/ initialiseVisemeMorphIndexes, randomBlinking, randomSwaying } from "./settings.js"
 import { table } from "../scene/components/table.js"
+import { participantNamesArray } from "../scene/components/pos-rot.js"
 
 let controls, verticalMirror, cameraMeGroup
 
@@ -52,9 +53,9 @@ export default function initAnimations() {
 		//camera.lookAt(cameraSettings.neutralFocus)
 	}
 	calculateCameraRot();
-	for(let i=0; i<participantNamesArray.length; i++) {
-		avatarLookAt(participantNamesArray[i], participants[participantNamesArray[i]].states.currentlyLookingAt, 1)
-	}
+	participantNamesArray.forEach(function(p) {
+		avatarLookAt(p, participants[p].states.currentlyLookingAt, 1)
+	})
 	if ( randomBlinking ) {
 		beginRandomBlinking();
 	}
@@ -64,21 +65,16 @@ export default function initAnimations() {
 }
 
 function calculateCameraRot() {
-	for (let k=1; k<noParticipants; k++) {
+	participantNamesArray.forEach(function(p) {
 		let direction = new THREE.Vector3();
-		let headPos = participants[participantNamesArray[k]].movableBodyParts.head.getWorldPosition(direction)
+		let headPos = participants[p].movableBodyParts.head.getWorldPosition(direction)
 		camera.lookAt(headPos)
-		posRot[noParticipants].camera.rotations[k] = {
+		posRot[participantNamesArray.length].camera.rotations[p] = {
 			x: camera.rotation.x * 0.075 - 0.075,
 			y: camera.rotation.y * 0.15,
 			z: 0
 		}
-	}
-	posRot[noParticipants].camera.rotations[-1] = {
-		x: -0.2,
-		y: 0,
-		z: 0
-	}
+	})
 	if ( orbitControls ) {
 		controls = new OrbitControls(camera, renderer.domElement);
 		controls.target.set(0, 1.59, 0);

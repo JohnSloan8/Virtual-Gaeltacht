@@ -12,9 +12,9 @@ import { sendExpression } from '../../../socket-logic.js'
 
 window.allExpression = allExpression
 function allExpression(e) {
-	for (let i=1; i<noParticipants; i++) {
-		expression(i, e)
-	}
+	participantNamesArray.forEach(function(p) {
+		expression(p, e)
+	})
 }
 
 window.expression = expression

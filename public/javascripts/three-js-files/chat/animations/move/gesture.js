@@ -8,7 +8,7 @@ import { sendGesture } from '../../../socket-logic.js'
 window.gesture = gesture
 export default function gesture(who, gestureName, duration) {
 
-	if ( who !== 0 ) {
+	if ( who !== username ) {
 		duration *= 0.7
 	}
 	console.log('who:', who)

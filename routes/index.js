@@ -160,7 +160,6 @@ wss.on('connection', function connection(ws) {
 					timestamp: new Date(data.timestamp)
 				})
 				c.save();
-				console.log('nodShake updated')
 			}
 		}
 	});

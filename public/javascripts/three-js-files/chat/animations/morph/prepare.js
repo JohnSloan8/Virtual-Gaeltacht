@@ -13,38 +13,42 @@ let lenMorphs
 export default function prepareExpressions() {
 
 	addHalfAndBlinkExpressions();
-	for(let i=0; i<participantNamesArray.length; i++) {
-		Object.entries(expressionMorphs).forEach( function(e) {
-			let lengthArray = participants[participantNamesArray[i]].movableBodyParts.face.morphTargetInfluences.length
-			participants[participantNamesArray[i]].movableBodyParts.face.morphTargetDictionary[e[0]] = lengthArray
-			Object.entries(e[1]).forEach( function(m, ind) {
-				let morphId = participants[participantNamesArray[i]].movableBodyParts.face.morphTargetDictionary[m[0]]
-				let copyPosition = participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.position[morphId].array.map(function(n) {
-					return n * m[1]
-				}) 
-				let copyNormal = participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.normal[morphId].array.map(function(o) {
-					return o * m[1]
-				}) 
-
-				if (ind===0) {
-					const newMorphTargetPosition = new THREE.Float32BufferAttribute( copyPosition, 3 );
-					const newMorphTargetNormal = new THREE.Float32BufferAttribute( copyNormal, 3 );
-					participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.position = [...participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.position, newMorphTargetPosition]
-					participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.normal = [...participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.normal, newMorphTargetNormal]
-					participants[participantNamesArray[i]].movableBodyParts.face.morphTargetInfluences = [...participants[participantNamesArray[i]].movableBodyParts.face.morphTargetInfluences, 0]
-				} else {
-					participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.position[lengthArray].array = participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.position[lengthArray].array.map(function(num, idx) {
-						return num + copyPosition[idx]
-					}) 
-					participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.normal[lengthArray].array = participants[participantNamesArray[i]].movableBodyParts.face.geometry.morphAttributes.normal[lengthArray].array.map(function(num, idx) {
-						return num + copyNormal[idx]
-					}) 
-				}
-			})
-		})
-	}
+	participantNamesArray.forEach(function(p) {
+		createExpressions(p)
+	})
 	lenMorphs = participants[participantNamesArray[0]].movableBodyParts.face.morphTargetInfluences.length
 
+}
+
+function createExpressions(p) {
+	Object.entries(expressionMorphs).forEach( function(e) {
+		let lengthArray = participants[p].movableBodyParts.face.morphTargetInfluences.length
+		participants[p].movableBodyParts.face.morphTargetDictionary[e[0]] = lengthArray
+		Object.entries(e[1]).forEach( function(m, ind) {
+			let morphId = participants[p].movableBodyParts.face.morphTargetDictionary[m[0]]
+			let copyPosition = participants[p].movableBodyParts.face.geometry.morphAttributes.position[morphId].array.map(function(n) {
+				return n * m[1]
+			}) 
+			let copyNormal = participants[p].movableBodyParts.face.geometry.morphAttributes.normal[morphId].array.map(function(o) {
+				return o * m[1]
+			}) 
+
+			if (ind===0) {
+				const newMorphTargetPosition = new THREE.Float32BufferAttribute( copyPosition, 3 );
+				const newMorphTargetNormal = new THREE.Float32BufferAttribute( copyNormal, 3 );
+				participants[p].movableBodyParts.face.geometry.morphAttributes.position = [...participants[p].movableBodyParts.face.geometry.morphAttributes.position, newMorphTargetPosition]
+				participants[p].movableBodyParts.face.geometry.morphAttributes.normal = [...participants[p].movableBodyParts.face.geometry.morphAttributes.normal, newMorphTargetNormal]
+				participants[p].movableBodyParts.face.morphTargetInfluences = [...participants[p].movableBodyParts.face.morphTargetInfluences, 0]
+			} else {
+				participants[p].movableBodyParts.face.geometry.morphAttributes.position[lengthArray].array = participants[p].movableBodyParts.face.geometry.morphAttributes.position[lengthArray].array.map(function(num, idx) {
+					return num + copyPosition[idx]
+				}) 
+				participants[p].movableBodyParts.face.geometry.morphAttributes.normal[lengthArray].array = participants[p].movableBodyParts.face.geometry.morphAttributes.normal[lengthArray].array.map(function(num, idx) {
+					return num + copyNormal[idx]
+				}) 
+			}
+		})
+	})
 }
 
 function addHalfAndBlinkExpressions() {
@@ -68,4 +72,4 @@ function addHalfAndBlinkExpressions() {
 	})
 }
 
-export {expressionMorphs, lenMorphs}
+export {expressionMorphs, lenMorphs, createExpressions}
