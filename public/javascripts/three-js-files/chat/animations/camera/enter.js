@@ -7,9 +7,11 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.mod
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { setEntranceAnimationPlaying } from "../../scene/settings.js"
 import { verticalMirror } from "../init.js"
+import { sendNewParticipantEnter } from "../../../socket-logic.js"
 
 window.cameraEnter = cameraEnter
 export default function cameraEnter(amount=0.7, duration=3000, easing="cubicIn") {
+	sendNewParticipantEnter(username)
 	let direction = new THREE.Vector3();
 	let headPos = participants[username].movableBodyParts.head.getWorldPosition(direction)
 	let cameraEnterRotateTween = new TWEEN.Tween(centralPivotGroup.rotation).to({y: -Math.PI}, duration)

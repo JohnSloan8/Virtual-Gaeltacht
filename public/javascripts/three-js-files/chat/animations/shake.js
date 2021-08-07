@@ -43,7 +43,7 @@ export default function avatarNodShake(who, nodShake) {
 
 		let direction = new THREE.Vector3();
 		let focalPoint;
-		if (participants[who].states.currentlyLookingAt === 0) {
+		if (participants[who].states.currentlyLookingAt === participantNamesArray[0]) {
 			focalPoint = camera.getWorldPosition(direction)
 		} else {
 			focalPoint = participants[participants[who].states.currentlyLookingAt].movableBodyParts.head.getWorldPosition(direction)

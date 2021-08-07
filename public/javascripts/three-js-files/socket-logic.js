@@ -21,12 +21,12 @@ export default function initSocket() {
     socket.addEventListener('message', function (event) {
         let messageData = JSON.parse(event.data)
         console.log('messageData:', messageData)
-        if (messageData.type === "newConnection" ) {
+        if (messageData.type === "newParticipantEnter" ) {
           // check if it was not just refresh
           if (participantNamesArray.indexOf(messageData.name) === -1) {
-            addAvatar(messageData.name)
+            addAvatar(messageData.who)
           } else {
-            console.log('refresh by:', messageData.name)
+            console.log('already in names:', messageData.name)
           }
         } else if (messageData.type === "look" ) {
           avatarLookAt(messageData.who, messageData.whom, 500)
@@ -81,4 +81,14 @@ function sendNodShake( who, nodShake ) {
   }))
 }
 
-export { sendChangeLook, sendExpression, sendGesture, sendNodShake }
+function sendNewParticipantEnter( who ) {
+  socket.send( JSON.stringify({
+    chatID: window.location.pathname,
+    who: username,
+    newParticipant: true,
+    type: "newParticipantEnter",
+    timestamp: new Date()
+  }))
+}
+
+export { sendChangeLook, sendExpression, sendGesture, sendNodShake, sendNewParticipantEnter }

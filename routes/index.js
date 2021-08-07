@@ -74,6 +74,7 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 	let uname = req.user.name
 	let c = await Chat.findOne({chatURL: req.params.id})
 	if (c) {
+		let firstEnter = false
 		let thisParticipant = c.participants.find(p => p.name === uname )
 		if (thisParticipant === undefined || thisParticipant.endTime !== null) {
 			c.participants.push({
@@ -81,6 +82,7 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 				endTime: null
 			})
 			c.save();
+			firstEnter = true
 		}
 
 		currentParticipants = c.participants.filter(p => p.endTime === null )
@@ -96,15 +98,14 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 			participantNames.push(p.name)
 			participantLookingAt.push(mostRecentWhom)
 		})
-		console.log('participantNames:', participantNames)
-		console.log('participantLookingAt:', participantLookingAt)
 
 		res.render('chat', {
 			loggedIn: loggedIn(req),
 			name: uname,
 			participantNames: participantNames,
 			participantLookingAt: participantLookingAt,
-			host: c.createdBy
+			host: c.createdBy,
+			firstEnter: firstEnter
 		})
 	} else {
 		req.flash('error_msg', `the conversation ${req.params.id} does not exist`)
@@ -118,9 +119,10 @@ wss.on('connection', function connection(ws) {
   ws.on('message', async function incoming(message) {
 		let data = JSON.parse(message)
 		console.log('message: ', message)
-		if ( data.newConnection ) {
-			console.log('new connection')
+		if ( data.newConnection === true ) {
 			c = await Chat.findOne({chatURL: path.basename(data.chatURL)})
+		} else if ( data.newParticipant === true ) {
+			console.log('new participant')
 			wss.clients.forEach(function each(client) {
 				if (client !== ws && client.readyState === WebSocket.OPEN) {
 					client.send(message);

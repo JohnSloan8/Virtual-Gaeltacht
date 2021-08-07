@@ -7,8 +7,7 @@ const showTable = false
 const showAxesHelper = false
 const showColumn = false
 const showSkeleton = false
-const showEntranceAnimation = true
-var entranceAnimationPlaying
+var entranceAnimationPlaying = false
 function setEntranceAnimationPlaying(tF) {
 	entranceAnimationPlaying = tF
 }
@@ -94,7 +93,6 @@ export {
 	showAxesHelper,
 	showColumn,
 	showSkeleton,
-	showEntranceAnimation,
 	showMe,
 	orbitControls,
 	background,

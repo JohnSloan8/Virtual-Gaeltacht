@@ -5,9 +5,9 @@ import avatarLookAt from "./look.js"
 import cameraLookAt from "./camera/keyboard.js"
 import createKeyBindings from "./camera/keyboard.js"
 import createClickActions from "./click/main.js"
-import { showEntranceAnimation, setEntranceAnimationPlaying, showMe, noParticipants, cameraSettings, orbitControls } from "../scene/settings.js"
+import { entranceAnimationPlaying, setEntranceAnimationPlaying, showMe, noParticipants, cameraSettings, orbitControls } from "../scene/settings.js"
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
-import { renderer, scene, windowWidth, windowHeight } from "../scene/components/scene.js"
+import { renderer, scene, windowWidth, windowHeight, onWindowResize } from "../scene/components/scene.js"
 import { camera } from "../scene/components/camera.js"
 import { cameraMe } from "../scene/components/cameraMe.js"
 import beginRandomBlinking from "./random/blink.js"
@@ -21,13 +21,13 @@ let controls, verticalMirror, cameraMeGroup
 export default function initAnimations() {
 	createKeyBindings();
 	createClickActions();
-	if ( showEntranceAnimation ) {
-		setEntranceAnimationPlaying(true)
+	if ( entranceAnimationPlaying ) {
 		camera.position.set(posRot[participantNamesArray.length].cameraStart.position.x, posRot[participantNamesArray.length].cameraStart.position.y, posRot[participantNamesArray.length].camera.z+1);
 		addCameraMeGroup(false, true);
 		setTimeout(cameraEnter, 500);
 	} else {
-		setEntranceAnimationPlaying(false)
+		$('#controlPanelOverlay').show()
+		onWindowResize();
 		camera.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z);
 		// cameraMe
 		addCameraMeGroup(true, false);

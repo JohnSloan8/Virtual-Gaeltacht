@@ -8,29 +8,33 @@ import { sendChangeLook } from '../../../socket-logic.js'
 
 window.cameraLookAt = cameraLookAt
 function cameraLookAt(toWhom, duration) {
-  participantNamesArray.forEach(function(p) {
-    participants[p].model.traverse(function(object) {
-      if (object.isMesh) {
-        if (object.name !== "Wolf3D_Glasses") {
-          if (p !== toWhom) {
-            object.material.color = {
-              r: 0.667,
-              g: 0.667,
-              b: 0.667,
-              isColor: true
-            }
-          } else {
-            object.material.color = {
-              r: 1.33,
-              g: 1.33,
-              b: 1.33,
-              isColor: true
+  try {
+    participantNamesArray.forEach(function(p) {
+      participants[p].model.traverse(function(object) {
+        if (object.isMesh) {
+          if (object.name !== "Wolf3D_Glasses") {
+            if (p !== toWhom) {
+              object.material.color = {
+                r: 0.667,
+                g: 0.667,
+                b: 0.667,
+                isColor: true
+              }
+            } else {
+              object.material.color = {
+                r: 1.33,
+                g: 1.33,
+                b: 1.33,
+                isColor: true
+              }
             }
           }
         }
-      }
-    });
-  })
+      });
+    })
+  } catch {
+    console.log('model not available')
+  }
   let cameraTweenRotation = new TWEEN.Tween(camera.rotation).to(posRot[participantNamesArray.length].camera.rotations[toWhom], duration)
     .easing(TWEEN.Easing.Quintic.Out)
   cameraTweenRotation.start()
