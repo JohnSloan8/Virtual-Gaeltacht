@@ -7,7 +7,6 @@ var mouthedVisemes = []
 var easings = []
 var participant0ZOffset = 0.5
 var	cameraMeOffset = 0.05
-//var verticalMirrorOffset = 1.9
 
 function initialiseVisemeMorphIndexes() {
 	Object.entries(participants[participantNamesArray[0]].movableBodyParts.face.morphTargetDictionary).forEach(function (e) {

@@ -75,4 +75,4 @@ function resizeFrame() {
 	})
 }
 
-export { scene, renderer, clock, container, stats, windowWidth, windowHeight, controlPanelHeight }
+export { scene, renderer, clock, container, stats, windowWidth, windowHeight, controlPanelHeight, onWindowResize }

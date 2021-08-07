@@ -5,7 +5,7 @@ import avatarLookAt from "./look.js"
 import cameraLookAt from "./camera/keyboard.js"
 import createKeyBindings from "./camera/keyboard.js"
 import createClickActions from "./click/main.js"
-import { showEntranceAnimation, showMe, noParticipants, cameraSettings, orbitControls } from "../scene/settings.js"
+import { showEntranceAnimation, setEntranceAnimationPlaying, showMe, noParticipants, cameraSettings, orbitControls } from "../scene/settings.js"
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
 import { renderer, scene, windowWidth, windowHeight } from "../scene/components/scene.js"
 import { camera } from "../scene/components/camera.js"
@@ -22,34 +22,15 @@ export default function initAnimations() {
 	createKeyBindings();
 	createClickActions();
 	if ( showEntranceAnimation ) {
-		camera.position.set(posRot[noParticipants].cameraStart.position.x, posRot[noParticipants].cameraStart.position.y, posRot[noParticipants].cameraStart.position.z);
-		setTimeout(cameraEnter, 1000);
+		setEntranceAnimationPlaying(true)
+		camera.position.set(posRot[participantNamesArray.length].cameraStart.position.x, posRot[participantNamesArray.length].cameraStart.position.y, posRot[participantNamesArray.length].camera.z+1);
+		addCameraMeGroup(false, true);
+		setTimeout(cameraEnter, 500);
 	} else {
-		if ( !showMe ) {
-			participants[0].model.visible = false
-		}
+		setEntranceAnimationPlaying(false)
 		camera.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z);
-
 		// cameraMe
-		cameraMe.position.set(0, posRot[noParticipants].camera.y-0.1, cameraMeOffset);
-		let geometry = new THREE.PlaneGeometry( 2, 2 );
-		verticalMirror = new Reflector( geometry, {
-			clipBias: 0.003,
-			textureWidth: windowWidth * window.devicePixelRatio,
-			textureHeight: windowHeight * window.devicePixelRatio,
-			color: 0x889999
-		} );
-		verticalMirror.position.set(0, posRot[noParticipants].camera.y, 0);
-		verticalMirror.rotation.x = -0.05
-		participants[participantNamesArray[0]].model.position.z = participant0ZOffset
-		cameraMeGroup = new THREE.Group()
-		cameraMeGroup.add(cameraMe)
-		cameraMeGroup.add(verticalMirror)
-		cameraMeGroup.add(participants[participantNamesArray[0]].model)
-		cameraMeGroup.position.z = camera.position.z
-		scene.add( cameraMeGroup );
-		window.cameraMeGroup = cameraMeGroup
-
+		addCameraMeGroup(true, false);
 		//camera.lookAt(cameraSettings.neutralFocus)
 	}
 	calculateCameraRot();
@@ -85,4 +66,30 @@ function calculateCameraRot() {
 	camera.rotation.set(r.x, r.y, r.z)
 }
 
-export { controls, cameraMeGroup, calculateCameraRot }
+function addCameraMeGroup(mirrorVisible, entrance) {
+	cameraMe.position.set(0, posRot[noParticipants].camera.y-0.1, cameraMeOffset);
+	let geometry = new THREE.PlaneGeometry( 2, 2 );
+	verticalMirror = new Reflector( geometry, {
+		clipBias: 0.003,
+		textureWidth: windowWidth * window.devicePixelRatio,
+		textureHeight: windowHeight * window.devicePixelRatio,
+		color: 0x889999
+	} );
+	verticalMirror.visible = mirrorVisible
+	verticalMirror.position.set(0, posRot[noParticipants].camera.y, 0);
+	verticalMirror.rotation.x = -0.05
+	participants[participantNamesArray[0]].model.position.z = participant0ZOffset
+	cameraMeGroup = new THREE.Group()
+	cameraMeGroup.add(cameraMe)
+	cameraMeGroup.add(verticalMirror)
+	cameraMeGroup.add(participants[participantNamesArray[0]].model)
+	if (entrance) {
+		cameraMeGroup.position.z = camera.position.z + 3
+	} else {
+		cameraMeGroup.position.z = camera.position.z
+	}
+	scene.add( cameraMeGroup );
+	window.cameraMeGroup = cameraMeGroup
+}
+
+export { controls, cameraMeGroup, calculateCameraRot, verticalMirror }
