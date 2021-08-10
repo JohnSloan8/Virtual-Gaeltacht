@@ -1,6 +1,35 @@
 <link href="/css/chat.css" rel="stylesheet">
 <div id="threeCanvas" style="position:absolute; height: 100%; width: 100%; z-index: -1; left: 0; top: 0;"></div>
 <div id="blackOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 101; left: 0; top: 0; background-color: black; display: none"></div>
+<div id="loadOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 102; left: 0; top: 0; display: none">
+	<div class="d-flex align-items-center justify-content-center" style="position:absolute; height: 100%; width: 100%; z-index: 103; left: 0; top: 0;">
+		<h3>loading conversation, please wait a moment...</h3>
+	</div>
+</div>
+<div id="waitOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 103; left: 0; top: 0; display: none;">
+	<div class="d-flex align-items-center justify-content-center" style="position:absolute; height: 100%; width: 100%; z-index: 103; left: 0; top: 0;">
+		<h3>waiting for the host to let you in</h3>
+	</div>	
+</div>
+<div id="allowEntry" style="position:absolute; z-index: 104; right: 2px; top: 50px; display: none;">
+	<div class="card text-white bg-secondary mb-2" style="max-width: 20rem;">
+  <div class="card-header">Waiting Room</div>
+  <div class="card-body">
+		<h4 class="card-title d-flex justify-content-center" id="whoIsWaiting"></h4>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm d-flex justify-content-center">
+					<a href="#" class="btn btn-lg btn-success btn-block admit-refuse" id="admit">Admit</a>
+				</div>
+				<div class="col-sm d-flex justify-content-center">
+					<a href="#" class="btn btn-lg btn-danger btn-block admit-refuse" id="refuse">Refuse</a>
+				</div>
+			</div>
+		</div>
+
+  </div>
+</div>
+</div>
 <div id="controlPanelOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 100; left: 0; top: 0; display: none;">
 	<div class="frame frameSide bg-dark" id="frameLeftSkew"></div>
 	<div class="frame frameSide bg-dark" id="frameLeft"></div>

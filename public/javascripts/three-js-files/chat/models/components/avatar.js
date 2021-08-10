@@ -71,8 +71,6 @@ function loadIndividualGLTF(avatarName, visibility, cb=null) {
 		//console.log('currentlyLookingAt:', participants[avatarName].states.currentlyLookingAt)
 		participants[avatarName].model = gltf.scene;
 		participants[avatarName].model.visible = visibility
-		participants[avatarName].model.rotation.set(0, posRot[participantNamesArray.length][reversePositions[avatarName]].neutralYrotation, 0);
-		participants[avatarName].model.position.set(posRot[participantNamesArray.length][reversePositions[avatarName]].x, 0, posRot[participantNamesArray.length][reversePositions[avatarName]].z);
 		if (avatarName !== username) {
 			group.add(participants[avatarName].model);
 		}
@@ -83,7 +81,7 @@ function loadIndividualGLTF(avatarName, visibility, cb=null) {
 			}
 		});
 		addMovableBodyParts(avatarName)
-
+		setPosRotOfAvatar(avatarName)
 		if ( showSkeleton ) {
 			skeleton = new THREE.SkeletonHelper(participants[avatarName].model);
 			skeleton.visible = true;
@@ -114,10 +112,15 @@ function loadIndividualGLTF(avatarName, visibility, cb=null) {
 		}
 		if (cb) {
 			//console.log('in callback')
-			cb();
+			cb(avatarName);
 		}
 	});
 
+}
+
+function setPosRotOfAvatar(avatarName) {
+	participants[avatarName].model.rotation.set(0, posRot[participantNamesArray.length][reversePositions[avatarName]].neutralYrotation, 0);
+	participants[avatarName].model.position.set(posRot[participantNamesArray.length][reversePositions[avatarName]].x, 0, posRot[participantNamesArray.length][reversePositions[avatarName]].z);
 }
 
 function activateAction( action ) {

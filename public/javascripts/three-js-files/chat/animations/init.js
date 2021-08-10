@@ -15,10 +15,14 @@ import beginRandomSwaying from "./random/sway.js"
 import { participant0ZOffset, cameraMeOffset, /*verticalMirrorOffset,*/ initialiseVisemeMorphIndexes, randomBlinking, randomSwaying } from "./settings.js"
 import { table } from "../scene/components/table.js"
 import { participantNamesArray } from "../scene/components/pos-rot.js"
+import { displayWaitingList } from "../../socket-logic.js"
 
 let controls, verticalMirror, cameraMeGroup
 
 export default function initAnimations() {
+	if (firstEnter === "true") {
+		setEntranceAnimationPlaying(true)
+	}
 	createKeyBindings();
 	createClickActions();
 	if ( entranceAnimationPlaying ) {
@@ -42,6 +46,9 @@ export default function initAnimations() {
 	}
 	if ( randomSwaying ) {
 		beginRandomSwaying();
+	}
+	if (host === username) {
+		displayWaitingList();
 	}
 }
 

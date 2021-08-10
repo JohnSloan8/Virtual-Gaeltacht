@@ -14,6 +14,11 @@ function setEntranceAnimationPlaying(tF) {
 const showMe = true
 const orbitControls = true
 	
+var chat = {
+	waitingList: []
+}
+window.chat = chat
+
 const background = {
 	displayGround: true,
 	displayFog: true,
@@ -99,6 +104,7 @@ export {
 	showShadows,
 	cameraSettings,
 	entranceAnimationPlaying,
-	setEntranceAnimationPlaying
+	setEntranceAnimationPlaying,
+	chat
 }
 

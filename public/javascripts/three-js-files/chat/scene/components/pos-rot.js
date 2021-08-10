@@ -67,12 +67,11 @@ function organiseParticipants() {
 	console.log('names:', names)
 	let namesClone = participantNames.split(',')
 	let lookingAt = participantLookingAt.split(',')
-	console.log('lookingAt:', lookingAt)
+	//console.log('lookingAt:', lookingAt)
 	let indexOfParticipant = names.indexOf(username)
 
 	let y = namesClone.splice(indexOfParticipant)
 	participantNamesArray = y.concat(namesClone)
-	window.participantNamesArray = participantNamesArray
 	calculatePositions();
 	names.forEach( function(p, i) {
 		if (names.includes(lookingAt[i])) {
@@ -94,19 +93,21 @@ function calculatePositions() {
 		positions[i] = n	
 		reversePositions[n] = i	
 	})
-	console.log('positions:', positions)
+	//console.log('positions:', positions)
 }
 
 function findPositionOfNewParticipant(u) {
 	names.push(u)
+	//console.log('names:', names)
 	let namesClone = [...names]
-	console.log('namesClone:', namesClone)
+	//console.log('namesClone:', namesClone)
 	let indexOfParticipant = namesClone.indexOf(username)
 	let y = namesClone.splice(indexOfParticipant)
-	console.log('indexOfParticipant:', indexOfParticipant)
+	//console.log('indexOfParticipant:', indexOfParticipant)
 	participantNamesArray = y.concat(namesClone)
+	//console.log('participantNamesArray:', participantNamesArray)
 	let indexOfNewParticipant = participantNamesArray.indexOf(u)
-	console.log('indexOfNewParticipant:', indexOfNewParticipant)
+	//console.log('indexOfNewParticipant:', indexOfNewParticipant)
 	calculatePositions();
 }
 

@@ -77,11 +77,13 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 		let firstEnter = false
 		let thisParticipant = c.participants.find(p => p.name === uname )
 		if (thisParticipant === undefined || thisParticipant.endTime !== null) {
-			c.participants.push({
-				name: uname,
-				endTime: null
-			})
-			c.save();
+			if (uname === c.createdBy) {
+				c.participants.push({
+					name: uname,
+					endTime: null
+				})
+				c.save();
+			}
 			firstEnter = true
 		}
 
@@ -119,10 +121,44 @@ wss.on('connection', function connection(ws) {
   ws.on('message', async function incoming(message) {
 		let data = JSON.parse(message)
 		console.log('message: ', message)
-		if ( data.newConnection === true ) {
+		if ( data.newConnection ) {
 			c = await Chat.findOne({chatURL: path.basename(data.chatURL)})
+			let waitingListArray = createWaitingListArray(c)
+			if (c.createdBy === data.name) {
+				data['waitingList'] = waitingListArray
+				ws.send(JSON.stringify(data))
+			} else {
+				ws.send(message)
+			}
+		} else if ( data.requestEnter ) {
+			if (!c.waitingList.some(n => n.name === data.who)) {
+				c.waitingList.push({name: data.who})
+				c.save()
+			}
+			data['waitingListArray'] = createWaitingListArray(c)
+			wss.clients.forEach(function each(client) {
+				if (client !== ws && client.readyState === WebSocket.OPEN) {
+					client.send(JSON.stringify(data));
+				}
+			});
+		} else if ( data.admitRefuse === true ) {
+			let newParticipant = c.waitingList.shift()
+			if (data.admit) {
+				c.participants.push({
+					name: newParticipant.name,
+					endTime: null
+				})
+			}
+			c.save()
+			console.log('after shift:', c.waitingList)
+			data['waitingListArray'] = createWaitingListArray(c)
+			data['newParticipant'] = newParticipant.name
+			wss.clients.forEach(function each(client) {
+				if (client.readyState === WebSocket.OPEN) {
+					client.send(JSON.stringify(data));
+				}
+			});
 		} else if ( data.newParticipant === true ) {
-			console.log('new participant')
 			wss.clients.forEach(function each(client) {
 				if (client !== ws && client.readyState === WebSocket.OPEN) {
 					client.send(message);
@@ -168,6 +204,12 @@ wss.on('connection', function connection(ws) {
 
 });
 
-
+function createWaitingListArray(c) {
+	let waitingListArray = []
+	c.waitingList.forEach(function(p) {
+		waitingListArray.push(p.name)
+	})
+	return waitingListArray
+}
 
 module.exports = router

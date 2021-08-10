@@ -12,20 +12,18 @@ import { createExpressions } from "../../animations/morph/prepare.js"
 import { participant0ZOffset, cameraMeOffset/*, verticalMirrorOffset*/} from "../../animations/settings.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
+import { displayWaitingList } from "../../../socket-logic.js"
 
 window.addAvatar = addAvatar
-var newParticipant
 export default function addAvatar(u) {
-	newParticipant = u
 	setNoParticipants(participantNamesArray.length+1);
 	findPositionOfNewParticipant(u)
 	calculatePosRot(participantNamesArray.length);
 	///need to add model first
-	loadIndividualGLTF(u, false, function(){
-		moveCameraAndMirror();
+	loadIndividualGLTF(u, false, function(u){
+		moveCameraAndMirror(u);
 		moveAvatarsController();
 		calculateCameraRot()
-		//resizeTable();
 	})
 }
 
@@ -51,16 +49,16 @@ const moveAvatar = n => {
 	rotateAvatarTween.start()
 }
 
-function moveCameraAndMirror() {
+function moveCameraAndMirror(u) {
 	let newCameraZPos = {z: posRot[participantNamesArray.length].camera.z}
 	let moveCameraTween = new TWEEN.Tween(camera.position).to(newCameraZPos, 1000).easing(TWEEN.Easing.Quintic.Out)
 	moveCameraTween.start()
 	cameraMeGroup.position.z = newCameraZPos.z
 	moveCameraTween.onComplete(function(object) {
 		calculateLookAngles(false)
-		createExpressions(newParticipant)
-		avatarLookAt(newParticipant, names[0], 1)
-		newAvatarEnter()
+		createExpressions(u)
+		avatarLookAt(u, names[0], 1)
+		newAvatarEnter(u)
 	})
 }
 
@@ -70,29 +68,35 @@ function resizeTable() {
 	scaleTableTween.start()
 }
 
-function newAvatarEnter() {
-	participants[newParticipant].model.position.set(posRot[participantNamesArray.length][reversePositions[newParticipant]].x*10, 0, posRot[participantNamesArray.length][reversePositions[newParticipant]].z*10);
+function newAvatarEnter(u) {
+	participants[u].model.position.set(posRot[participantNamesArray.length][reversePositions[u]].x*10, 0, posRot[participantNamesArray.length][reversePositions[u]].z*10);
 	let newAvatarFinalPos = {
-		x: posRot[participantNamesArray.length][reversePositions[newParticipant]].x, 
+		x: posRot[participantNamesArray.length][reversePositions[u]].x, 
 		y: 0,
-		z: posRot[participantNamesArray.length][reversePositions[newParticipant]].z
+		z: posRot[participantNamesArray.length][reversePositions[u]].z
 	}
-	let enterAvatarTween = new TWEEN.Tween(participants[newParticipant].model.position).to(newAvatarFinalPos, 3000)
+	let enterAvatarTween = new TWEEN.Tween(participants[u].model.position).to(newAvatarFinalPos, 3000)
 	enterAvatarTween.easing(TWEEN.Easing.Quintic.Out)
 	enterAvatarTween.start()
 	setTimeout(function(){
-		participants[newParticipant].model.visible = true
+		participants[u].model.visible = true
 	}, 100)
 	let focalPoint = camera.getWorldPosition(new THREE.Vector3)
 	enterAvatarTween.onUpdate(function (object) {
-		participants[newParticipant].movableBodyParts.leftEye.lookAt(focalPoint)
-		participants[newParticipant].movableBodyParts.rightEye.lookAt(focalPoint)
+		participants[u].movableBodyParts.leftEye.lookAt(focalPoint)
+		participants[u].movableBodyParts.rightEye.lookAt(focalPoint)
 	})
 	enterAvatarTween.onComplete( function() {
-		randomSway(newParticipant)
-		randomNeckTurn(newParticipant)
-		randomBlink(newParticipant)
+		randomSway(u)
+		randomNeckTurn(u)
+		randomBlink(u)
+		if (username === host) {
+    	chat.newParticipantEntering = false;
+			displayWaitingList()
+			if (participantNamesArray.length === 2) {
+				avatarLookAt(host, u, 5000)
+			}
+		}
 	} )
 }
-
 

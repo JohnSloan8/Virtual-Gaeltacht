@@ -17,22 +17,18 @@ import cameraEnter from "./animations/camera/enter.js"
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { mouth } from './animations/random/mouth.js'
 import initSocket from '../socket-logic.js'
-import { entranceAnimationPlaying, setEntranceAnimationPlaying } from "./scene/settings.js"
+import { entranceAnimationPlaying } from "./scene/settings.js"
 
 setAvatarNo();
 
 window.setAvatarNo = setAvatarNo
 function setAvatarNo() {
 	initSocket();
-	init();
 }
 
 function init() {
 	loadScene()
 	loadModels();
-	if (firstEnter === "true") {
-		setEntranceAnimationPlaying(true)
-	}
 }
 
 function animate() {
@@ -64,4 +60,4 @@ function animate() {
 	requestAnimationFrame(animate);
 }
 
-export { animate }
+export { animate, init }

@@ -21,6 +21,7 @@ export default function prepareExpressions() {
 }
 
 function createExpressions(p) {
+	console.log('p:', p)
 	Object.entries(expressionMorphs).forEach( function(e) {
 		let lengthArray = participants[p].movableBodyParts.face.morphTargetInfluences.length
 		participants[p].movableBodyParts.face.morphTargetDictionary[e[0]] = lengthArray

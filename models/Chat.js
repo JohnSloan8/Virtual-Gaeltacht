@@ -14,6 +14,13 @@ const ChatSchema = new mongoose.Schema({
 		}, 
 		endTime: Date
 	}],
+	waitingList: [{
+		name: String,
+		requestTime: {
+			type: Date, 
+			default: Date.now
+		} 
+	}],
 	lookingAt: [{
 		who: String,
 		whom: String,
