@@ -1,3 +1,4 @@
+<%- include('./partials/overlays') %>
 <link href="/css/chat.css" rel="stylesheet">
 <div id="threeCanvas" style="position:absolute; height: 100%; width: 100%; z-index: -1; left: 0; top: 0;"></div>
 <div id="blackOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 101; left: 0; top: 0; background-color: black; display: none"></div>
@@ -11,6 +12,8 @@
 		<h3>waiting for the host to let you in</h3>
 	</div>	
 </div>
+<p id="host" style="position: absolute; top: 5px; right: 120px; display: none">host</p>
+<a href="#" data-toggle="modal" data-target="#leaveChatModal" style="position: absolute; top: 5px; right: 5px; width: 100px;" class="btn btn-sm btn-danger btn-block">Leave</a>
 <div id="allowEntry" style="position:absolute; z-index: 104; right: 2px; top: 50px; display: none;">
 	<div class="card text-white bg-secondary mb-2" style="max-width: 20rem;">
   <div class="card-header">Waiting Room</div>
@@ -30,7 +33,7 @@
   </div>
 </div>
 </div>
-<div id="controlPanelOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 100; left: 0; top: 0; display: none;">
+<div id="controlPanelOverlay" style="position:absolute; height: 0%; width: 100%; z-index: 100; left: 0; bottom: 0; display: none;">
 	<div class="frame frameSide bg-dark" id="frameLeftSkew"></div>
 	<div class="frame frameSide bg-dark" id="frameLeft"></div>
 	<div class="frame frameSide bg-dark" id="frameRightSkew"></div>

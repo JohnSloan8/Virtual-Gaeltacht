@@ -21,6 +21,7 @@ import { entranceAnimationPlaying } from "./scene/settings.js"
 
 setAvatarNo();
 
+$('#navbar').hide()
 window.setAvatarNo = setAvatarNo
 function setAvatarNo() {
 	initSocket();

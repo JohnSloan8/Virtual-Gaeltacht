@@ -7,6 +7,7 @@ export default function addTable() {
 	table = includeTable(cameraSettings[noParticipants].radius, 32, 0)
 	window.table = table
 	group.add( table );
+	window.group = group
 }
 
 function includeTable( rad, sides, zRot ) {

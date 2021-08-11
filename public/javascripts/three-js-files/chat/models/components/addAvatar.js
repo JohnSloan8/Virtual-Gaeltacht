@@ -1,6 +1,6 @@
 import calculatePosRot from "../../scene/components/pos-rot.js"
 import table from "../../scene/components/table.js"
-import { posRot, participantNamesArray, names, findPositionOfNewParticipant, reversePositions } from "../../scene/components/pos-rot.js"
+import { posRot, participantNamesArray, names, findPositionOfNewParticipant, positions, reversePositions } from "../../scene/components/pos-rot.js"
 import { noParticipants, setNoParticipants, cameraSettings } from "../../scene/settings.js"
 import { participants, calculateLookAngles } from "./avatar.js"
 import { camera } from "../../scene/components/camera.js"
@@ -34,19 +34,24 @@ const moveAvatarsController = () => {
 }
 
 const moveAvatar = n => {
-	let newXZPos = {
-		x: posRot[participantNamesArray.length][reversePositions[n]].x,
-		z: posRot[participantNamesArray.length][reversePositions[n]].z
+	if (reversePositions[n] !== 0) {
+		console.log('moving:', n)
+		let newXZPos = {
+			x: posRot[participantNamesArray.length][reversePositions[n]].x,
+			z: posRot[participantNamesArray.length][reversePositions[n]].z
+		}
+		let newYRot = {
+			y: posRot[participantNamesArray.length][reversePositions[n]].neutralYrotation
+		}
+		let moveAvatarTween = new TWEEN.Tween(participants[n].model.position).to(newXZPos, 1000)
+		let rotateAvatarTween = new TWEEN.Tween(participants[n].model.rotation).to(newYRot, 1000)
+		moveAvatarTween.easing(TWEEN.Easing.Quintic.Out)
+		rotateAvatarTween.easing(TWEEN.Easing.Quintic.Out)
+		moveAvatarTween.start()
+		rotateAvatarTween.start()
+		moveAvatarTween.onComplete(function(object) {
+		})
 	}
-	let newYRot = {
-		y: posRot[participantNamesArray.length][reversePositions[n]].neutralYrotation
-	}
-	let moveAvatarTween = new TWEEN.Tween(participants[n].model.position).to(newXZPos, 1000)
-	let rotateAvatarTween = new TWEEN.Tween(participants[n].model.rotation).to(newYRot, 1000)
-	moveAvatarTween.easing(TWEEN.Easing.Quintic.Out)
-	rotateAvatarTween.easing(TWEEN.Easing.Quintic.Out)
-	moveAvatarTween.start()
-	rotateAvatarTween.start()
 }
 
 function moveCameraAndMirror(u) {
@@ -100,3 +105,4 @@ function newAvatarEnter(u) {
 	} )
 }
 
+export {moveAvatar, moveAvatarsController}

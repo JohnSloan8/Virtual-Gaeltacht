@@ -5,7 +5,7 @@ import avatarLookAt from "./look.js"
 import cameraLookAt from "./camera/keyboard.js"
 import createKeyBindings from "./camera/keyboard.js"
 import createClickActions from "./click/main.js"
-import { entranceAnimationPlaying, setEntranceAnimationPlaying, showMe, noParticipants, cameraSettings, orbitControls } from "../scene/settings.js"
+import { entranceAnimationPlaying, setEntranceAnimationPlaying, showMe, cameraSettings, orbitControls } from "../scene/settings.js"
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
 import { renderer, scene, windowWidth, windowHeight, onWindowResize } from "../scene/components/scene.js"
 import { camera } from "../scene/components/camera.js"
@@ -32,7 +32,7 @@ export default function initAnimations() {
 	} else {
 		$('#controlPanelOverlay').show()
 		onWindowResize();
-		camera.position.set(0, posRot[noParticipants].camera.y, posRot[noParticipants].camera.z);
+		camera.position.set(0, posRot[participantNamesArray.length].camera.y, posRot[participantNamesArray.length].camera.z);
 		// cameraMe
 		addCameraMeGroup(true, false);
 		//camera.lookAt(cameraSettings.neutralFocus)
@@ -48,6 +48,7 @@ export default function initAnimations() {
 		beginRandomSwaying();
 	}
 	if (host === username) {
+		$('#host').show()
 		displayWaitingList();
 	}
 }
@@ -67,14 +68,14 @@ function calculateCameraRot() {
 		controls = new OrbitControls(camera, renderer.domElement);
 		controls.target.set(0, 1.59, 0);
 		controls.update();
-		window.controls = controls
 	}
-	let r = posRot[noParticipants].camera.rotations[participants[participantNamesArray[0]].states.currentlyLookingAt]
+	console.log('participantNamesArray init.js 71:', participantNamesArray)
+	let r = posRot[participantNamesArray.length].camera.rotations[participants[participantNamesArray[0]].states.currentlyLookingAt]
 	camera.rotation.set(r.x, r.y, r.z)
 }
 
 function addCameraMeGroup(mirrorVisible, entrance) {
-	cameraMe.position.set(0, posRot[noParticipants].camera.y-0.1, cameraMeOffset);
+	cameraMe.position.set(0, posRot[participantNamesArray.length].camera.y-0.1, cameraMeOffset);
 	let geometry = new THREE.PlaneGeometry( 2, 2 );
 	verticalMirror = new Reflector( geometry, {
 		clipBias: 0.003,
@@ -83,7 +84,7 @@ function addCameraMeGroup(mirrorVisible, entrance) {
 		color: 0x889999
 	} );
 	verticalMirror.visible = mirrorVisible
-	verticalMirror.position.set(0, posRot[noParticipants].camera.y, 0);
+	verticalMirror.position.set(0, posRot[participantNamesArray.length].camera.y, 0);
 	verticalMirror.rotation.x = -0.05
 	participants[participantNamesArray[0]].model.position.z = participant0ZOffset
 	cameraMeGroup = new THREE.Group()

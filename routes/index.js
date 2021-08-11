@@ -48,7 +48,9 @@ router.post('/createChat', ensureAuthenticated, (req, res) => {
 		const newChat = new Chat({
 			chatURL: randomURL,
 			createdBy: req.user.name,
-			lookingAt: []
+			host: req.user.name,
+			lookingAt: [],
+			participants: []
 		})
 		newChat.save()
 			.then(user => {
@@ -75,9 +77,10 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 	let c = await Chat.findOne({chatURL: req.params.id})
 	if (c) {
 		let firstEnter = false
-		let thisParticipant = c.participants.find(p => p.name === uname )
-		if (thisParticipant === undefined || thisParticipant.endTime !== null) {
-			if (uname === c.createdBy) {
+		currentParticipants = c.participants.filter(p => p.endTime === null )
+		let thisParticipant = c.participants.find(p => p.name === uname && p.endTime === null)
+		if (thisParticipant === undefined) {
+			if (uname === c.createdBy && c.participants.length === 0) {
 				c.participants.push({
 					name: uname,
 					endTime: null
@@ -87,11 +90,9 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 			firstEnter = true
 		}
 
-		currentParticipants = c.participants.filter(p => p.endTime === null )
-
 		participantNames = []
 		participantLookingAt = []
-		currentParticipants.forEach(function (p) {
+		c.participants.forEach(function (p) {
 			let personLookingAtAll = c.lookingAt.filter(lA => lA.who === p.name)
 			let mostRecentWhom = null
 			if (personLookingAtAll.length > 0) {
@@ -101,12 +102,13 @@ router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
 			participantLookingAt.push(mostRecentWhom)
 		})
 
+		console.log('participantNames:', participantNames)
 		res.render('chat', {
 			loggedIn: loggedIn(req),
 			name: uname,
 			participantNames: participantNames,
 			participantLookingAt: participantLookingAt,
-			host: c.createdBy,
+			host: c.host,
 			firstEnter: firstEnter
 		})
 	} else {
@@ -124,7 +126,7 @@ wss.on('connection', function connection(ws) {
 		if ( data.newConnection ) {
 			c = await Chat.findOne({chatURL: path.basename(data.chatURL)})
 			let waitingListArray = createWaitingListArray(c)
-			if (c.createdBy === data.name) {
+			if (c.host === data.name) {
 				data['waitingList'] = waitingListArray
 				ws.send(JSON.stringify(data))
 			} else {
@@ -162,6 +164,28 @@ wss.on('connection', function connection(ws) {
 			wss.clients.forEach(function each(client) {
 				if (client !== ws && client.readyState === WebSocket.OPEN) {
 					client.send(message);
+				}
+			});
+		} else if ( data.removeParticipant === true ) {
+			let p = c.participants.find(e => e.name === data.who)
+			p.endTime = Date.now()
+			c.save()
+			ws.close()
+			let currentParticipants = c.participants.filter(p => p.endTime === null )
+			if (currentParticipants.length > 0) {
+				c.host = currentParticipants[0].name
+			}
+			c.save()
+			let participantNames = ""
+			currentParticipants.forEach(function(p) {
+				participantNames += p.name + ","
+			})
+			participantNames = participantNames.slice(0, participantNames.length - 1)
+			data['participantNames'] = participantNames
+			data['host'] = c.host
+			wss.clients.forEach(function each(client) {
+				if ( client.readyState === WebSocket.OPEN) {
+					client.send(JSON.stringify(data));
 				}
 			});
 		} else {

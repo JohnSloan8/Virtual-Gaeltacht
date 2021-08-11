@@ -1,5 +1,5 @@
 import { participants } from "../models/components/avatar.js"
-import { posRot } from "../scene/components/pos-rot.js"
+import { posRot, participantNamesArray } from "../scene/components/pos-rot.js"
 import { camera } from "../scene/components/camera.js";
 import { noParticipants } from "../scene/settings.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
@@ -13,9 +13,10 @@ export default function avatarLookAt(who, toWhom, duration) {
 	if ( who === username ) {
 		cameraLookAt(toWhom, duration)
 	}
-	//console.log('who:', who)
-	//console.log('toWhom:', toWhom)
-	if (who !== toWhom && toWhom !== null) {
+	if (!participantNamesArray.includes(toWhom)) {
+		toWhom = positions[0]
+	}
+	if (who !== toWhom && toWhom !== null	&& toWhom !== undefined) {
 		let head = new TWEEN.Tween(participants[who].movableBodyParts.head.rotation).to(participants[who].rotations[toWhom].head, 0.8*duration)
 		let spine2 = new TWEEN.Tween(participants[who].movableBodyParts.spine2.rotation).to(participants[who].rotations[toWhom].spine2, 0.9*duration)
 		let spine1 = new TWEEN.Tween(participants[who].movableBodyParts.spine1.rotation).to(participants[who].rotations[toWhom].spine1, duration)

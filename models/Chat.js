@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const ChatSchema = new mongoose.Schema({
 	chatURL: String,
 	createdBy: String,
+	host: String,
 	startDate: {
 		type: Date,
 		default: Date.now

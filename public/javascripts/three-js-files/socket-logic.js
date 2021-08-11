@@ -1,6 +1,7 @@
 import avatarLookAt from "./chat/animations/look.js"
 import { participantNamesArray } from "./chat/scene/components/pos-rot.js"
 import addAvatar from "./chat/models/components/addAvatar.js"
+import removeAvatar from "./chat/models/components/removeAvatar.js"
 import { init } from "./chat/main.js"
 import { chat } from "./chat/scene/settings.js"
 
@@ -25,6 +26,7 @@ export default function initSocket() {
     console.log('messageData:', messageData)
     if (messageData.type === "newConnection" ) {
       chat.waitingList = messageData.waitingList
+      setUpLeaveEvent();
       if ( host === username || firstEnter !== "true" ) {
         init()
       } else {
@@ -56,13 +58,27 @@ export default function initSocket() {
         }
         if (host === username) {
           $('#allowEntry').hide();
-          chat.newParticipantEntering = true;
+          if (!chat.participantLeaving) {
+            chat.newParticipantEntering = true;
+          } 
         } 
       } else {
         if (host === username) {
           chat.newParticipantEntering = false;
           displayWaitingList();
         } 
+      }
+    } else if (messageData.type === "removeParticipant" ) {
+      if (username === messageData.who) {
+        window.location.href = '/dashboard'
+      } else {
+        //participantNames = messageData.participantNames
+        host = messageData.host
+        if (username === host) {
+          alert('you are the new host')
+          $('#host').show()
+        }
+        removeAvatar(messageData.who)
       }
     } else if (participantNamesArray !== undefined) {
 
@@ -174,4 +190,23 @@ function admitRefuse(aR) {
   }))
 }
 
-export { displayWaitingList, sendChangeLook, sendExpression, sendGesture, sendNodShake, sendNewParticipantEnter }
+function setUpLeaveEvent() {
+  console.log('setting up leave Event')
+  $('#leaveButton').on('click', function(e) {
+    e.preventDefault()
+  	removeParticipant(username)
+  })
+}
+
+function removeParticipant(u) {
+  console.log('in removeParticipant')
+  socket.send(JSON.stringify({
+    chatID: window.location.pathname,
+    who: u,
+    removeParticipant: true,
+    type: "removeParticipant",
+    timestamp: new Date()
+  }))
+}
+
+export { displayWaitingList, sendChangeLook, sendExpression, sendGesture, sendNodShake, sendNewParticipantEnter, removeParticipant }
