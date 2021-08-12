@@ -57,6 +57,7 @@ app.use(express.static('public'))
 // ROUTES
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
+app.use('/web-sockets/chat', require('./routes/web-sockets/chat'))
 
 const PORT = process.env.PORT || 5000
 

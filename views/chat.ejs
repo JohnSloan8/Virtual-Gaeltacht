@@ -2,14 +2,14 @@
 <link href="/css/chat.css" rel="stylesheet">
 <div id="threeCanvas" style="position:absolute; height: 100%; width: 100%; z-index: -1; left: 0; top: 0;"></div>
 <div id="blackOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 101; left: 0; top: 0; background-color: black; display: none"></div>
-<div id="loadOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 102; left: 0; top: 0; display: none">
+<div id="loadOverlay" class="bg-secondary" style="position:absolute; height: 100%; width: 100%; z-index: 103; left: 0; top: 0;">
 	<div class="d-flex align-items-center justify-content-center" style="position:absolute; height: 100%; width: 100%; z-index: 103; left: 0; top: 0;">
-		<h3>loading conversation, please wait a moment...</h3>
-	</div>
+		<h3 id="loadingText">Initialising...</h3>
+	</div>	
 </div>
-<div id="waitOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 103; left: 0; top: 0; display: none;">
+<div id="waitOverlay" class="bg-secondary" style="position:absolute; height: 100%; width: 100%; z-index: 104; left: 0; top: 0; display: none">
 	<div class="d-flex align-items-center justify-content-center" style="position:absolute; height: 100%; width: 100%; z-index: 103; left: 0; top: 0;">
-		<h3>waiting for the host to let you in</h3>
+		<h3 id="waitingText"></h3>
 	</div>	
 </div>
 <p id="host" style="position: absolute; top: 5px; right: 120px; display: none">host</p>
@@ -78,12 +78,9 @@
 		</div>
 	</div>
 </div>
-<script src="/javascripts/three-js-files/chat/main.js" type="module"></script>
+<script src="/javascript/setup/chat/init.js" type="module"></script>
 <script>
-	var participantNames = "<%= participantNames %>"
-	var participantLookingAt = "<%= participantLookingAt %>"
 	var username = "<%- name %>"
-	var host = "<%- host %>"
-	var firstEnter = "<%- firstEnter %>"
+	document.getElementById('navbar').style.visibility = 'hidden'
 </script>
 
