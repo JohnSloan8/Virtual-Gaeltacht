@@ -37,6 +37,10 @@ export default function initAnimations() {
 		addCameraMeGroup(true, false);
 		//camera.lookAt(cameraSettings.neutralFocus)
 	}
+	c.participantList.forEach(function(n) {
+		setPosRotOfAvatar(n)
+	})
+
 	calculateCameraRot();
 	c.participantList.forEach(function(p) {
 		avatarLookAt(p, participants[p].states.currentlyLookingAt, 1)
@@ -51,6 +55,11 @@ export default function initAnimations() {
 		$('#host').show()
 		displayWaitingList();
 	}
+}
+
+function setPosRotOfAvatar(avatarName) {
+	participants[avatarName].model.rotation.set(0, posRot[c.participantList.length][reversePositions[avatarName]].neutralYrotation, 0);
+	participants[avatarName].model.position.set(posRot[c.participantList.length][reversePositions[avatarName]].x, 0, posRot[c.participantList.length][reversePositions[avatarName]].z);
 }
 
 function calculateCameraRot() {

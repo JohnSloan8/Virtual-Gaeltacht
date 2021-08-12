@@ -36,7 +36,6 @@ const loadIndividualGLTF = (name_, visibility, cb=null) => {
 		}
 		addMovableBodyParts(name_)
 		addAnimations();
-		setPosRotOfAvatar(name_)
 		if (cb) {
 			cb(name_);
 		}

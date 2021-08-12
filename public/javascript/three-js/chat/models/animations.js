@@ -2,28 +2,28 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.mod
 import { baseActions, additiveActions } from "../settings.js"
 
 let numAnimations, clip, name, animations, action;
-const addAnimations = () => {
-	c.p[avatarName].mixer = new THREE.AnimationMixer(c.p[avatarName].model);
+const addAnimations = n => {
+	c.p[n].mixer = new THREE.AnimationMixer(c.p[n].model);
 	numAnimations = animations.length;
-	c.p[avatarName]['allActions'] = [];
+	c.p[n]['allActions'] = [];
 	for (let j = 0; j !== numAnimations; ++j) {
 		clip = animations[j].clone();
 		name = clip.name;
 		if ( baseActions[ name ] ) {
-			const action = c.p[avatarName].mixer.clipAction( clip );
+			const action = c.p[n].mixer.clipAction( clip );
 			activateAction( action );
 			baseActions[ name ].action = action;
-			c.p[avatarName]['allActions'].push(action);
+			c.p[n]['allActions'].push(action);
 		} else if ( additiveActions[ name ] ) {
 			// Make the clip additive and remove the reference frame
 			THREE.AnimationUtils.makeClipAdditive( clip );
 			if ( clip.name.endsWith( '_pose' ) ) {
 				clip = THREE.AnimationUtils.subclip( clip, clip.name, 2, 3, 30 );
 			}
-			const action = c.p[avatarName].mixer.clipAction( clip );
+			const action = c.p[n].mixer.clipAction( clip );
 			activateAction( action );
 			additiveActions[ name ].action = action;
-			c.p[avatarName]['allActions'].push(action);
+			c.p[n]['allActions'].push(action);
 		}
 	}
 }
