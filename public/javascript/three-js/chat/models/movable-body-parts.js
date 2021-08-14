@@ -3,23 +3,23 @@ const addMovableBodyParts = name_ => {
 	c.p[name_].model.traverse(function(object) {
 		//console.log('name:', object.name)
 		if (object.name === "Head") {
-			c.p[avatarName].movableBodyParts.head = object;
+			c.p[name_].movableBodyParts.head = object;
 		} else if (object.name === "Neck") {
-			c.p[avatarName].movableBodyParts.neck = object;
+			c.p[name_].movableBodyParts.neck = object;
 		} else if (object.name === "Spine1") {
-			c.p[avatarName].movableBodyParts.spine1 = object;
+			c.p[name_].movableBodyParts.spine1 = object;
 		} else if (object.name === "Spine2") {
-			c.p[avatarName].movableBodyParts.spine2 = object;
+			c.p[name_].movableBodyParts.spine2 = object;
 		} else if (object.name === "LeftEye") {
-			c.p[avatarName].movableBodyParts.leftEye = object;
+			c.p[name_].movableBodyParts.leftEye = object;
 		} else if (object.name === "RightEye") {
-			c.p[avatarName].movableBodyParts.rightEye = object;
+			c.p[name_].movableBodyParts.rightEye = object;
 		} else if  (object.name === "Wolf3D_Head") {
-			c.p[avatarName].movableBodyParts.face = object;
+			c.p[name_].movableBodyParts.face = object;
 		} else if  (object.name === "Spine") {
-			c.p[avatarName].movableBodyParts.spine = object;
+			c.p[name_].movableBodyParts.spine = object;
 		} else if  (object.name === "Wolf3D_Teeth") {
-			c.p[avatarName].movableBodyParts.teeth = object;
+			c.p[name_].movableBodyParts.teeth = object;
 		}
 	})
 }

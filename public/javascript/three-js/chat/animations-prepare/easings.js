@@ -12,4 +12,5 @@ const easingDict = {
 	'backOut': TWEEN.Easing.Back.Out
 }
 
-export default easingDict
+let easings = Object.keys(easingDict)
+export { easingDict, easings }

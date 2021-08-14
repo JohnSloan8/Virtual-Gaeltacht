@@ -1,7 +1,8 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
-import { baseActions, additiveActions } from "../settings.js"
+import { baseActions, additiveActions } from "./settings.js"
+import { animations } from "./load-models.js"
 
-let numAnimations, clip, name, animations, action;
+let numAnimations, clip, name, action;
 const addAnimations = n => {
 	c.p[n].mixer = new THREE.AnimationMixer(c.p[n].model);
 	numAnimations = animations.length;

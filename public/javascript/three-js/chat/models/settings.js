@@ -1,6 +1,20 @@
+const showSkeleton = false
+
+const	initialAvatarStates = {
+	currentlyLookingAt: null,
+	previouslyLookingAt: null,
+	expression: 'half_neutral',
+	speaking: false,
+	speakingViseme: null,
+	blinking: false,
+	changingExpression: false,
+	gesturing: false
+}
+
 const baseActions = {
 	//idle: { weight: 1 },
 };
+
 const additiveActions = {
 	neutral_arm_pose: { weight: 1 },
 	right_hand_up_pose: { weight: 0 },
@@ -11,6 +25,8 @@ const additiveActions = {
 };
 
 export {
+	showSkeleton,
+	initialAvatarStates,
 	baseActions,
 	additiveActions,
 }

@@ -1,13 +1,9 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { noP } from "../../scene/settings.js"
-import { participants } from "../../models/components/avatar.js"
-import { c.participantList, posRot, positions, reversePositions } from "../../scene/components/pos-rot.js"
-import { table } from "../../scene/components/table.js"
-import avatarLookAt from "../look.js"
+import { avatarLookAt } from "../look.js"
 import { sendChangeLook } from '../../../../web-sockets/chat/socket-logic.js'
 
 window.cameraLookAt = cameraLookAt
-function cameraLookAt(toWhom, duration) {
+const cameraLookAt = (toWhom, duration) => {
   try {
     c.participantList.forEach(function(p) {
       participants[p].model.traverse(function(object) {

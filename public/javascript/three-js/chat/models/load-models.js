@@ -2,17 +2,20 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.mod
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/loaders/GLTFLoader.js";
 import { loadIndividualGLTF } from "./avatar.js"
 import { c } from "../../../setup/chat/settings.js"
+import { initialAvatarStates } from "./settings.js"
+import { initScene } from "../init.js"
+import { scene } from "../scene/scene.js"
 
-let group;
+let group, animations, modelGLTFLoader;
 
 const loadModels = () => {
-	group = new THREE.Group()
+	c.pGroup = new THREE.Group()
 	loadModelGLTF('root-avatar-poses', iterateAvatar)
 }
 
 const loadModelGLTF = (avatarName, cb=null) => {
-	gltfLoader = new GLTFLoader();
-	gltfLoader.load("/avatars/" + avatarName + ".glb", function(gltf) {
+	modelGLTFLoader = new GLTFLoader();
+	modelGLTFLoader.load("/avatars/" + avatarName + ".glb", function(gltf) {
 		animations = gltf.animations;
 		cb();
 	})
@@ -22,25 +25,14 @@ let avatarCount = 0
 const iterateAvatar = () => {
 	if (avatarCount < c.participantList.length) {
 		let name = c.positions[avatarCount]
-		setInitialStates(name);
+		c.p[name]['states'] = initialAvatarStates
 		loadIndividualGLTF(name, true, iterateAvatar)
 		avatarCount += 1
 	} else {
-		calculateLookAngles(true);
+		scene.add(c.pGroup)
+		//scene.add(c.p[username].model)
+		initScene('animations')
 	};
 }
 
-const setInitialStates = name_ => {
-	c.p[name] = {
-		states: {
-			currentlyLookingAt: c.lookingAtEnter[name],
-			previouslyLookingAt: null,
-			expression: 'half_neutral',
-			speaking: false,
-			speakingViseme: null,
-			blinking: false,
-			changingExpression: false,
-			gesturing: false
-		}
-	}
-}
+export { loadModels, animations }

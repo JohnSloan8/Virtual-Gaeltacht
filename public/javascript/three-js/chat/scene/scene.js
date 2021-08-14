@@ -37,9 +37,9 @@ function onWindowResize() {
 	windowHeight = window.innerHeight
 	//controlPanelHeight = $('#controlPanel').height()
 	//resizeFrame()
-	camera.aspect = windowWidth / windowHeight;
-	cameraMe.aspect = windowWidth / windowHeight;
-	camera.updateProjectionMatrix();
+	c.cameras.main.camera.aspect = windowWidth / windowHeight;
+	c.cameras.selfie.camera.aspect = windowWidth / windowHeight;
+	c.cameras.main.camera.updateProjectionMatrix();
 	renderer.setSize(windowWidth, windowHeight);
 }
 

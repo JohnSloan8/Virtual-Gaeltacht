@@ -51,7 +51,7 @@ const calculateParticipantsPosRot = noP => {
 	} else {
 		curAng = Math.floor((noP/2) - 1) * cameraSettings[noP].angle + cameraSettings[noP].angle/2;
 	}
-	for (let i=1; i<noP; i++) {
+	for (let i=0; i<noP; i++) {
 		c.p[c.positions[i]] = { 
 			posRot: {
 				position: {

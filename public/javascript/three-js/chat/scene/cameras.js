@@ -1,8 +1,10 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
-//import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
-import { scene } from "./scene.js"
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
+import { scene, renderer } from "./scene.js"
+import { orbitControls } from "./settings.js"
 import { c } from "../../../setup/chat/settings.js"
 
+let controls
 const setupCameras = () => {
 	c.cameras.main.camera = new THREE.PerspectiveCamera(
 		c.cameras.main.fov,
@@ -10,9 +12,9 @@ const setupCameras = () => {
 		0.01,
 		100
 	);
-	c.centralPivotGroup = new THREE.Group()
-	c.centralPivotGroup.add(c.cameras.main.camera)
-	scene.add(c.centralPivotGroup)
+	//c.centralPivotGroup = new THREE.Group()
+	//c.centralPivotGroup.add(c.cameras.main.camera)
+	//scene.add(c.centralPivotGroup)
 
 	c.cameras.selfie.camera = new THREE.PerspectiveCamera(
 		45,
@@ -21,7 +23,11 @@ const setupCameras = () => {
 		100
 	);
 	//cameraMe.position.set(0, 0, 0)
-	scene.add(c.cameras.selfie.camera)
+	if ( orbitControls ) {
+		controls = new OrbitControls(c.cameras.main.camera, renderer.domElement);
+		controls.target.set(0, 1.59, 0);
+		controls.update();
+	}
 }
 
 export { setupCameras }

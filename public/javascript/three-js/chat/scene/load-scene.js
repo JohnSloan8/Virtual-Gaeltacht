@@ -18,7 +18,6 @@ const loadScene = () => {
 	setupCameras();
 	setupBackground();
 	setupLights();
-	//addTable();
 	initScene('avatars')
 }
 

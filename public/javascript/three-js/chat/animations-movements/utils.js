@@ -1,9 +1,8 @@
-import avatarLookAt from './look.js'
-import { noP } from "../scene/settings.js"
-import expression from "./morph/expression.js";
-import avatarNodShake from "./shake.js";
-import gesture from "./move/gesture.js";
-import {expressionMorphs} from "./morph/prepare.js";
+import { avatarLookAt } from './look.js'
+import { expression } from "./expression.js";
+import { avatarNodShake } from "./nod-shake.js";
+import { gesture } from "./gesture.js";
+import { expressionMorphs } from "../animations-prepare/morph-targets.js";
 
 window.allLookAt = allLookAt
 function allLookAt(who, jittered=true) {
@@ -45,3 +44,4 @@ function allMakeRandomGesture(jittered=true) {
 }
 
 export {allLookAt}
+

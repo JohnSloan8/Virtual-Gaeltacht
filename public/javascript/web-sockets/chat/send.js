@@ -1,4 +1,4 @@
-export default const socketSend = (key, val) => {
+const socketSend = (key, val) => {
 
   socket.send( JSON.stringify({
     chatID: window.location.pathname,
@@ -9,3 +9,5 @@ export default const socketSend = (key, val) => {
   }))
 
 }
+
+export { socketSend }
