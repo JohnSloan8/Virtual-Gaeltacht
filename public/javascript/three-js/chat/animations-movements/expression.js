@@ -1,18 +1,18 @@
 import { easingDict } from "../animations-prepare/easings.js"
-import { dealWithCSSExpressionGestureEvent } from "../animations-loaded/click-events.js"
+import { dealWithCSSExpressionGestureEvent } from "../enter/click-events.js"
 import { expressionMorphs, jawNeeded } from "../animations-prepare/morph-targets.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
+import { updateAvatarState } from "../models/states.js"
+import { c } from '../../../setup/chat/settings.js'
 
-window.allExpression = allExpression
-function allExpression(e) {
+const allExpression = e => {
 	c.participantList.forEach(function(p) {
 		expression(p, e)
 	})
 }
 
-window.expression = expression
-export default function expression(who, e) {
+const expression = (who, e) => {
 
 	if (!c.p[who].states.changingExpression) {
 		let faceMorphsTo = new Array(c.lenMorphs).fill(0);
@@ -38,8 +38,8 @@ export default function expression(who, e) {
 			baseExpression = splitExpressionName[1]
 		}
 		expressionIn.onStart( function() {
-			c.p[who].states.changingExpression = true
-			c.p[who].states.expression = 'changing'
+			updateAvatarState(who, 'changingExpression', true)
+			updateAvatarState(who, 'expression', 'changing')
 			if ( jawNeeded[splitExpressionName[0]] || jawNeeded[splitExpressionName[1]] ) {
 				let indexOfMouthOpenInTeeth = c.p[who].movableBodyParts.teeth.morphTargetDictionary["mouthOpen"]
 				// dunno why have to hard code the "0" below
@@ -49,8 +49,8 @@ export default function expression(who, e) {
 			}
 		})
 		expressionOut.onStart( function() {
-			c.p[who].states.changingExpression = true
-			c.p[who].states.expression = 'changing'
+			updateAvatarState(who, 'changingExpression', true)
+			updateAvatarState(who, 'expression', 'changing')
 
 			if ( jawNeeded[baseExpression] ) {
 				new TWEEN.Tween(c.p[who].movableBodyParts.teeth.morphTargetInfluences).to({"0": expressionMorphs['half_' + e].jawOpen}, 1500)
@@ -59,18 +59,20 @@ export default function expression(who, e) {
 			}
 		})
 		expressionIn.onComplete( function() {
-			//c.p[who].states.changingExpression = false
-			c.p[who].states.expression = e
+			updateAvatarState(who, 'expression', e)
 		})
 		expressionOut.onComplete( function() {
-			if (who === 0 ) {
+			if (who === username ) {
 				dealWithCSSExpressionGestureEvent('emotion', e, false)
 			}
 			c.p[who].states.changingExpression = false
 			c.p[who].states.expression = "half_" + e
+			updateAvatarState(who, 'changingExpression', false)
+			updateAvatarState(who, 'expression', "half_" + e)
 		})
 	} else {
 		console.log('cannot express while already expressing')
 	}
 }
 
+export { expression }

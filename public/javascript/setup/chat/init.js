@@ -1,5 +1,7 @@
 import { initSocket } from '../../web-sockets/chat/receive.js'
 import { c } from './settings.js'
+import { setupAllEvents } from './events.js'
+import { displayChoosePositionCircle } from './choose-position-circle.js'
 import { calculatePosRot } from './pos-rot.js'
 import { initScene } from '../../three-js/chat/init.js'
 
@@ -13,15 +15,18 @@ const resolveNewConnection = serverData_ => {
   c.host = serverData_.host
   console.log('c:', c)
 
-  if (c.host !== username && c.firstEntry ) {
-    $('#waitingText').text(`waiting for the host (${c.host}) to let you in...`)
-    $('#waitOverlay').show()
-    requestEnter(username)
+  if (c.host !== username && c.firstEntry) {
+    displayChoosePositionCircle([...c.participantList])
+  } else {
+    loadAll()
   }
-
-	calculatePosRot(c.participantList.length)
-  initScene('scene')
 
 }
 
-export { resolveNewConnection }
+const loadAll = () => {
+  setupAllEvents()
+  calculatePosRot(c.participantList.length)
+  initScene('scene')
+}
+
+export { resolveNewConnection, loadAll }

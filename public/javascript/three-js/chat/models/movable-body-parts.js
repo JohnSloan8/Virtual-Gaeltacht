@@ -1,3 +1,5 @@
+import { c } from '../../../setup/chat/settings.js'
+
 const addMovableBodyParts = name_ => {
 	c.p[name_].movableBodyParts = {}
 	c.p[name_].model.traverse(function(object) {

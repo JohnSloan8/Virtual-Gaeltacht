@@ -1,6 +1,7 @@
-import { renderer, scene, stats, clock, windowWidth, windowHeight } from "./scene/scene.js"
+import { renderer, scene, stats, clock, windowWidth, windowHeight, controlPanelHeight } from "./scene/scene.js"
 import { c } from "../../setup/chat/settings.js"
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
+import { entranceAnimationPlaying } from "./scene/settings.js"
 
 //import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 //import Stats from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/libs/stats.module.js";
@@ -18,9 +19,8 @@ import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tw
 //import gesture from "./animations/move/gesture.js"
 //import cameraEnter from "./animations/camera/enter.js"
 //import { mouth } from './animations/random/mouth.js'
-//import { entranceAnimationPlaying } from "./scene/settings.js"
 
-export default function animate() {
+const animate = () => {
 	const mixerUpdateDelta = clock.getDelta();
 	Object.values(c.p).forEach( function(p) {
 		if (p.mixer !== undefined) {
@@ -36,15 +36,15 @@ export default function animate() {
 	c.cameras.main.camera.updateProjectionMatrix()	
 	renderer.render(scene, c.cameras.main.camera);
 
-	//if (!entranceAnimationPlaying) {
-		//renderer.setViewport(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
-		//renderer.setScissor(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
-		//renderer.setScissorTest( true );
-		//renderer.setClearColor( 0xffffff, 1 )
-		//renderer.clearColor( 0xffffff, 1 )
-		//cameraMe.updateProjectionMatrix()	
-		//renderer.render(scene, cameraMe);
-	//}
+	if (!entranceAnimationPlaying) {
+		renderer.setViewport(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
+		renderer.setScissor(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
+		renderer.setScissorTest( true );
+		renderer.setClearColor( 0xffffff, 1 )
+		renderer.clearColor( 0xffffff, 1 )
+		c.cameras.selfie.camera.updateProjectionMatrix()	
+		renderer.render(scene, c.cameras.selfie.camera);
+	}
 
 	requestAnimationFrame(animate);
 }

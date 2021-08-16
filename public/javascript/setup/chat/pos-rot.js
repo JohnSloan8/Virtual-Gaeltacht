@@ -1,6 +1,5 @@
 import { cameraSettings } from "./settings.js"
 import { c } from './settings.js'
-window.c = c
 
 const calculatePosRot = noP => {
 	organiseParticipantPositions()
@@ -9,8 +8,8 @@ const calculatePosRot = noP => {
 }
 
 function organiseParticipantPositions() {
-	let participantListClone = [...c.participantList]
 	let indexOfParticipant = c.participantList.indexOf(username)
+	let participantListClone = [...c.participantList]
 
 	let y = participantListClone.splice(indexOfParticipant)
 	let participantListOrdered = y.concat(participantListClone)
@@ -46,12 +45,23 @@ const calculateCameraPosRot = noP => {
 
 const calculateParticipantsPosRot = noP => {
 	let curAng = 0;
+	c.p[username] = { 
+		posRot: {
+			position: {
+				x: 0,
+				z: c.cameras.main.position.z
+			},
+			rotation: {
+				y: Math.PI
+			}
+		}
+	}
 	if (noP%2 === 0) {
 		curAng = (noP - 2)/2 * cameraSettings[noP].angle
 	} else {
 		curAng = Math.floor((noP/2) - 1) * cameraSettings[noP].angle + cameraSettings[noP].angle/2;
 	}
-	for (let i=0; i<noP; i++) {
+	for (let i=1; i<noP; i++) {
 		c.p[c.positions[i]] = { 
 			posRot: {
 				position: {

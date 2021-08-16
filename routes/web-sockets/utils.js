@@ -2,14 +2,14 @@ module.exports = {
 	
 	getWaitingList: chatModel_ => {
 		let waitingList = []
-		chatModel_.waitingList.forEach(function(p) {
-			waitingList.push(p.name)
+		chatModel_.waitingList.forEach(function(wL) {
+			waitingList.push(wL)
 		})
 		return waitingList
 	},
 
 	getCurrentParticipants: chatModel_ => {
-		let currentParticipants = chatModel_.participants.filter(p => p.endTime === null)
+		let currentParticipants = chatModel_.participants.filter(p => p.endTime !== 1) // change this to !== null
 		let currentParticipantsList = []
 		currentParticipants.forEach(function(p) {
 			currentParticipantsList.push(p.name)
@@ -21,12 +21,23 @@ module.exports = {
 		let lookingAt = {}
 		participantList_.forEach(function(p) {
 			let personLookingAtAll = chatModel_.lookingAt.filter(lA => lA.who === p)
+			//console.log('personLookingAtAll:', personLookingAtAll)
 			let mostRecentWhom = null
 			if (personLookingAtAll.length > 0) {
 				mostRecentWhom = personLookingAtAll.pop().whom
+				//console.log('mostRecentWhom:', mostRecentWhom)
+			} else {
+				if (participantList_.length > 1) {
+					if (participantList_[0] !== p) {
+						mostRecentWhom = participantList_[0]
+					} else {
+						mostRecentWhom = participantList_[1]
+					}
+				}
 			}
 			lookingAt[p] = mostRecentWhom
 		})
+		//console.log('lookingAt:', lookingAt)
 		return lookingAt
 	},
 

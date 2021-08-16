@@ -2,6 +2,7 @@
 const c = {
 	p: {}, // participants
 }
+window.c = c
 
 const cameraSettings = {
 	neutralFocus: (0, 1.59, 0),

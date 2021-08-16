@@ -26,3 +26,31 @@
 	transform: skew(2.5deg);
 }
 
+/*CHOOSE POSITION*/
+#choosePositionCircle {
+  background-color: rgba(0,0,0,0);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.choose-participant-location-circle {
+  height: 50px;
+  width: 50px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.choose-participant-location-circle:hover {
+  cursor: pointer;
+  background-color: #ff0;
+}
+
+/*ALLOW ENTRY*/
+.allow-entry-left {
+  left: 2px
+}
+
+.allow-entry-right {
+  right: 2px
+}

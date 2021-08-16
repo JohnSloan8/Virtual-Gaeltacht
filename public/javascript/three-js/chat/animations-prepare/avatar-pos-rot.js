@@ -1,9 +1,17 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
+import { c } from '../../../setup/chat/settings.js'
+
+const setPosRotOfAvatars = () => {
+	c.participantList.forEach(function(n) {
+		c.p[n].model.rotation.set(0, c.p[n].posRot.rotation.y, 0);
+		c.p[n].model.position.set(c.p[n].posRot.position.x, 0, c.p[n].posRot.position.z);
+	})
+}
 
 const calculateLookAngles = firstLoad => {
 	let cameraDirection = new THREE.Vector3();
 	let myHeadPos = c.p[username].movableBodyParts.head.getWorldPosition(cameraDirection)
-	c.cameras.main.position.y = myHeadPos.y + 0.1
+	c.cameras.main.camera.position.y = myHeadPos.y + 0.1
 	
 	let headMult = 0.2;
 	let spine2Mult = 0.05;
@@ -35,13 +43,7 @@ const calculateLookAngles = firstLoad => {
 				c.p[n].lookRotations[m].spine1 = {x:yr.x*spine1Mult, y:yr.y*spine1Mult*2, z:yr.z*spine1Mult}
 			}
 		})
-		setPosRotOfAvatar(n)
 	})
 }
 
-function setPosRotOfAvatar(name_) {
-	c.p[name_].model.rotation.set(0, c.p[name_].posRot.rotation.y, 0);
-	c.p[name_].model.position.set(c.p[name_].posRot.position.x, 0, c.p[name_].posRot.position.z);
-}
-
-export { calculateLookAngles }
+export { setPosRotOfAvatars, calculateLookAngles }

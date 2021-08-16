@@ -1,7 +1,8 @@
-import easingDict from "..//animations-prepar/easings.js"
+import { easingDict } from "../animations-prepare/easings.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { c } from "../../../setup/chat/settings.js"
+import { updateAvatarState } from "../models/states.js"
 
 const beginRandomBlinking = () => {
 	c.participantList.forEach(function(par) {
@@ -9,12 +10,11 @@ const beginRandomBlinking = () => {
 	})
 }
 
-window.randomBlink = randomBlink
 const randomBlink = who => {
 	blink(who)
 	let randomDelay = 2000 + Math.random() * 5000
 	setTimeout(function(){
-		if (participants[who] !== undefined) {
+		if (c.p[who] !== undefined) {
 			randomBlink(who)
 		}
 	}, randomDelay)
@@ -33,11 +33,11 @@ const blink = (who, delay=0) => {
 			.start()
 			.delay(delay)
 		blinking.onStart( function() {
-			c.p[who].states.blinking = true	
+			updateAvatarState(who, 'blinking', true)
 		})
 		blinking.onComplete( function() {
-			c.p[who].states.blinking = false	
+			updateAvatarState(who, 'blinking', false)
 		})
 	}
 }
-export { beginRandomBlinking, randomBlink }
+export { beginRandomBlinking, randomBlink, blink }

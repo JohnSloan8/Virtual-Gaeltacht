@@ -17,6 +17,8 @@ const ChatSchema = new mongoose.Schema({
 	}],
 	waitingList: [{
 		name: String,
+		requirer0: String,
+		requirer1: String,
 		requestTime: {
 			type: Date, 
 			default: Date.now

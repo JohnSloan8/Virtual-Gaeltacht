@@ -1,17 +1,19 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { easingDict, easings } from "../animations-prepare/easings.js"
+import { updateAvatarState } from "../models/states.js"
+import { c } from '../../../setup/chat/settings.js'
 
 window.startMouthing = startMouthing
 function startMouthing(who) {
 	//need to stop blinking
-	c.p[who].states.speaking = true
 	//c.p[who].states.expression = "neutral"
+	updateAvatarState(who, 'speaking', true)
 	mouth(who)
 }
 
 window.stopMouthing = stopMouthing
 function stopMouthing(who) {
-	c.p[who].states.speaking = false
+	updateAvatarState(who, 'speaking', false)
 }
 
 window.mouth = mouth
@@ -42,7 +44,7 @@ function mouth(who, final=false) {
 	mouthingIn = new TWEEN.Tween(c.p[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsTo, randomMouthingDuration)
 		.easing(easingDict[randomEasing])
 		.start()
-	c.p[who].states.speakingViseme = randomViseme
+	updateAvatarState(who, 'speakingViseme', randomViseme)
 
 	mouthingIn.onComplete( function() {
 		if ( c.p[who].states.speaking ) {

@@ -1,3 +1,5 @@
+import { socket } from "./receive.js"
+
 const socketSend = (key, val) => {
 
   socket.send( JSON.stringify({

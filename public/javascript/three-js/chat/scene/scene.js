@@ -1,7 +1,8 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import Stats from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/libs/stats.module.js";
+import { showAxesHelper } from "./settings.js"
 
-let	scene, renderer, clock, container, stats, windowWidth, windowHeight /*controlPanelHeight*/
+let	scene, renderer, clock, container, stats, windowWidth, windowHeight, controlPanelHeight
 const setupScene = () => {
 
 	container = document.getElementById("threeCanvas");
@@ -20,13 +21,13 @@ const setupScene = () => {
 	container.appendChild(renderer.domElement);
 	container.appendChild(stats.dom);
 
-	//controlPanelHeight = $('#controlPanel').height()
-	//resizeFrame()
+	controlPanelHeight = $('#controlPanel').height()
+	resizeFrame()
 
-	//if (showAxesHelper) {
-		//const axesHelper = new THREE.AxesHelper( 5 );
-		//scene.add( axesHelper );
-	//}
+	if (showAxesHelper) {
+		const axesHelper = new THREE.AxesHelper( 5 );
+		scene.add( axesHelper );
+	}
 
 
 	window.addEventListener("resize", onWindowResize);
@@ -35,41 +36,41 @@ const setupScene = () => {
 function onWindowResize() {
 	windowWidth = window.innerWidth
 	windowHeight = window.innerHeight
-	//controlPanelHeight = $('#controlPanel').height()
-	//resizeFrame()
+	controlPanelHeight = $('#controlPanel').height()
+	resizeFrame()
 	c.cameras.main.camera.aspect = windowWidth / windowHeight;
 	c.cameras.selfie.camera.aspect = windowWidth / windowHeight;
 	c.cameras.main.camera.updateProjectionMatrix();
 	renderer.setSize(windowWidth, windowHeight);
 }
 
-//function resizeFrame() {
-	//$('#frameLeft').css({
-		//"bottom": controlPanelHeight + "px",
-		//"left": 0.37*windowWidth + "px",
-		//"height": 0.25*windowHeight + "px",
-	//})
-	//$('#frameRight').css({
-		//"bottom": controlPanelHeight + "px",
-		//"right": 0.37*windowWidth + "px",
-		//"height": 0.25*windowHeight + "px",
-	//})
-	//$('#frameTop').css({
-		//"bottom": controlPanelHeight + windowHeight*0.25 + "px",
-		//"right": 0.37*windowWidth + "px",
-		//"left": 0.37*windowWidth + "px",
-		//"height": 0.005*windowWidth + "px",
-	//})
-	//$('#frameLeftSkew').css({
-		//"bottom": controlPanelHeight + "px",
-		//"left": 0.365*windowWidth + "px",
-		//"height": 0.25*windowHeight + 0.005*windowWidth + "px",
-	//})
-	//$('#frameRightSkew').css({
-		//"bottom": controlPanelHeight + "px",
-		//"right": 0.365*windowWidth + "px",
-		//"height": 0.25*windowHeight + 0.005*windowWidth + "px",
-	//})
-//}
+function resizeFrame() {
+	$('#frameLeft').css({
+		"bottom": controlPanelHeight + "px",
+		"left": 0.37*windowWidth + "px",
+		"height": 0.25*windowHeight + "px",
+	})
+	$('#frameRight').css({
+		"bottom": controlPanelHeight + "px",
+		"right": 0.37*windowWidth + "px",
+		"height": 0.25*windowHeight + "px",
+	})
+	$('#frameTop').css({
+		"bottom": controlPanelHeight + windowHeight*0.25 + "px",
+		"right": 0.37*windowWidth + "px",
+		"left": 0.37*windowWidth + "px",
+		"height": 0.005*windowWidth + "px",
+	})
+	$('#frameLeftSkew').css({
+		"bottom": controlPanelHeight + "px",
+		"left": 0.365*windowWidth + "px",
+		"height": 0.25*windowHeight + 0.005*windowWidth + "px",
+	})
+	$('#frameRightSkew').css({
+		"bottom": controlPanelHeight + "px",
+		"right": 0.365*windowWidth + "px",
+		"height": 0.25*windowHeight + 0.005*windowWidth + "px",
+	})
+}
 
-export { setupScene, scene, renderer, clock, container, stats, windowWidth, windowHeight, onWindowResize }
+export { setupScene, scene, renderer, clock, container, stats, windowWidth, windowHeight, onWindowResize, controlPanelHeight }

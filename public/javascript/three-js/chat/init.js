@@ -1,8 +1,7 @@
 import { loadScene } from "./scene/load-scene.js"
 import { loadModels } from "./models/load-models.js"
 import { loadAnimationsPrepare } from "./animations-prepare/load-animations-prepare.js"
-import { loadAnimationsMovements } from "./animations-movements/load-animations-movements.js"
-//import { animate } from "./animate.js"
+import { loadEnter } from "./enter/load-enter.js"
 
 const initScene = part => {
   $('#loadingText').text('loading ' + part + '...')
@@ -12,10 +11,8 @@ const initScene = part => {
 		loadModels()
 	} else if (part === "animations") {
 		loadAnimationsPrepare()
-	} else if (part === "movements") {
-		loadAnimationsMovements()
-	} else if (part === "animate") {
-    $('#loadOverlay').hide()
+	} else if (part === "enter") {
+		loadEnter()
 	}
 }
 

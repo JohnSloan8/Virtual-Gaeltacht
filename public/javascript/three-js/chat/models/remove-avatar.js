@@ -5,9 +5,9 @@ import { posRot, c.participantList, names, reversePositions, findPositionOfReduc
 import { setNoParticipants } from "../../scene/settings.js"
 import { moveAvatarsController, moveAvatar } from "./addAvatar.js"
 import { calculateLookAngles } from "./avatar.js"
+import { updateAvatarState } from "./states.js"
 import { displayWaitingList, removeParticipant } from "../../../../web-sockets/chat/socket-logic.js"
 
-window.removeAvatar = removeAvatar
 export default function removeAvatar(u) {
 	chat.participantLeaving = true
 	if (posRot[c.participantList.length-1] === undefined) {
@@ -34,6 +34,7 @@ function avatarLeave(u) {
 	})
 }
 function moveCameraAndMirrorReduce(u) {
+	console.log('in moveCameraAndMirrorReduce')
 	let newCameraZPos = {z: posRot[c.participantList.length].camera.z}
 	let moveCameraTween = new TWEEN.Tween(camera.position).to(newCameraZPos, 1000).easing(TWEEN.Easing.Quintic.Out)
 	moveCameraTween.start()
@@ -45,13 +46,13 @@ function moveCameraAndMirrorReduce(u) {
 			if (!c.participantList.includes(participants[p].states.currentlyLookingAt)) {
 				
 				if (c.participantList.length > 1){
-					if (p === c.participantList[0]) {
-						participants[p].states.currentlyLookingAt = c.participantList[1]
+					if (p === c.positions[0]) {
+						updateAvatarState(p, 'currentlyLookingAt', c.positions[1])
 					} else {
-						participants[p].states.currentlyLookingAt = c.participantList[0]
+						updateAvatarState(p, 'currentlyLookingAt', c.positions[0])
 					}
 				} else {
-					participants[p].states.currentlyLookingAt = c.participantList[0]
+					updateAvatarState(p, 'currentlyLookingAt', c.positions[0])
 				}
 			}
 		})

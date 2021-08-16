@@ -1,6 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import { baseActions, additiveActions } from "./settings.js"
 import { animations } from "./load-models.js"
+import { c } from '../../../setup/chat/settings.js'
 
 let numAnimations, clip, name, action;
 const addAnimations = n => {

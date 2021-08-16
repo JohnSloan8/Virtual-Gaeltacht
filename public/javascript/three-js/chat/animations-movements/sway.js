@@ -1,15 +1,15 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { easingDict } from "../animations-prepare/easings.js"
+import { c } from '../../../setup/chat/settings.js'
 
-window.beginRandomSwaying = beginRandomSwaying
-export default function beginRandomSwaying() {
+const beginRandomSwaying = () => {
 	c.participantList.forEach(function(par) {
 		randomSway(par);
 		randomNeckTurn(par);
 	})
 }
 
-function randomSway(who, direction=1) {
+const randomSway = (who, direction=1) => {
 	let randomDuration = 2000 + Math.random()*5000;
 	let randomRotation = Math.random()*0.025 * direction;
 	if (c.p[who].states.speaking) {
@@ -26,7 +26,7 @@ function randomSway(who, direction=1) {
 	}, randomDuration)
 }
 
-function randomNeckTurn(who, direction=1) {
+const randomNeckTurn = (who, direction=1) => {
 	let randomDuration = 2000 + Math.random()*5000;
 	let randomRotation = Math.random()*0.075 * direction;
 	if (c.p[who].states.speaking) {
@@ -51,4 +51,4 @@ function randomNeckTurn(who, direction=1) {
 	}, randomDuration)
 }
 
-export { randomSway, randomNeckTurn }
+export { beginRandomSwaying }

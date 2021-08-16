@@ -1,7 +1,15 @@
+import { c } from './settings.js'
+import { socketSend } from "../../web-sockets/chat/send.js"
+
+const setupAllEvents = () => {
+  setUpAdmitRefuseEvents();
+  setUpLeaveEvent();
+}
+
 function setUpAdmitRefuseEvents() {
   $('.admit-refuse').on('click', function(e) {
-    e.preventDefault()
-    admitRefuse(e.target.id)
+    e.preventDefault();
+    socketSend('admitRefuse', e.target.id);
   })
 }
 
@@ -15,10 +23,19 @@ function setUpLeaveEvent() {
 }
 
 function displayWaitingList() {
-  console.log('chat.waitingList:', chat.waitingList)
-  if (chat.waitingList.length>0) {
-    $('#whoIsWaiting').text(chat.waitingList[0])
-    $('#allowEntry').show();
+  $('#allowEntry').hide();
+  if (c.waitingList.length > 0) {
+    if (username === c.waitingList[0].requirer0 || username === c.waitingList[0].requirer1) {
+      if (username === c.waitingList[0].requirer0) {
+        $('#allowEntry').removeClass('allow-entry-right');
+        $('#allowEntry').addClass('allow-entry-left');
+      } else {
+        $('#allowEntry').removeClass('allow-entry-left');
+        $('#allowEntry').addClass('allow-entry-right');
+      }
+      $('#whoIsWaiting').html(`<strong style="color: yellow">${c.waitingList[0].name}&nbsp</strong> wants to join`)
+      $('#allowEntry').show();
+    }
   } else {
     $('#allowEntry').hide();
   }
@@ -26,4 +43,4 @@ function displayWaitingList() {
 
 
 
-export { displayWaitingList }
+export { displayWaitingList, setupAllEvents }

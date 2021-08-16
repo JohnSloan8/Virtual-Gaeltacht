@@ -1,7 +1,9 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import { c } from "../../../setup/chat/settings.js"
+import { cameraSettings } from "../../../setup/chat/settings.js"
 
 const calculateCameraRot = () => {
+	c.cameras.main.camera.position.set(0, c.cameras.main.camera.position.y, cameraSettings[c.participantList.length].radius + cameraSettings[c.participantList.length].cameraZPos);
 	c.cameras.main.rotations = {}
 	c.participantList.forEach(function(n) {
 		let direction = new THREE.Vector3();
@@ -14,11 +16,5 @@ const calculateCameraRot = () => {
 		}
 	})
 }
-
-//const cameraLookAt = () => {
-
-	//let r = c.cameras.main.rotations[c.p[c.positions[0]].states.currentlyLookingAt]
-	//c.cameras.main.camera.rotation.set(r.x, r.y, r.z)
-//}
 
 export { calculateCameraRot }

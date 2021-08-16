@@ -1,5 +1,12 @@
 import { c } from '../../setup/chat/settings.js'
+import { loadAll } from '../../setup/chat/init.js'
+import { displayWaitingList } from '../../setup/chat/events.js'
+import { displayChoosePositionCircle } from '../../setup/chat/choose-position-circle.js'
 import { resolveNewConnection } from "../../setup/chat/init.js"
+import { avatarLookAt } from "../../three-js/chat/animations-movements/look.js"
+import { expression } from "../../three-js/chat/animations-movements/expression.js"
+import { gesture } from "../../three-js/chat/animations-movements/gesture.js"
+import { avatarNodShake } from "../../three-js/chat/animations-movements/nod-shake.js"
 
 // CREATE WEBSOCKET CONNECTION
 var socket
@@ -25,39 +32,29 @@ const initSocket = () => {
 
     // REQUESTED ENTRY
     } else if (serverData.type === "requestEnter" ) {
-      if (host === username) {
-        console.log('entry requested')
-        chat.waitingList = serverData.waitingListArray
-        if (!chat.newParticipantEntering) {
-          displayWaitingList()
-        }
-      }
+      console.log('entry requested:', serverData.waitingList)
+      c.waitingList = serverData.waitingList
+      displayWaitingList()
 
     // ADMITTED OR REFUSED
     } else if (serverData.type === "admitRefuse" ) {
-      console.log('socket admitRefuse')
-      if (host === username) {
-        chat.waitingList = serverData.waitingListArray
-      }
-      if (serverData.admit) {
-        participantNames += "," + serverData.newParticipant
-        participantLookingAt += ","
-        if (username === serverData.newParticipant) {
-          $('#waitOverlay').hide()
-          init();
+      c.participantList = serverData.participantList
+      c.waitingList = serverData.waitingList
+      if (serverData.key === 'admit') {
+        if (username === serverData.admittedRefusedParticipant) {
+          $('#choosePositionOverlay').hide()
+          loadAll();
         }
-        if (host === username) {
-          $('#allowEntry').hide();
-          if (!chat.participantLeaving) {
-            chat.newParticipantEntering = true;
-          } 
+        if (!c.participantLeaving) {
+          c.newParticipantEntering = true;
         } 
       } else {
-        if (host === username) {
-          chat.newParticipantEntering = false;
-          displayWaitingList();
-        } 
+        if (username === serverData.admittedRefusedParticipant) {
+          $('#choosePositionText').html(`Your request was refused. You can try again.`)
+          displayChoosePositionCircle(serverData.participantList)
+        }
       }
+      displayWaitingList();
 
     // PARTICIPANT REMOVED
     } else if (serverData.type === "removeParticipant" ) {
@@ -79,7 +76,7 @@ const initSocket = () => {
       // SOMEONE ENTERS
       if (serverData.type === "newParticipantEnter" ) {
       // check if it was not just refresh
-        if (c.participantList.indexOf(serverData.name) === -1) {
+        if (c.participantList.indexOf(serverData.who) === -1) {
           addAvatar(serverData.who)
         } else {
           console.log('already in names:', serverData.name)
@@ -87,22 +84,22 @@ const initSocket = () => {
 
       // LOOKS
       } else if (serverData.type === "look" ) {
-        avatarLookAt(serverData.who, serverData.whom, 500)
+        avatarLookAt(serverData.who, serverData.key, 500)
       
       // FACIAL EXPRESSIONS
       } else if (serverData.type === "expression" ) {
-        expression(serverData.who, serverData.expression)
+        expression(serverData.who, serverData.key)
       
       // GESTURES
       } else if (serverData.type === "gesture" ) {
-        gesture(serverData.who, serverData.gesture, 2000)
+        gesture(serverData.who, serverData.key, 2000)
       
       // NODS OR SHAKES HEAD
       } else if (serverData.type === "nodShake" ) {
-        avatarNodShake(serverData.who, serverData.nodShake)
+        avatarNodShake(serverData.who, serverData.key)
       }
     }
   });
 }
 
-export { initSocket }
+export { initSocket, socket }

@@ -1,5 +1,5 @@
 const showTable = false
-const showAxesHelper = false
+const showAxesHelper = true
 const showColumn = false
 var entranceAnimationPlaying = false
 function setEntranceAnimationPlaying(tF) {

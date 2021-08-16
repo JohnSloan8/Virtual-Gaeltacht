@@ -18,12 +18,7 @@ function initWebSocket() {
 				chat = await Chat.findOne({chatURL: path.basename(clientData.chatURL)})
 				
 				let participantList = getCurrentParticipants(chat) // participant list
-				
 				clientData['firstEntry'] = (participantList.includes(clientData.who)) ? false: true
-				//if (clientData['firstEntry']) {
-					//addParticipantToChatModel(chat, clientData.who)
-					//participantList = getCurrentParticipants(chat)
-				//}	
 				clientData['participantList'] = participantList
 				clientData['waitingList'] = getWaitingList(chat)
 				clientData['lookingAt'] = getLookingAt(chat, participantList)
@@ -33,10 +28,15 @@ function initWebSocket() {
 			// PARTICIPANT REQUESTS ENTRY
 			} else if ( clientData.type === 'requestEnter' ) {
 				if (!chat.waitingList.some(n => n.name === clientData.who)) {
-					chat.waitingList.push({name: clientData.who})
+					chat.waitingList.push({
+						name: clientData.who,
+						requirer0: clientData.key[0],
+						requirer1: clientData.key[1],
+						entering: false
+					})
 					chat.save()
 				}
-				clientData['waitingList'] = getWaitingList(c)
+				clientData['waitingList'] = getWaitingList(chat)
 				wss.clients.forEach(function each(client) {
 					if (client !== ws && client.readyState === WebSocket.OPEN) {
 						client.send(JSON.stringify(clientData));
@@ -44,18 +44,18 @@ function initWebSocket() {
 				});
 			
 			// HOST ADMITS OR REFUSES ENTRY
-			} else if ( clientData.type = 'admitRefuse' ) {
+			} else if ( clientData.type === 'admitRefuse' ) {
 				let newParticipant = chat.waitingList.shift()
-				if (clientData.admit) {
-					chat.participants.push({
+				if (clientData.key === 'admit') {
+					chat.participants.splice(newParticipant.requirer0, 0, {
 						name: newParticipant.name,
 						endTime: null
 					})
 				}
 				chat.save()
-				console.log('after shift:', chat.waitingList)
-				clientData['waitingList'] = getWaitingList(c)
-				clientData['newParticipant'] = newParticipant.name
+				clientData['admittedRefusedParticipant'] = newParticipant.name
+				clientData['participantList'] = getCurrentParticipants(chat) // participant list
+				clientData['waitingList'] = getWaitingList(chat)
 				wss.clients.forEach(function each(client) {
 					if (client.readyState === WebSocket.OPEN) {
 						client.send(JSON.stringify(clientData));
@@ -71,10 +71,9 @@ function initWebSocket() {
 				});
 
 			// PARTICIPANT LEAVES
-			} else if ( clientData.type = 'removeParticipant' ) {
+			} else if ( clientData.type === 'removeParticipant' ) {
 				let p = chat.participants.find(e => e.name === clientData.who)
 				p.endTime = Date.now()
-				chat.save()
 				ws.close()
 				let currentParticipants = chat.participants.filter(p => p.endTime === null )
 				if (currentParticipants.length > 0) {
@@ -106,7 +105,7 @@ function initWebSocket() {
 				if (clientData.type === "look") {
 					chat.lookingAt.push({
 						who: clientData.who,
-						whom: clientData.whom,
+						whom: clientData.key,
 						timestamp: new Date(clientData.timestamp)
 					})
 					chat.save();

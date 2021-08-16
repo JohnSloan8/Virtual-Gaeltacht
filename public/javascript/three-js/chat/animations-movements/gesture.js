@@ -1,10 +1,11 @@
-import { dealWithCSSExpressionGestureEvent } from "../animations-loaded/click-events.js"
+import { dealWithCSSExpressionGestureEvent } from "../enter/click-events.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { socketSend } from '../../../web-sockets/chat/send.js'
+import { updateAvatarState } from "../models/states.js"
+import { c } from '../../../setup/chat/settings.js'
 
-window.gesture = gesture
-export default function gesture(who, gestureName, duration) {
+const gesture = (who, gestureName, duration) => {
 
 	if ( who !== username ) {
 		duration *= 0.7
@@ -31,13 +32,15 @@ export default function gesture(who, gestureName, duration) {
 			if (who === 0 ) {
 				dealWithCSSExpressionGestureEvent('gesture', gestureName, true)
 			}
-			c.p[who].states.gesturing = true
+			updateAvatarState(who, 'gesturing', true)
 		})
 		gestureTweenOut.onComplete( function() {
-			if (who === 0 ) {
+			if (who === username ) {
 				dealWithCSSExpressionGestureEvent('gesture', gestureName, false)
 			}
-			c.p[who].states.gesturing = false
+			updateAvatarState(who, 'gesturing', false)
 		})
 	}
 }
+
+export { gesture }
