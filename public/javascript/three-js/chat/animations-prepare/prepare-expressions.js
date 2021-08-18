@@ -5,7 +5,6 @@ import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tw
 import { c } from '../../../setup/chat/settings.js'
 
 const prepareExpressions = () => {
-
 	addHalfAndBlinkExpressions();
 	c.participantList.forEach(function(p) {
 		createExpressions(p)
@@ -65,4 +64,4 @@ const createExpressions = n => {
 	})
 }
 
-export { prepareExpressions }
+export { createExpressions, prepareExpressions }

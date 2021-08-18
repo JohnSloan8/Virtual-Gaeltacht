@@ -45,15 +45,13 @@ const calculateCameraPosRot = noP => {
 
 const calculateParticipantsPosRot = noP => {
 	let curAng = 0;
-	c.p[username] = { 
-		posRot: {
-			position: {
-				x: 0,
-				z: c.cameras.main.position.z
-			},
-			rotation: {
-				y: Math.PI
-			}
+	c.p[username].posRot = {
+		position: {
+			x: 0,
+			z: c.cameras.main.position.z
+		},
+		rotation: {
+			y: Math.PI
 		}
 	}
 	if (noP%2 === 0) {
@@ -62,19 +60,17 @@ const calculateParticipantsPosRot = noP => {
 		curAng = Math.floor((noP/2) - 1) * cameraSettings[noP].angle + cameraSettings[noP].angle/2;
 	}
 	for (let i=1; i<noP; i++) {
-		c.p[c.positions[i]] = { 
-			posRot: {
-				position: {
-					x: Math.round(1000 * cameraSettings[noP].radius * Math.sin(-curAng))/1000,
-					z: Math.round(1000 * -cameraSettings[noP].radius * Math.cos(curAng))/1000
-				},
-				rotation: {
-					y: curAng
-				}
+		c.p[c.positions[i]].posRot = {
+			position: {
+				x: Math.round(1000 * cameraSettings[noP].radius * Math.sin(-curAng))/1000,
+				z: Math.round(1000 * -cameraSettings[noP].radius * Math.cos(curAng))/1000
+			},
+			rotation: {
+				y: curAng
 			}
 		}
 		curAng -= cameraSettings[noP].angle;
 	}
 }
 
-export { calculatePosRot }
+export { calculatePosRot, organiseParticipantPositions, calculateParticipantsPosRot }

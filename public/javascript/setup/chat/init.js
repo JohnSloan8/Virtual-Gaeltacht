@@ -13,14 +13,15 @@ const resolveNewConnection = serverData_ => {
   c.waitingList = serverData_.waitingList
   c.firstEntry = serverData_.firstEntry
   c.host = serverData_.host
+  c.participantList.forEach(function(n){
+    c.p[n] = {}
+  })
   console.log('c:', c)
-
   if (c.host !== username && c.firstEntry) {
     displayChoosePositionCircle([...c.participantList])
   } else {
     loadAll()
   }
-
 }
 
 const loadAll = () => {

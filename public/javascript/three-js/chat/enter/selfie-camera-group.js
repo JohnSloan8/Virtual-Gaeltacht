@@ -22,7 +22,7 @@ const addSelfieCameraGroup = (mirrorVisible, entrance) => {
 	} );
 	mirror.visible = mirrorVisible
 	mirror.position.set(0, c.cameras.selfie.camera.position.y, mirrorOffsetZ);
-	mirror.rotation.x = -0.05
+	mirror.rotation.x = -0.075
 	c.selfieGroup = new THREE.Group()
 	c.selfieGroup.add(c.cameras.selfie.camera)
 	c.selfieGroup.add(selfieCameraHelper)

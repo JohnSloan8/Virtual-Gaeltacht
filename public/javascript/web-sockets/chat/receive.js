@@ -1,12 +1,14 @@
 import { c } from '../../setup/chat/settings.js'
 import { loadAll } from '../../setup/chat/init.js'
-import { displayWaitingList } from '../../setup/chat/events.js'
+import { displayWaitingList, updateEntering } from '../../setup/chat/events.js'
 import { displayChoosePositionCircle } from '../../setup/chat/choose-position-circle.js'
 import { resolveNewConnection } from "../../setup/chat/init.js"
 import { avatarLookAt } from "../../three-js/chat/animations-movements/look.js"
 import { expression } from "../../three-js/chat/animations-movements/expression.js"
 import { gesture } from "../../three-js/chat/animations-movements/gesture.js"
 import { avatarNodShake } from "../../three-js/chat/animations-movements/nod-shake.js"
+import { addAvatar } from "../../three-js/chat/models/add-avatar.js"
+import { initialAvatarStates } from "../../three-js/chat/models/states.js"
 
 // CREATE WEBSOCKET CONNECTION
 var socket
@@ -41,16 +43,21 @@ const initSocket = () => {
       c.participantList = serverData.participantList
       c.waitingList = serverData.waitingList
       if (serverData.key === 'admit') {
+        c.participantList = serverData.participantList
+        c.lookingAtEntry = serverData.lookingAtEntry
+        c.p[serverData.admittedRefusedParticipant] = {
+          states: {...initialAvatarStates}
+        }
         if (username === serverData.admittedRefusedParticipant) {
           $('#choosePositionOverlay').hide()
           loadAll();
+        } else {
+          addAvatar(serverData.admittedRefusedParticipant)
         }
-        if (!c.participantLeaving) {
-          c.newParticipantEntering = true;
-        } 
+        updateEntering(true, serverData.admittedRefusedParticipant)
       } else {
         if (username === serverData.admittedRefusedParticipant) {
-          $('#choosePositionText').html(`Your request was refused. You can try again.`)
+          $('#choosePositionText').html(`Your request was refused or timed out. You can try again.`)
           displayChoosePositionCircle(serverData.participantList)
         }
       }

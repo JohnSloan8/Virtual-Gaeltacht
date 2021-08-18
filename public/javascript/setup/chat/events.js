@@ -6,15 +6,14 @@ const setupAllEvents = () => {
   setUpLeaveEvent();
 }
 
-function setUpAdmitRefuseEvents() {
+const setUpAdmitRefuseEvents = () => {
   $('.admit-refuse').on('click', function(e) {
     e.preventDefault();
     socketSend('admitRefuse', e.target.id);
   })
 }
 
-
-function setUpLeaveEvent() {
+const setUpLeaveEvent = () => {
   console.log('setting up leave Event')
   $('#leaveButton').on('click', function(e) {
     e.preventDefault()
@@ -22,7 +21,7 @@ function setUpLeaveEvent() {
   })
 }
 
-function displayWaitingList() {
+const displayWaitingList = () => {
   $('#allowEntry').hide();
   if (c.waitingList.length > 0) {
     if (username === c.waitingList[0].requirer0 || username === c.waitingList[0].requirer1) {
@@ -41,6 +40,37 @@ function displayWaitingList() {
   }
 }
 
+const updateEntering = ( entering, who ) => {
+  if (entering) {
+    if ( who === username ) {
+      c.entering = {
+        me: true,
+        other: false,
+        who: who
+      }
+    } else {
+      c.entering = {
+        me: false,
+        other: true,
+        who: who
+      }
+    }
+    if (!c.participantList.includes(username)) {
+      $('#otherEnteringText').text(`Please wait: ${c.entering.who} is joining...`)
+      $('#otherEnteringOverlay').show()
+      $('#otherEnteringOverlay').css('opacity', 0.8)
+    }
+  } else {
+    c.entering = {
+      me: false,
+      other: false,
+      who: null
+    }
+    if (!c.participantList.includes(username)) {
+      $('#otherEnteringText').text(`Please wait...`)
+      $('#otherEnteringOverlay').hide()
+    }
+  }
+}
 
-
-export { displayWaitingList, setupAllEvents }
+export { displayWaitingList, setupAllEvents, updateEntering }

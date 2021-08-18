@@ -1,7 +1,6 @@
 import { renderer, scene, stats, clock, windowWidth, windowHeight, controlPanelHeight } from "./scene/scene.js"
 import { c } from "../../setup/chat/settings.js"
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { entranceAnimationPlaying } from "./scene/settings.js"
 
 //import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 //import Stats from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/libs/stats.module.js";
@@ -36,7 +35,7 @@ const animate = () => {
 	c.cameras.main.camera.updateProjectionMatrix()	
 	renderer.render(scene, c.cameras.main.camera);
 
-	if (!entranceAnimationPlaying) {
+	if (!c.entering.me) {
 		renderer.setViewport(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
 		renderer.setScissor(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
 		renderer.setScissorTest( true );

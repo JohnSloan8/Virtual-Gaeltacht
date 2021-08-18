@@ -1,16 +1,12 @@
 const showTable = false
 const showAxesHelper = true
 const showColumn = false
-var entranceAnimationPlaying = false
-function setEntranceAnimationPlaying(tF) {
-	entranceAnimationPlaying = tF
-}
 const showMe = true
 const orbitControls = true
 
 const background = {
 	displayGround: true,
-	displayFog: false,
+	displayFog: true,
 	skyColor: 0x87ceeb,
 	groundColor: 0x1b3f01,
 }
@@ -24,7 +20,5 @@ export {
 	orbitControls,
 	background,
 	showShadows,
-	entranceAnimationPlaying,
-	setEntranceAnimationPlaying,
 }
 

@@ -51,4 +51,4 @@ const randomNeckTurn = (who, direction=1) => {
 	}, randomDuration)
 }
 
-export { beginRandomSwaying }
+export { beginRandomSwaying, randomSway, randomNeckTurn }

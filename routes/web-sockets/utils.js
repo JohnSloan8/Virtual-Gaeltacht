@@ -9,18 +9,19 @@ module.exports = {
 	},
 
 	getCurrentParticipants: chatModel_ => {
-		let currentParticipants = chatModel_.participants.filter(p => p.endTime !== 1) // change this to !== null
+		let currentParticipants = chatModel_.participants.filter(p => p.endTime === null)
 		let currentParticipantsList = []
 		currentParticipants.forEach(function(p) {
 			currentParticipantsList.push(p.name)
 		})
+		console.log('currentParticipantsList:', currentParticipantsList)
 		return currentParticipantsList
 	},
 
 	getLookingAt: (chatModel_, participantList_) => {
 		let lookingAt = {}
 		participantList_.forEach(function(p) {
-			let personLookingAtAll = chatModel_.lookingAt.filter(lA => lA.who === p)
+			let personLookingAtAll = chatModel_.lookingAt.filter(lA => lA.who === p && participantList_.includes(lA.whom))
 			//console.log('personLookingAtAll:', personLookingAtAll)
 			let mostRecentWhom = null
 			if (personLookingAtAll.length > 0) {
@@ -37,7 +38,6 @@ module.exports = {
 			}
 			lookingAt[p] = mostRecentWhom
 		})
-		//console.log('lookingAt:', lookingAt)
 		return lookingAt
 	},
 

@@ -12,9 +12,6 @@ const setupCameras = () => {
 		0.01,
 		100
 	);
-	//c.centralPivotGroup = new THREE.Group()
-	//c.centralPivotGroup.add(c.cameras.main.camera)
-	//scene.add(c.centralPivotGroup)
 
 	c.cameras.selfie.camera = new THREE.PerspectiveCamera(
 		45,

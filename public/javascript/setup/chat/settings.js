@@ -1,6 +1,11 @@
 // MAIN CHAT OBJECT
 const c = {
 	p: {}, // participants
+	entering: {
+		me: false,
+		other: false,
+		who: null
+	}
 }
 window.c = c
 

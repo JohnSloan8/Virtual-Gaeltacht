@@ -16,9 +16,12 @@ function initWebSocket() {
 			// NEW CONNECTION
 			if ( clientData.type === 'newConnection' ) {
 				chat = await Chat.findOne({chatURL: path.basename(clientData.chatURL)})
-				
 				let participantList = getCurrentParticipants(chat) // participant list
 				clientData['firstEntry'] = (participantList.includes(clientData.who)) ? false: true
+				if (chat.participants.length === 0) {
+					addParticipantToChatModel(chat, clientData.who)
+					participantList = getCurrentParticipants(chat) // participant list
+				}
 				clientData['participantList'] = participantList
 				clientData['waitingList'] = getWaitingList(chat)
 				clientData['lookingAt'] = getLookingAt(chat, participantList)
@@ -46,8 +49,9 @@ function initWebSocket() {
 			// HOST ADMITS OR REFUSES ENTRY
 			} else if ( clientData.type === 'admitRefuse' ) {
 				let newParticipant = chat.waitingList.shift()
+				let requirer1 = chat.participants.find(p => p.name === newParticipant.requirer1)
 				if (clientData.key === 'admit') {
-					chat.participants.splice(newParticipant.requirer0, 0, {
+					chat.participants.splice(chat.participants.indexOf(requirer1), 0, {
 						name: newParticipant.name,
 						endTime: null
 					})
@@ -56,6 +60,8 @@ function initWebSocket() {
 				clientData['admittedRefusedParticipant'] = newParticipant.name
 				clientData['participantList'] = getCurrentParticipants(chat) // participant list
 				clientData['waitingList'] = getWaitingList(chat)
+				clientData['lookingAtEntry'] = getLookingAt(chat, clientData['participantList'])
+				clientData['lookingAtEntry'][newParticipant.name] = newParticipant.requirer1
 				wss.clients.forEach(function each(client) {
 					if (client.readyState === WebSocket.OPEN) {
 						client.send(JSON.stringify(clientData));

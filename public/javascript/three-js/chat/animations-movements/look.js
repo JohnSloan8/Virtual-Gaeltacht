@@ -34,6 +34,9 @@ const avatarLookAt = (who, toWhom, duration, body=false) => {
 				focalPoint = c.cameras.main.camera.getWorldPosition(direction)
 			} else {
 				focalPoint = c.p[toWhom].movableBodyParts.head.getWorldPosition(direction)
+				// look more at nose area
+				focalPoint.x *= 0.75
+				focalPoint.z *= 0.75
 			}
 		} else {
 			focalPoint = new THREE.Vector3(0, 1.59, 0)

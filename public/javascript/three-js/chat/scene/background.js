@@ -9,7 +9,7 @@ const setupBackground = () => {
 	if ( background.displayGround ) {
 		let plane;
 		plane = new THREE.Mesh(
-			new THREE.PlaneGeometry(10, 10, 10, 10),
+			new THREE.PlaneGeometry(100, 100, 100, 100),
 			new THREE.MeshPhongMaterial({
 				color: background.groundColor,
 				depthWrite: false,
@@ -22,7 +22,7 @@ const setupBackground = () => {
 	}
 	
 	if ( background.displayFog ) {
-		scene.fog = new THREE.Fog(0x87ceeb, 5, 6.0);
+		scene.fog = new THREE.Fog(0x87ceeb, 9, 11);
 	}
 
 }
