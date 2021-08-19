@@ -3,7 +3,7 @@ import { c } from './settings.js'
 
 const calculatePosRot = noP => {
 	organiseParticipantPositions()
-	calculateCameraPosRot(noP)
+	setupCameras(noP)
 	calculateParticipantsPosRot(noP)
 }
 
@@ -21,7 +21,7 @@ function organiseParticipantPositions() {
 	})
 }
 
-const calculateCameraPosRot = noP => {
+const setupCameras = noP => {
 	c.cameras= {
 		main: {
 			position: {
@@ -73,4 +73,4 @@ const calculateParticipantsPosRot = noP => {
 	}
 }
 
-export { calculatePosRot, organiseParticipantPositions, calculateParticipantsPosRot }
+export { calculatePosRot, organiseParticipantPositions, calculateParticipantsPosRot, setupCameras }

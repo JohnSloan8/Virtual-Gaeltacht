@@ -1,5 +1,5 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { avatarLookAt } from "../animations-movements/look.js"
+import { avatarLookAt } from "../animations/look.js"
 import { socketSend } from '../../../web-sockets/chat/send.js'
 import { updateAvatarState } from "../models/states.js"
 import { c } from '../../../setup/chat/settings.js'

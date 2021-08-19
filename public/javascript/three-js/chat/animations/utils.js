@@ -2,7 +2,7 @@ import { avatarLookAt } from './look.js'
 import { expression } from "./expression.js";
 import { avatarNodShake } from "./nod-shake.js";
 import { gesture } from "./gesture.js";
-import { expressionMorphs } from "../animations-prepare/morph-targets.js";
+import { expressionMorphs } from "../animations/morph-targets.js";
 
 window.allLookAt = allLookAt
 function allLookAt(who, jittered=true) {

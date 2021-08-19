@@ -1,6 +1,6 @@
 import { loadScene } from "./scene/load-scene.js"
 import { loadModels } from "./models/load-models.js"
-import { loadAnimationsPrepare } from "./animations-prepare/load-animations-prepare.js"
+import { loadAnimationsPrepare } from "./animations/load-animations.js"
 import { loadEnter } from "./enter/load-enter.js"
 
 const initScene = part => {

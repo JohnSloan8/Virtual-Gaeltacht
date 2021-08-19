@@ -1,6 +1,6 @@
-import { easingDict } from "../animations-prepare/easings.js"
+import { easingDict } from "../animations/easings.js"
 import { dealWithCSSExpressionGestureEvent } from "../enter/click-events.js"
-import { expressionMorphs, jawNeeded } from "../animations-prepare/morph-targets.js"
+import { expressionMorphs, jawNeeded } from "../animations/morph-targets.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { updateAvatarState } from "../models/states.js"

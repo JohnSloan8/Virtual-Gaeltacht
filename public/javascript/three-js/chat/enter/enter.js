@@ -1,19 +1,35 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { c } from '../../../setup/chat/settings.js'
-import { cameraSettings } from "../../../setup/chat/settings.js"
+import { c, cameraSettings } from '../../../setup/chat/settings.js'
 import { onWindowResize, scene } from "../scene/scene.js";
-import { easingDict } from "../animations-prepare/easings.js"
+import { easingDict } from "../animations/easings.js"
+import { createExpressions } from "../animations/prepare-expressions.js"
 import { updateEntering } from '../../../setup/chat/events.js'
-import { avatarLookAt } from "../animations-movements/look.js"
+import { avatarLookAt } from "../animations/look.js"
 import { addSelfieCameraGroup } from "./selfie-camera-group.js"
+import { setupAllEvents } from '../../../setup/chat/events.js'
+import { organiseParticipantPositions, calculateParticipantsPosRot } from '../../../setup/chat/pos-rot.js'
+import { loadIndividualGLTF } from "../models/avatar.js"
+import { animate } from "../animate.js"
+import { enterSceneNormal } from "./load-enter.js"
+
+const newAvatarEnter = (u) => {
+	loadIndividualGLTF(u, true, function(u){
+		createExpressions(u)
+		cameraEnter(u)
+		enterSceneNormal()
+	})
+}
 
 let centralPivotGroup
 const cameraEnter = (amount=0.7, duration=3000, easing="cubicIn") => {
+  setupAllEvents();
+  organiseParticipantPositions(c.participantList.length);
+  calculateParticipantsPosRot(c.participantList.length);
 	let direction = new THREE.Vector3();
 	let headPos = c.p[username].movableBodyParts.head.getWorldPosition(direction)
 
-	c.cameras.main.camera.position.set(0, headPos.y+0.2, c.p[username].posRot.position.z + 1 );
+	c.cameras.main.camera.position.set(0, headPos.y+0.4, c.p[username].posRot.position.z + 2 );
 	c.cameras.main.camera.lookAt(0, 1.6, 0);
 	centralPivotGroup = new THREE.Group()
 	centralPivotGroup.add(c.cameras.main.camera)
@@ -50,12 +66,12 @@ const cameraEnter = (amount=0.7, duration=3000, easing="cubicIn") => {
 
 const displayControlPanel = () => {
 	$('#controlPanelOverlay').show()
-	scene.remove(c.p[username].model)
 	scene.remove(centralPivotGroup)
+	scene.add(c.cameras.main.camera)
 	c.cameras.main.camera.position.set(0, c.cameras.main.camera.position.y, cameraSettings[c.participantList.length].radius + cameraSettings[c.participantList.length].cameraZPos);
 	addSelfieCameraGroup();
 	onWindowResize()
 	$('#blackOverlay').fadeOut(3000)
 }
 
-export { cameraEnter }
+export { newAvatarEnter }

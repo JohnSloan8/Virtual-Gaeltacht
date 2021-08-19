@@ -2,7 +2,7 @@ import { initSocket } from '../../web-sockets/chat/receive.js'
 import { c } from './settings.js'
 import { setupAllEvents } from './events.js'
 import { displayChoosePositionCircle } from './choose-position-circle.js'
-import { calculatePosRot } from './pos-rot.js'
+import { calculatePosRot, setupCameras } from './pos-rot.js'
 import { initScene } from '../../three-js/chat/init.js'
 
 initSocket()
@@ -18,7 +18,8 @@ const resolveNewConnection = serverData_ => {
   })
   console.log('c:', c)
   if (c.host !== username && c.firstEntry) {
-    displayChoosePositionCircle([...c.participantList])
+    setupCameras(c.participantList.length)
+    initScene('scene')
   } else {
     loadAll()
   }

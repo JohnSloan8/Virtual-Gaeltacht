@@ -1,6 +1,6 @@
-import { expression } from "../animations-movements/expression.js"
-import { gesture } from "../animations-movements/gesture.js"
-import { avatarNodShake } from "../animations-movements/nod-shake.js"
+import { expression } from "../animations/expression.js"
+import { gesture } from "../animations/gesture.js"
+import { avatarNodShake } from "../animations/nod-shake.js"
 import { socketSend } from "../../../web-sockets/chat/send.js"
 
 const dealWithCSSExpressionGestureEvent = (emotionGesture, expression, start) => {

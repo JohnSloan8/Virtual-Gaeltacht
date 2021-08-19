@@ -1,23 +1,18 @@
 import { c } from '../../../setup/chat/settings.js'
 import { organiseParticipantPositions, calculateParticipantsPosRot } from "../../../setup/chat/pos-rot.js"
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { calculateLookAngles } from "../animations-prepare/avatar-pos-rot.js"
-import { calculateCameraRot } from "../animations-prepare/camera-pos-rot.js"
-import { randomSway, randomNeckTurn } from "../animations-movements/sway.js"
-import { avatarLookAt } from "../animations-movements/look.js"
-import { randomBlink } from "../animations-movements/blink.js"
-import { createExpressions } from "../animations-prepare/prepare-expressions.js"
+import { calculateLookAngles } from "../enter/avatar-pos-rot.js"
+import { calculateCameraRot } from "../enter/camera-pos-rot.js"
+import { randomSway, randomNeckTurn } from "../animations/sway.js"
+import { avatarLookAt } from "../animations/look.js"
+import { randomBlink } from "../animations/blink.js"
+import { createExpressions } from "../animations/prepare-expressions.js"
 import { loadIndividualGLTF } from "../models/avatar.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import { cameraSettings } from "../../../setup/chat/settings.js"
 //import { displayWaitingList } from "../../../web-sockets/chat/events.js"
 
-//import { initialAvatarStates } from "./states.js"
 const addAvatar = u => {
-
-		//c.p[u] = {
-			//states: {...initialAvatarStates}
-		//}
 
 	organiseParticipantPositions();
 	calculateParticipantsPosRot(c.participantList.length);
@@ -102,6 +97,13 @@ const newAvatarEnter = u => {
 			//}
 		//}
 	} )
+}
+
+const addAvatarWhileChoosingPosition(u) {
+	c.p[u] = {}
+	loadIndividualGLTF(u, false, function(u){
+		createExpressions(u)
+	})
 }
 
 export {moveAvatar, moveAvatarsController, addAvatar}

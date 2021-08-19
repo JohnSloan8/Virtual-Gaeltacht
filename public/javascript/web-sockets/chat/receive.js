@@ -1,12 +1,12 @@
 import { c } from '../../setup/chat/settings.js'
-import { loadAll } from '../../setup/chat/init.js'
+import { newAvatarEnter } from '../../three-js/chat/enter/enter.js'
 import { displayWaitingList, updateEntering } from '../../setup/chat/events.js'
 import { displayChoosePositionCircle } from '../../setup/chat/choose-position-circle.js'
 import { resolveNewConnection } from "../../setup/chat/init.js"
-import { avatarLookAt } from "../../three-js/chat/animations-movements/look.js"
-import { expression } from "../../three-js/chat/animations-movements/expression.js"
-import { gesture } from "../../three-js/chat/animations-movements/gesture.js"
-import { avatarNodShake } from "../../three-js/chat/animations-movements/nod-shake.js"
+import { avatarLookAt } from "../../three-js/chat/animations/look.js"
+import { expression } from "../../three-js/chat/animations/expression.js"
+import { gesture } from "../../three-js/chat/animations/gesture.js"
+import { avatarNodShake } from "../../three-js/chat/animations/nod-shake.js"
 import { addAvatar } from "../../three-js/chat/models/add-avatar.js"
 import { initialAvatarStates } from "../../three-js/chat/models/states.js"
 
@@ -50,9 +50,13 @@ const initSocket = () => {
         }
         if (username === serverData.admittedRefusedParticipant) {
           $('#choosePositionOverlay').hide()
-          loadAll();
+		      newAvatarEnter(serverData.admittedRefusedParticipant)
         } else {
-          addAvatar(serverData.admittedRefusedParticipant)
+          if (c.participantList.includes(username)) {
+            addAvatar(serverData.admittedRefusedParticipant)
+          } else {
+            addAvatarWhileChoosingPosition(serverData.admittedRefusedParticipant);
+          } 
         }
         updateEntering(true, serverData.admittedRefusedParticipant)
       } else {

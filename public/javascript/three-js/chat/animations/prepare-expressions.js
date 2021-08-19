@@ -9,7 +9,7 @@ const prepareExpressions = () => {
 	c.participantList.forEach(function(p) {
 		createExpressions(p)
 	})
-	c.lenMorphs = c.p[c.positions[0]].movableBodyParts.face.morphTargetInfluences.length
+	c.lenMorphs = c.p[c.participantList[0]].movableBodyParts.face.morphTargetInfluences.length
 }
 
 const addHalfAndBlinkExpressions = () => {

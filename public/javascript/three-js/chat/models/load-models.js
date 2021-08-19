@@ -24,7 +24,7 @@ const loadModelGLTF = (avatarName, cb=null) => {
 let avatarCount = 0
 const iterateAvatar = () => {
 	if (avatarCount < c.participantList.length) {
-		let name = c.positions[avatarCount]
+		let name = c.participantList[avatarCount]
 		c.p[name]['states'] = {...initialAvatarStates}
 		loadIndividualGLTF(name, true, iterateAvatar)
   	$('#loadingText').text('loading ' + name + "'s avatar...")
