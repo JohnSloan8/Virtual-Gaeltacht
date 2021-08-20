@@ -23,6 +23,7 @@ const updateChatState = (k, v) => {
         //$('#otherEnteringText').text(`Please wait: ${c.entering.who} is joining...`)
         $('#otherEnteringOverlay').hide()
         $('#otherEnteringOverlay').css('opacity', 1)
+        $('#choosePositionText').text("Click a new place where you wish to stand")
         displayChoosePositionCircle(c.participantList)
       }
     }

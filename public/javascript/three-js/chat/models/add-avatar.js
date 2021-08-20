@@ -16,11 +16,11 @@ import { updateChatState } from '../../../setup/chat/updates.js'
 
 const addAvatar = u => {
   updateChatState('newParticipantEntering', true)
-	let avatarVisibility = true
+	let avatarVisibility = false
 	if (!c.meHavePosition) {
+		avatarVisibility = true
 		setTimeout(function(){
 			updateChatState('newParticipantEntering', false)
-			avatarVisibility = true
 		}, 6000)
 	}
 	c.p[u] = {
@@ -94,10 +94,6 @@ const newAvatarEnter = u => {
 	}, 100)
 	let direction = new THREE.Vector3();
 	let focalPoint = c.p[c.lookingAtEntry[u]].movableBodyParts.head.getWorldPosition(direction)
-	enterAvatarTween.onUpdate(function (object) {
-		c.p[u].movableBodyParts.leftEye.lookAt(focalPoint)
-		c.p[u].movableBodyParts.rightEye.lookAt(focalPoint)
-	})
 	enterAvatarTween.onComplete( function() {
 		calculateCameraRotations()
 		calculateLookAngles(false)

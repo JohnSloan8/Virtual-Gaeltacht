@@ -17,19 +17,20 @@ let centralPivotGroup
 const cameraEnter = (amount=0.7, duration=3000, easing="cubicIn") => {
 	stageReady(); //need this twice as new positions come from server 
 	animate();
+	updateChatState('meEntering', true)
   $('#choosePositionOverlay').hide()
   $('#loadOverlay').hide()
 	let direction = new THREE.Vector3();
 	let headPos = c.p[username].movableBodyParts.head.getWorldPosition(direction)
 
 	// MAIN CAMERA ENTER POSITION
-	c.cameras.main.camera.position.set(0, headPos.y+0.5, cameraSettings[c.participantList.length].radius + cameraSettings[c.participantList.length].cameraZPos + 2 );
+	c.cameras.main.camera.position.set(0, headPos.y+0.5, cameraSettings[c.participantList.length].radius + cameraSettings[c.participantList.length].cameraZPos + 1 );
 	c.cameras.main.camera.lookAt(0, headPos.y, 0);
 	centralPivotGroup = new THREE.Group()
 	centralPivotGroup.add(c.cameras.main.camera)
 	scene.add(centralPivotGroup)
-
-	c.p[username].model.position.set(0, 0, c.cameras.main.camera.position.z + 1 );
+	
+	c.p[username].model.position.set(0, 0, c.cameras.main.camera.position.z-0.5 );
 	c.p[username].model.rotation.y = Math.PI
 	scene.add(c.p[username].model)
 	
@@ -41,7 +42,7 @@ const cameraEnter = (amount=0.7, duration=3000, easing="cubicIn") => {
 	cameraEnterRotateTween.chain(cameraEnterRotateTween2)
 	cameraEnterRotateTween.start()
 
-	let cameraEnterPositionTween = new TWEEN.Tween(c.cameras.main.camera.position).to({y: headPos.y+0.05, z: cameraSettings[c.participantList.length].radius }, duration)
+	let cameraEnterPositionTween = new TWEEN.Tween(c.cameras.main.camera.position).to({y: headPos.y+0.1, z: cameraSettings[c.participantList.length].radius }, duration)
 	.easing(easingDict["quinticIn"])
 
 	let meEnterTween = new TWEEN.Tween(c.p[username].model.position).to({z: cameraSettings[c.participantList.length].radius}, duration*0.9)
@@ -61,7 +62,7 @@ const cameraEnter = (amount=0.7, duration=3000, easing="cubicIn") => {
 		updateChatState('meHavePosition', true)
 		updateChatState('meEntering', false)
   	updateChatState('newParticipantEntering', false)
-	}, duration*1.95+500)
+	}, duration*1.95)
 
 }
 

@@ -41,7 +41,7 @@ const avatarNodShake = (who, nodShake) => {
 		let direction = new THREE.Vector3();
 		let focalPoint;
 		if (c.p[who].states.currentlyLookingAt === c.positions[0]) {
-			focalPoint = camera.getWorldPosition(direction)
+			focalPoint = c.cameras.main.camera.getWorldPosition(direction)
 		} else {
 			focalPoint = c.p[c.p[who].states.currentlyLookingAt].movableBodyParts.head.getWorldPosition(direction)
 			focalPoint.x *= 0.75

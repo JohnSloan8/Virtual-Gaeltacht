@@ -4,7 +4,7 @@ import { socketSend } from '../../web-sockets/chat/send.js'
 const displayChoosePositionCircle = pL => { 
   $('.participants-names').remove()
   $('.choose-participant-location-circle').remove()
-  //let waiter = c.waitingList.find(wL => wL.name === username)
+  let waiter = c.waitingList.find(wL => wL.name === username)
   let circleDiameter = pL.length * 200 / Math.PI
   $('#choosePositionCircle').css({
     "height": circleDiameter,
@@ -38,15 +38,14 @@ const displayChoosePositionCircle = pL => {
 
   $('.choose-participant-location-circle').css("background-color", "white")
   $('.participant-names').css("color", "white")
-  $('#choosePositionText').text("Click a circle where you wish to stand")
 
-  //if (waiter !== undefined) {
-    //highlightChosenSpace(waiter.requirer0, waiter.requirer1)
-  //} else {
+  if (waiter !== undefined) {
+    highlightChosenSpace(waiter.requirer0, waiter.requirer1)
+  } else {
     $('.choose-participant-location-circle').on('click', function(e) {
       choosePositionEvent(e.target.id, pL)
     })
-  //}
+  }
 }
 
 const choosePositionEvent = (p, pL_) => {

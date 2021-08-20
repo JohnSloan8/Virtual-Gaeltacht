@@ -26,7 +26,8 @@ const setPositionsRotationsOfAvatars = () => {
 const setPositionOfMainCamera = () => {
 	let direction = new THREE.Vector3();
 	let headPos = c.p[username].movableBodyParts.head.getWorldPosition(direction)
-	c.cameras.main.camera.position.set(0, headPos.y, cameraSettings[c.participantList.length].cameraZPos+cameraSettings[c.participantList.length].radius)
+	console.log('headPos.y', headPos.y)
+	c.cameras.main.camera.position.set(0, headPos.y+0.1, cameraSettings[c.participantList.length].cameraZPos+cameraSettings[c.participantList.length].radius)
 	c.cameras.main.camera.fov = cameraSettings[c.participantList.length].cameraFov
 }
 

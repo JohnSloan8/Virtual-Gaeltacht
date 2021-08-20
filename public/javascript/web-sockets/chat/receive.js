@@ -40,9 +40,9 @@ const initSocket = () => {
 
     // ADMITTED OR REFUSED
     } else if (serverData.type === "admitRefuse" ) {
+      c.waitingList = serverData.waitingList
       if (serverData.key === 'admit') {
         c.participantList = serverData.participantList
-        c.waitingList = serverData.waitingList
         displayWaitingList()
         c.lookingAtEntry = serverData.lookingAtEntry
         if (username === serverData.admittedRefusedParticipant) {
@@ -55,7 +55,8 @@ const initSocket = () => {
           $('#choosePositionText').html(`Your request was refused or timed out. You can try again.`)
           displayChoosePositionCircle(serverData.participantList)
         }
-        displayWaitingList();
+        console.log('waitingList:', c.waitingList)
+        displayWaitingList()
       }
 
     // PARTICIPANT REMOVED

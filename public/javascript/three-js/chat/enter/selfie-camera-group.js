@@ -10,7 +10,10 @@ let participant0OffsetZ = 5.5
 const addSelfieCameraGroup = entrance => {
 	c.p[username].model.position.z = participant0OffsetZ
 	c.p[username].model.rotation.y = Math.PI
-	c.cameras.selfie.camera.position.set(0, c.cameras.main.camera.position.y-0.1, selfieCameraOffsetZ);
+ 
+	let direction = new THREE.Vector3();
+	let headPos = c.p[username].movableBodyParts.head.getWorldPosition(direction)
+	c.cameras.selfie.camera.position.set(0, headPos.y-0.075, selfieCameraOffsetZ);
 	//const selfieCameraHelper = new THREE.CameraHelper(c.cameras.selfie.camera)
 	const geometry = new THREE.PlaneGeometry( 1, 1 );
 	const mirror = new Reflector( geometry, {

@@ -20,7 +20,6 @@ const loadEnter = () => {
 	scene.add(c.pGroup)
 	//onWindowResize()
 	if (c.firstEntry) {
-		updateChatState('meEntering', true)
     displayChoosePositionCircle([...c.participantList])
 		c.participantList.push(username)
 		stageReady();
