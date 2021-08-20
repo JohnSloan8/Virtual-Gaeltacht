@@ -1,8 +1,8 @@
 import { easingDict } from "../animations/easings.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { c } from "../../../setup/chat/settings.js"
-import { updateAvatarState } from "../models/states.js"
+import { c } from "../../../setup/chat/init.js"
+import { updateAvatarState } from "../../../setup/chat/updates.js"
 
 const beginRandomBlinking = () => {
 	c.participantList.forEach(function(par) {

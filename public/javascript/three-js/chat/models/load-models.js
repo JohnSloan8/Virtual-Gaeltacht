@@ -1,12 +1,9 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/loaders/GLTFLoader.js";
 import { loadIndividualGLTF } from "./avatar.js"
-import { c } from "../../../setup/chat/settings.js"
+import { c } from "../../../setup/chat/init.js"
 import { initialAvatarStates } from "./states.js"
-import { initScene } from "../init.js"
-import { scene } from "../scene/scene.js"
-
-let group, animations, modelGLTFLoader;
+import { initThreeJs } from "../init.js"
 
 const loadModels = () => {
 	c.pGroup = new THREE.Group()
@@ -14,9 +11,9 @@ const loadModels = () => {
 }
 
 const loadModelGLTF = (avatarName, cb=null) => {
-	modelGLTFLoader = new GLTFLoader();
+	let modelGLTFLoader = new GLTFLoader();
 	modelGLTFLoader.load("/avatars/" + avatarName + ".glb", function(gltf) {
-		animations = gltf.animations;
+		c.animations = gltf.animations;
 		cb();
 	})
 }
@@ -25,13 +22,26 @@ let avatarCount = 0
 const iterateAvatar = () => {
 	if (avatarCount < c.participantList.length) {
 		let name = c.participantList[avatarCount]
-		c.p[name]['states'] = {...initialAvatarStates}
-		loadIndividualGLTF(name, true, iterateAvatar)
-  	$('#loadingText').text('loading ' + name + "'s avatar...")
+		loadAvatar(name, iterateAvatar)
 		avatarCount += 1
 	} else {
-		initScene('animations')
+		if (c.firstEntry && c.participantList.length !== 1) {
+			c.p[username] = {}
+			loadAvatar(username, function(){initThreeJs('animations')})
+		} else {
+			initThreeJs('animations')
+		}
 	};
 }
 
-export { loadModels, animations }
+const loadAvatar = (n, cb) => {
+	c.p[n]['states'] = {...initialAvatarStates}
+	loadIndividualGLTF(n, true, cb)
+	if ( n !== username ) {
+		$('#loadingText').text('loading ' + n + "'s avatar...")
+	} else {
+		$('#loadingText').text('loading your avatar...')
+	}
+}
+
+export { loadModels }

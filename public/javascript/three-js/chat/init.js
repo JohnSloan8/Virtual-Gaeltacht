@@ -1,19 +1,19 @@
 import { loadScene } from "./scene/load-scene.js"
 import { loadModels } from "./models/load-models.js"
-import { loadAnimationsPrepare } from "./animations/load-animations.js"
+import { loadAnimations } from "./animations/load-animations.js"
 import { loadEnter } from "./enter/load-enter.js"
 
-const initScene = part => {
+const initThreeJs = part => {
   $('#loadingText').text('loading ' + part + '...')
 	if (part === "scene") {
 		loadScene()
 	} else if (part === "avatars") {
 		loadModels()
 	} else if (part === "animations") {
-		loadAnimationsPrepare()
+		loadAnimations()
 	} else if (part === "enter") {
 		loadEnter()
 	}
 }
 
-export { initScene }
+export { initThreeJs }

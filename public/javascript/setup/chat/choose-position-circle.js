@@ -1,15 +1,14 @@
-import { c } from './settings.js'
+import { c } from './init.js'
 import { socketSend } from '../../web-sockets/chat/send.js'
 
 const displayChoosePositionCircle = pL => { 
-  console.log('pL:', pL)
   $('.participants-names').remove()
   $('.choose-participant-location-circle').remove()
-  let waiter = c.waitingList.find(wL => wL.name === username)
+  //let waiter = c.waitingList.find(wL => wL.name === username)
   let circleDiameter = pL.length * 200 / Math.PI
   $('#choosePositionCircle').css({
     "height": circleDiameter,
-    "width": circleDiameter
+    "width": circleDiameter,
   })
   $('#choosePositionOverlay').show();
   let circleCenterX = $('#choosePositionCircle').offset().left + 0.5 * circleDiameter
@@ -37,17 +36,20 @@ const displayChoosePositionCircle = pL => {
     participantCount += 1
   })
 
-  if (waiter !== undefined) {
-    highlightChosenSpace(waiter.requirer0, waiter.requirer1)
-  } else {
+  $('.choose-participant-location-circle').css("background-color", "white")
+  $('.participant-names').css("color", "white")
+  $('#choosePositionText').text("Click a circle where you wish to stand")
+
+  //if (waiter !== undefined) {
+    //highlightChosenSpace(waiter.requirer0, waiter.requirer1)
+  //} else {
     $('.choose-participant-location-circle').on('click', function(e) {
       choosePositionEvent(e.target.id, pL)
     })
-  }
+  //}
 }
 
 const choosePositionEvent = (p, pL_) => {
-  console.log('pL_:', pL_)
   let requirer0 = p.slice(0, p.length-6)
   let indexOfRequirer0 = pL_.indexOf(requirer0)
   let requirer1

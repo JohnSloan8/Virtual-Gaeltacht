@@ -1,11 +1,11 @@
 import { initialiseVisemeMorphIndexes } from "./visemes.js"
-import { prepareExpressions } from "./prepare-expressions.js"
-import { initScene } from "../init.js"
+import { prepareAllExpressions } from "./prepare-expressions.js"
+import { initThreeJs } from "../init.js"
 
-const loadAnimationsPrepare = () => {
+const loadAnimations = () => {
 	initialiseVisemeMorphIndexes();
-	prepareExpressions();
-	initScene('enter');
+	prepareAllExpressions();
+	initThreeJs('enter');
 }
 
-export { loadAnimationsPrepare }
+export { loadAnimations }

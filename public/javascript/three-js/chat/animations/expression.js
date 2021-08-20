@@ -1,10 +1,10 @@
 import { easingDict } from "../animations/easings.js"
-import { dealWithCSSExpressionGestureEvent } from "../enter/click-events.js"
+import { highlightExpressionGesture } from "../../../setup/chat/events.js"
 import { expressionMorphs, jawNeeded } from "../animations/morph-targets.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { updateAvatarState } from "../models/states.js"
-import { c } from '../../../setup/chat/settings.js'
+import { updateAvatarState } from "../../../setup/chat/updates.js"
+import { c } from '../../../setup/chat/init.js'
 
 const allExpression = e => {
 	c.participantList.forEach(function(p) {
@@ -63,7 +63,7 @@ const expression = (who, e) => {
 		})
 		expressionOut.onComplete( function() {
 			if (who === username ) {
-				dealWithCSSExpressionGestureEvent('emotion', e, false)
+				highlightExpressionGesture('emotion', e, false)
 			}
 			c.p[who].states.changingExpression = false
 			c.p[who].states.expression = "half_" + e

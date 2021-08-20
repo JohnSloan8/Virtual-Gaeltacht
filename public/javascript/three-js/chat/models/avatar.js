@@ -3,17 +3,17 @@ import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/js
 import { addMovableBodyParts } from "./movable-body-parts.js"
 import { addAnimations } from "./animations.js"
 import { showSkeleton } from "./settings.js"
-import { c } from "../../../setup/chat/settings.js"
+import { c } from "../../../setup/chat/init.js"
 
 let gltfLoader, skeleton;
-const loadIndividualGLTF = (name_, visibility, cb=null) => {
+const loadIndividualGLTF = (name_, visibility=true, cb=null) => {
 	gltfLoader = new GLTFLoader();
 	gltfLoader.load("/avatars/" + name_ + ".glb", function(gltf) {
 		c.p[name_].model = gltf.scene;
-		c.p[name_].model.visible = visibility
 		if (name_ !== username) {
 			c.pGroup.add(c.p[name_].model);
 		}
+		c.p[name_].model.visible = visibility
 		c.p[name_].model.traverse(function(object) {
 			if (object.isMesh) {
 				object.castShadow = false;

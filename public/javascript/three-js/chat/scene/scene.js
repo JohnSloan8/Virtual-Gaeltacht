@@ -1,6 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import Stats from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/libs/stats.module.js";
 import { showAxesHelper } from "./settings.js"
+import { c } from '../../../setup/chat/init.js'
 
 let	scene, renderer, clock, container, stats, windowWidth, windowHeight, controlPanelHeight
 const setupScene = () => {

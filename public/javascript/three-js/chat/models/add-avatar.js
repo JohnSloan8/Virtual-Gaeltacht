@@ -1,33 +1,48 @@
-import { c } from '../../../setup/chat/settings.js'
-import { organiseParticipantPositions, calculateParticipantsPosRot } from "../../../setup/chat/pos-rot.js"
+import { c } from '../../../setup/chat/init.js'
+import { sortParticipantList, calculateParticipantsPositionsRotations } from "../calculations/avatar-positions.js"
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { calculateLookAngles } from "../enter/avatar-pos-rot.js"
-import { calculateCameraRot } from "../enter/camera-pos-rot.js"
+import { calculateLookAngles } from "../calculations/avatar-look-rotations.js"
+import { calculateCameraRotations } from "../calculations/camera-look-rotations.js"
 import { randomSway, randomNeckTurn } from "../animations/sway.js"
-import { avatarLookAt } from "../animations/look.js"
+import { avatarLookAt } from "../animations/avatar-look.js"
 import { randomBlink } from "../animations/blink.js"
 import { createExpressions } from "../animations/prepare-expressions.js"
 import { loadIndividualGLTF } from "../models/avatar.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
-import { cameraSettings } from "../../../setup/chat/settings.js"
+import { cameraSettings } from "../enter/set-positions-rotations.js"
+import { initialAvatarStates } from "./states.js"
+import { updateChatState } from '../../../setup/chat/updates.js'
 //import { displayWaitingList } from "../../../web-sockets/chat/events.js"
 
 const addAvatar = u => {
+  updateChatState('newParticipantEntering', true)
+	let avatarVisibility = true
+	if (!c.meHavePosition) {
+		setTimeout(function(){
+			updateChatState('newParticipantEntering', false)
+			avatarVisibility = true
+		}, 6000)
+	}
+	c.p[u] = {
+		states: {...initialAvatarStates}
+	}
+	sortParticipantList();
+	calculateParticipantsPositionsRotations(c.participantList.length);
 
-	organiseParticipantPositions();
-	calculateParticipantsPosRot(c.participantList.length);
 	///need to add model first
-	loadIndividualGLTF(u, false, function(u){
+	loadIndividualGLTF(u, avatarVisibility, function(u){
 		createExpressions(u)
-		moveCamera(u);
-		moveAvatarsController(u);
+		if (c.meHavePosition) {
+			moveAvatarsController(u);
+			moveCamera(u);
+		}
 	})
 }
 window.addAvatar = addAvatar
 
 const moveCamera = u => {
 	let newCameraZPos = {z: cameraSettings[c.participantList.length].radius + cameraSettings[c.participantList.length].cameraZPos}
-	let moveCameraTween = new TWEEN.Tween(c.cameras.main.camera.position).to(newCameraZPos, 1000).easing(TWEEN.Easing.Quintic.Out)
+	let moveCameraTween = new TWEEN.Tween(c.cameras.main.camera.position).to(newCameraZPos, 3000).easing(TWEEN.Easing.Quintic.Out)
 	moveCameraTween.start()
 	moveCameraTween.onComplete(function(object) {
 		newAvatarEnter(u)
@@ -43,7 +58,7 @@ const moveAvatarsController = u => {
 }
 
 const moveAvatar = n => {
-	if (c.reversePositions[n] !== 0) {
+	if (n !== username) {
 		let newXZPos = {
 			x: c.p[n].posRot.position.x,
 			z: c.p[n].posRot.position.z
@@ -51,15 +66,15 @@ const moveAvatar = n => {
 		let newYRot = {
 			y: c.p[n].posRot.rotation.y
 		}
-		let moveAvatarTween = new TWEEN.Tween(c.p[n].model.position).to(newXZPos, 1000)
-		let rotateAvatarTween = new TWEEN.Tween(c.p[n].model.rotation).to(newYRot, 1000)
+		let moveAvatarTween = new TWEEN.Tween(c.p[n].model.position).to(newXZPos, 3000)
+		let rotateAvatarTween = new TWEEN.Tween(c.p[n].model.rotation).to(newYRot, 3000)
 		moveAvatarTween.easing(TWEEN.Easing.Quintic.Out)
 		rotateAvatarTween.easing(TWEEN.Easing.Quintic.Out)
 		moveAvatarTween.start()
 		rotateAvatarTween.start()
-		moveAvatarTween.onComplete( function(object) {
-			avatarLookAt(n, c.p[n].states.currentlyLookingAt, 500)
-		})
+		//moveAvatarTween.onComplete( function(object) {
+			//avatarLookAt(n, c.p[n].states.currentlyLookingAt, 500)
+		//})	
 	}
 }
 
@@ -77,33 +92,28 @@ const newAvatarEnter = u => {
 	setTimeout(function(){
 		c.p[u].model.visible = true
 	}, 100)
-	let focalPoint = c.cameras.main.camera.getWorldPosition(new THREE.Vector3)
+	let direction = new THREE.Vector3();
+	let focalPoint = c.p[c.lookingAtEntry[u]].movableBodyParts.head.getWorldPosition(direction)
 	enterAvatarTween.onUpdate(function (object) {
 		c.p[u].movableBodyParts.leftEye.lookAt(focalPoint)
 		c.p[u].movableBodyParts.rightEye.lookAt(focalPoint)
 	})
 	enterAvatarTween.onComplete( function() {
-		calculateCameraRot()
+		calculateCameraRotations()
 		calculateLookAngles(false)
 		randomSway(u)
 		randomNeckTurn(u)
 		randomBlink(u)
-		avatarLookAt(u, c.lookingAtEntry[u], 500)
-		//if (username === host) {
-      //chat.newParticipantEntering = false;
-			//displayWaitingList()
-			//if (c.participantList.length === 2) {
-				//avatarLookAt(host, u, 5000)
-			//}
-		//}
+		
+		c.participantList.forEach(function(n) {
+			if (n !== u) {
+				avatarLookAt(n, c.p[n].states.currentlyLookingAt, 1000)
+			} else {
+				avatarLookAt(n, c.lookingAtEntry[u], 1000)
+			}
+		})	
+  	updateChatState('newParticipantEntering', false)
 	} )
 }
 
-const addAvatarWhileChoosingPosition(u) {
-	c.p[u] = {}
-	loadIndividualGLTF(u, false, function(u){
-		createExpressions(u)
-	})
-}
-
-export {moveAvatar, moveAvatarsController, addAvatar}
+export { addAvatar }

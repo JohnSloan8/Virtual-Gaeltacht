@@ -1,15 +1,14 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import { baseActions, additiveActions } from "./settings.js"
-import { animations } from "./load-models.js"
-import { c } from '../../../setup/chat/settings.js'
+import { c } from '../../../setup/chat/init.js'
 
 let numAnimations, clip, name, action;
 const addAnimations = n => {
 	c.p[n].mixer = new THREE.AnimationMixer(c.p[n].model);
-	numAnimations = animations.length;
+	numAnimations = c.animations.length;
 	c.p[n]['allActions'] = [];
 	for (let j = 0; j !== numAnimations; ++j) {
-		clip = animations[j].clone();
+		clip = c.animations[j].clone();
 		name = clip.name;
 		if ( baseActions[ name ] ) {
 			const action = c.p[n].mixer.clipAction( clip );

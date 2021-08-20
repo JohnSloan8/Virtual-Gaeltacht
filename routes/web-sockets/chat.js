@@ -56,10 +56,11 @@ function initWebSocket() {
 						endTime: null
 					})
 				}
+				chat.waitingList = []
 				chat.save()
 				clientData['admittedRefusedParticipant'] = newParticipant.name
 				clientData['participantList'] = getCurrentParticipants(chat) // participant list
-				clientData['waitingList'] = getWaitingList(chat)
+				clientData['waitingList'] = []
 				clientData['lookingAtEntry'] = getLookingAt(chat, clientData['participantList'])
 				clientData['lookingAtEntry'][newParticipant.name] = newParticipant.requirer1
 				wss.clients.forEach(function each(client) {

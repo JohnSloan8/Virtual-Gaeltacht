@@ -1,4 +1,4 @@
-import { c } from "../../../setup/chat/settings.js"
+import { c } from "../../../setup/chat/init.js"
 
 const initialiseVisemeMorphIndexes = () => {
 	c.mouthedVisemes = []

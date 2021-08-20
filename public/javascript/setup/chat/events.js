@@ -1,25 +1,4 @@
-import { c } from './settings.js'
-import { socketSend } from "../../web-sockets/chat/send.js"
-
-const setupAllEvents = () => {
-  setUpAdmitRefuseEvents();
-  setUpLeaveEvent();
-}
-
-const setUpAdmitRefuseEvents = () => {
-  $('.admit-refuse').on('click', function(e) {
-    e.preventDefault();
-    socketSend('admitRefuse', e.target.id);
-  })
-}
-
-const setUpLeaveEvent = () => {
-  console.log('setting up leave Event')
-  $('#leaveButton').on('click', function(e) {
-    e.preventDefault()
-  	removeParticipant(username)
-  })
-}
+import { c } from './init.js'
 
 const displayWaitingList = () => {
   $('#allowEntry').hide();
@@ -40,37 +19,14 @@ const displayWaitingList = () => {
   }
 }
 
-const updateEntering = ( entering, who ) => {
-  if (entering) {
-    if ( who === username ) {
-      c.entering = {
-        me: true,
-        other: false,
-        who: who
-      }
-    } else {
-      c.entering = {
-        me: false,
-        other: true,
-        who: who
-      }
-    }
-    if (!c.participantList.includes(username)) {
-      $('#otherEnteringText').text(`Please wait: ${c.entering.who} is joining...`)
-      $('#otherEnteringOverlay').show()
-      $('#otherEnteringOverlay').css('opacity', 0.8)
-    }
-  } else {
-    c.entering = {
-      me: false,
-      other: false,
-      who: null
-    }
-    if (!c.participantList.includes(username)) {
-      $('#otherEnteringText').text(`Please wait...`)
-      $('#otherEnteringOverlay').hide()
-    }
-  }
+const highlightExpressionGesture = (emotionGesture, expression, start) => {
+	if (start) {
+		$('#' + expression).parent().removeClass('bg-dark')	
+		$('#' + expression).parent().addClass('bg-light')	
+	} else {
+		$('#' + expression).parent().removeClass('bg-light')	
+		$('#' + expression).parent().addClass('bg-dark')	
+	}
 }
 
-export { displayWaitingList, setupAllEvents, updateEntering }
+export { displayWaitingList, highlightExpressionGesture }

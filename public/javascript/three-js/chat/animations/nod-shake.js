@@ -1,8 +1,8 @@
-import { dealWithCSSExpressionGestureEvent } from "../enter/click-events.js"
+import { highlightExpressionGesture } from "../../../setup/chat/events.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { updateAvatarState } from "../models/states.js"
-import { c } from '../../../setup/chat/settings.js'
+import { updateAvatarState } from "../../../setup/chat/updates.js"
+import { c } from '../../../setup/chat/init.js'
 
 const dampedSineEasingShake = k => {
 	return 2*Math.exp(-2*k)*Math.cos(6*Math.PI*k - Math.PI/2)
@@ -34,7 +34,7 @@ const avatarNodShake = (who, nodShake) => {
 			updateAvatarState(who, 'nodShaking', true)
 			if (who === 0 ) {
 				socketSend('nodShake', nodShake)
-				dealWithCSSExpressionGestureEvent("nodShake", nodShake + "_head", true)
+				highlightExpressionGesture("nodShake", nodShake + "_head", true)
 			}
 		})
 
@@ -44,15 +44,18 @@ const avatarNodShake = (who, nodShake) => {
 			focalPoint = camera.getWorldPosition(direction)
 		} else {
 			focalPoint = c.p[c.p[who].states.currentlyLookingAt].movableBodyParts.head.getWorldPosition(direction)
+			focalPoint.x *= 0.75
+			focalPoint.z *= 0.75
 		}
+		updateAvatarState(who, 'focalPoint', focalPoint)
 		start.onUpdate(function (object) {
-			c.p[who].movableBodyParts.leftEye.lookAt(focalPoint)
-			c.p[who].movableBodyParts.rightEye.lookAt(focalPoint)
+			c.p[who].movableBodyParts.leftEye.lookAt(c.p[who].states.focalPoint)
+			c.p[who].movableBodyParts.rightEye.lookAt(c.p[who].states.focalPoint)
 		})
 		start.onComplete( function() {
 			updateAvatarState(who, 'nodShaking', false)
 			if (who === 0 ) {
-				dealWithCSSExpressionGestureEvent("nodShake", nodShake + "_head", false)
+				highlightExpressionGesture("nodShake", nodShake + "_head", false)
 			}
 		})
 	} else {

@@ -1,14 +1,13 @@
-import { c } from '../../setup/chat/settings.js'
-import { newAvatarEnter } from '../../three-js/chat/enter/enter.js'
-import { displayWaitingList, updateEntering } from '../../setup/chat/events.js'
+import { c } from '../../setup/chat/init.js'
+import { cameraEnter } from '../../three-js/chat/enter/camera-enter.js'
+import { displayWaitingList } from '../../setup/chat/events.js'
 import { displayChoosePositionCircle } from '../../setup/chat/choose-position-circle.js'
 import { resolveNewConnection } from "../../setup/chat/init.js"
-import { avatarLookAt } from "../../three-js/chat/animations/look.js"
+import { avatarLookAt } from "../../three-js/chat/animations/avatar-look.js"
 import { expression } from "../../three-js/chat/animations/expression.js"
 import { gesture } from "../../three-js/chat/animations/gesture.js"
 import { avatarNodShake } from "../../three-js/chat/animations/nod-shake.js"
 import { addAvatar } from "../../three-js/chat/models/add-avatar.js"
-import { initialAvatarStates } from "../../three-js/chat/models/states.js"
 
 // CREATE WEBSOCKET CONNECTION
 var socket
@@ -28,6 +27,7 @@ const initSocket = () => {
   socket.addEventListener('message', function (event) {
     let serverData = JSON.parse(event.data)
     console.log('serverData:', serverData)
+
     // NEW CONNECTION
     if (serverData.type === "newConnection" ) {
       resolveNewConnection(serverData) 
@@ -40,32 +40,23 @@ const initSocket = () => {
 
     // ADMITTED OR REFUSED
     } else if (serverData.type === "admitRefuse" ) {
-      c.participantList = serverData.participantList
-      c.waitingList = serverData.waitingList
       if (serverData.key === 'admit') {
         c.participantList = serverData.participantList
+        c.waitingList = serverData.waitingList
+        displayWaitingList()
         c.lookingAtEntry = serverData.lookingAtEntry
-        c.p[serverData.admittedRefusedParticipant] = {
-          states: {...initialAvatarStates}
-        }
         if (username === serverData.admittedRefusedParticipant) {
-          $('#choosePositionOverlay').hide()
-		      newAvatarEnter(serverData.admittedRefusedParticipant)
+		      cameraEnter()
         } else {
-          if (c.participantList.includes(username)) {
-            addAvatar(serverData.admittedRefusedParticipant)
-          } else {
-            addAvatarWhileChoosingPosition(serverData.admittedRefusedParticipant);
-          } 
+          addAvatar(serverData.admittedRefusedParticipant)
         }
-        updateEntering(true, serverData.admittedRefusedParticipant)
       } else {
         if (username === serverData.admittedRefusedParticipant) {
           $('#choosePositionText').html(`Your request was refused or timed out. You can try again.`)
           displayChoosePositionCircle(serverData.participantList)
         }
+        displayWaitingList();
       }
-      displayWaitingList();
 
     // PARTICIPANT REMOVED
     } else if (serverData.type === "removeParticipant" ) {
@@ -84,17 +75,8 @@ const initSocket = () => {
     // OTHER PARTICIPANT ACTIONS
     } else if (c.participantList !== undefined) {
 
-      // SOMEONE ENTERS
-      if (serverData.type === "newParticipantEnter" ) {
-      // check if it was not just refresh
-        if (c.participantList.indexOf(serverData.who) === -1) {
-          addAvatar(serverData.who)
-        } else {
-          console.log('already in names:', serverData.name)
-        }
-
       // LOOKS
-      } else if (serverData.type === "look" ) {
+      if (serverData.type === "look" ) {
         avatarLookAt(serverData.who, serverData.key, 500)
       
       // FACIAL EXPRESSIONS

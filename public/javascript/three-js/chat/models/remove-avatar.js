@@ -1,5 +1,5 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { cameraMeGroup, calculateCameraRot } from "../../animations/init.js"
+import { cameraMeGroup, calculateCameraRotations } from "../../animations/init.js"
 import calculatePosRot from  "../../scene/components/pos-rot.js"
 import { posRot, c.participantList, names, reversePositions, findPositionOfReducedParticipants } from "../../scene/components/pos-rot.js"
 import { setNoParticipants } from "../../scene/settings.js"
@@ -56,7 +56,7 @@ function moveCameraAndMirrorReduce(u) {
 				}
 			}
 		})
-		calculateCameraRot()
+		calculateCameraRotations()
 		calculateLookAngles(false)
 		c.participantList.forEach(function(p) {
 			avatarLookAt(p, participants[p].states.currentlyLookingAt, 500)

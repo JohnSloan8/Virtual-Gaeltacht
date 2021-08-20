@@ -1,7 +1,7 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { easingDict, easings } from "../animations/easings.js"
 import { updateAvatarState } from "../models/states.js"
-import { c } from '../../../setup/chat/settings.js'
+import { c } from '../../../setup/chat/init.js'
 
 window.startMouthing = startMouthing
 function startMouthing(who) {

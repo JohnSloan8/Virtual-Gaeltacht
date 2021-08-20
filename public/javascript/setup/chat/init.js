@@ -1,34 +1,36 @@
 import { initSocket } from '../../web-sockets/chat/receive.js'
-import { c } from './settings.js'
-import { setupAllEvents } from './events.js'
-import { displayChoosePositionCircle } from './choose-position-circle.js'
-import { calculatePosRot, setupCameras } from './pos-rot.js'
-import { initScene } from '../../three-js/chat/init.js'
+import { initThreeJs } from '../../three-js/chat/init.js'
 
 initSocket()
 
 const resolveNewConnection = serverData_ => {
-  c.participantList = serverData_.participantList
-  c.lookingAtEntry = serverData_.lookingAt
-  c.waitingList = serverData_.waitingList
-  c.firstEntry = serverData_.firstEntry
-  c.host = serverData_.host
+  propogateC(serverData_)
+  initThreeJs('scene')
+}
+
+let c
+const propogateC = sD_ => {
+  c = {
+    p: {}, // participants
+    newParticipantEntering: true,
+    meEntering: false,
+    positions: {},
+    reversePositions: {},
+    participantList: sD_.participantList,
+    lookingAtEntry: sD_.lookingAt,
+    waitingList: sD_.waitingList,
+    firstEntry: sD_.firstEntry,
+    meHavePosition: true,
+    host: sD_.host
+  }
   c.participantList.forEach(function(n){
     c.p[n] = {}
   })
-  console.log('c:', c)
-  if (c.host !== username && c.firstEntry) {
-    setupCameras(c.participantList.length)
-    initScene('scene')
-  } else {
-    loadAll()
+  if (!c.participantList.includes(username)) {
+    c.meHavePosition = false;
   }
+  console.log('c:', c)
+  window.c = c
 }
 
-const loadAll = () => {
-  setupAllEvents()
-  calculatePosRot(c.participantList.length)
-  initScene('scene')
-}
-
-export { resolveNewConnection, loadAll }
+export { resolveNewConnection, c }

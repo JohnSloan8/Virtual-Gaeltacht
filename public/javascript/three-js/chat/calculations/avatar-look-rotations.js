@@ -1,12 +1,5 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
-import { c } from '../../../setup/chat/settings.js'
-
-const setPosRotOfAvatars = () => {
-	c.participantList.forEach(function(n) {
-		c.p[n].model.rotation.set(0, c.p[n].posRot.rotation.y, 0);
-		c.p[n].model.position.set(c.p[n].posRot.position.x, 0, c.p[n].posRot.position.z);
-	})
-}
+import { c } from '../../../setup/chat/init.js'
 
 const calculateLookAngles = firstLoad => {
 	let cameraDirection = new THREE.Vector3();
@@ -23,9 +16,19 @@ const calculateLookAngles = firstLoad => {
 		c.p[n].cube = new THREE.Mesh( geometry, material );
 		
 		let direction = new THREE.Vector3();
-		let focalPoint = c.p[n].movableBodyParts.head.getWorldPosition(direction)
+		let focalPoint
+		let yRotation
+			
+		if (n!== username) {
+			focalPoint = c.p[n].movableBodyParts.head.getWorldPosition(direction)
+			yRotation = c.p[n].posRot.rotation.y
+		} else {
+			focalPoint = c.cameras.main.camera.getWorldPosition(direction)
+			console.log('camera focal point:', focalPoint)
+			yRotation = -Math.PI
+		}
 		cubeGroup.position.set(focalPoint.x, focalPoint.y, focalPoint.z)
-		cubeGroup.rotation.y = c.p[n].posRot.rotation.y
+		cubeGroup.rotation.y = yRotation
 		cubeGroup.add(c.p[n].cube)
 		c.p[n].lookRotations =  {}
 		c.participantList.forEach(function(m) {
@@ -34,10 +37,14 @@ const calculateLookAngles = firstLoad => {
 			if (m!==n) {	
 				direction = new THREE.Vector3();
 				headPos = c.p[m].movableBodyParts.head.getWorldPosition(direction)
-				c.p[n].cube.lookAt(headPos)
+				if (m!== username) {
+					c.p[n].cube.lookAt(headPos)
+				} else {
+					focalPoint = c.cameras.main.camera.getWorldPosition(direction)
+					c.p[n].cube.lookAt(focalPoint)
+				}
 				c.p[n].lookRotations[m] = {}
 				let yr = c.p[n].cube.rotation
-				//let y0 = c.p[n].posRot.rotation.y
 				c.p[n].lookRotations[m].head = {x:yr.x*headMult, y:yr.y*headMult*2, z:yr.z*headMult}
 				c.p[n].lookRotations[m].spine2 = {x:yr.x*spine2Mult, y:yr.y*spine2Mult*2, z:yr.z*spine2Mult}
 				c.p[n].lookRotations[m].spine1 = {x:yr.x*spine1Mult, y:yr.y*spine1Mult*2, z:yr.z*spine1Mult}
@@ -46,4 +53,4 @@ const calculateLookAngles = firstLoad => {
 	})
 }
 
-export { setPosRotOfAvatars, calculateLookAngles }
+export { calculateLookAngles }

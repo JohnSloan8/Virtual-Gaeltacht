@@ -1,4 +1,4 @@
-import { c } from "../../../setup/chat/settings.js"
+import { c } from "../../../setup/chat/init.js"
 
 const	initialAvatarStates = {
 	currentlyLookingAt: null,
@@ -11,12 +11,4 @@ const	initialAvatarStates = {
 	gesturing: false
 }
 
-const updateAvatarState = (who, k, v) => {
-	//console.log('updateState:  ', who, k, v)
-	c.p[who].states[k] = v
-}
-
-export {
-	initialAvatarStates,
-	updateAvatarState
-}
+export { initialAvatarStates }

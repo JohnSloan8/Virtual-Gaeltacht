@@ -1,6 +1,6 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { easingDict } from "../animations/easings.js"
-import { c } from '../../../setup/chat/settings.js'
+import { c } from '../../../setup/chat/init.js'
 
 const beginRandomSwaying = () => {
 	c.participantList.forEach(function(par) {
