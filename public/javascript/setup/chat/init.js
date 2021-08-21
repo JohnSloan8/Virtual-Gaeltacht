@@ -14,13 +14,14 @@ const propogateC = sD_ => {
     p: {}, // participants
     newParticipantEntering: true,
     meEntering: false,
+    meHavePosition: true,
+    participantLeaving: false,
     positions: {},
     reversePositions: {},
     participantList: sD_.participantList,
     lookingAtEntry: sD_.lookingAt,
     waitingList: sD_.waitingList,
     firstEntry: sD_.firstEntry,
-    meHavePosition: true,
     host: sD_.host
   }
   c.participantList.forEach(function(n){

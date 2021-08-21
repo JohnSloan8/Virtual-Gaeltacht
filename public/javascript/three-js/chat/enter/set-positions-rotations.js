@@ -27,7 +27,9 @@ const setPositionOfMainCamera = () => {
 	let direction = new THREE.Vector3();
 	let headPos = c.p[username].movableBodyParts.head.getWorldPosition(direction)
 	console.log('headPos.y', headPos.y)
-	c.cameras.main.camera.position.set(0, headPos.y+0.1, cameraSettings[c.participantList.length].cameraZPos+cameraSettings[c.participantList.length].radius)
+	let zPos = cameraSettings[c.participantList.length].cameraZPos+cameraSettings[c.participantList.length].radius
+	console.log('zPos', zPos)
+	c.cameras.main.camera.position.set(0, headPos.y+0.1, zPos)
 	c.cameras.main.camera.fov = cameraSettings[c.participantList.length].cameraFov
 }
 

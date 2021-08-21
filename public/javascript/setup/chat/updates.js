@@ -1,7 +1,7 @@
 import { c } from "./init.js"
 import { setupKeyBindings, disableKeyBindings } from "./keyboard-events.js"
 import { displayChoosePositionCircle } from "./choose-position-circle.js"
-import { displayWaitingList } from './events.js'
+import { displayWaitingList, displayLeaveButton } from './events.js'
 
 const updateAvatarState = (who, k, v) => {
 	c.p[who].states[k] = v
@@ -12,6 +12,7 @@ const updateChatState = (k, v) => {
   if (k === 'newParticipantEntering') {
     if (v) {
       disableKeyBindings();
+      displayLeaveButton(false);
       if (!c.meHavePosition) {
         $('#otherEnteringText').text(`Please wait, someone else is joining...`)
         $('#otherEnteringOverlay').show()
@@ -19,13 +20,21 @@ const updateChatState = (k, v) => {
       }
     } else {
       setupKeyBindings();
+      displayLeaveButton(true);
       if (!c.meHavePosition) {
-        //$('#otherEnteringText').text(`Please wait: ${c.entering.who} is joining...`)
         $('#otherEnteringOverlay').hide()
         $('#otherEnteringOverlay').css('opacity', 1)
         $('#choosePositionText').text("Click a new place where you wish to stand")
         displayChoosePositionCircle(c.participantList)
       }
+    }
+  } else if (k === 'newParticipantEntering') {
+    if (v) {
+      disableKeyBindings();
+      displayLeaveButton(false);
+    } else {
+      setupKeyBindings();
+      displayLeaveButton(true);
     }
   }
 }

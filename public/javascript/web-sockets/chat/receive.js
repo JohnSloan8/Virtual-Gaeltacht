@@ -8,6 +8,7 @@ import { expression } from "../../three-js/chat/animations/expression.js"
 import { gesture } from "../../three-js/chat/animations/gesture.js"
 import { avatarNodShake } from "../../three-js/chat/animations/nod-shake.js"
 import { addAvatar } from "../../three-js/chat/models/add-avatar.js"
+import { removeAvatar } from "../../three-js/chat/models/remove-avatar.js"
 
 // CREATE WEBSOCKET CONNECTION
 var socket
@@ -61,15 +62,11 @@ const initSocket = () => {
 
     // PARTICIPANT REMOVED
     } else if (serverData.type === "removeParticipant" ) {
+      console.log('removeParticipant serverData:', serverData)
       if (username === serverData.who) {
         window.location.href = '/dashboard'
       } else {
-        //participantNames = serverData.participantNames
-        host = serverData.host
-        if (username === host) {
-          alert('you are the new host')
-          $('#host').show()
-        }
+        c.participantList = serverData.participantList
         removeAvatar(serverData.who)
       }
 

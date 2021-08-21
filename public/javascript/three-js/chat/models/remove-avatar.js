@@ -1,49 +1,44 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { cameraMeGroup, calculateCameraRotations } from "../../animations/init.js"
-import calculatePosRot from  "../../scene/components/pos-rot.js"
-import { posRot, c.participantList, names, reversePositions, findPositionOfReducedParticipants } from "../../scene/components/pos-rot.js"
-import { setNoParticipants } from "../../scene/settings.js"
-import { moveAvatarsController, moveAvatar } from "./addAvatar.js"
-import { calculateLookAngles } from "./avatar.js"
-import { updateAvatarState } from "./states.js"
-import { displayWaitingList, removeParticipant } from "../../../../web-sockets/chat/socket-logic.js"
+import { moveAvatarsController } from "./add-avatar.js"
+import { updateAvatarState } from "../../../setup/chat/updates.js"
+import { displayWaitingList } from "../../../setup/chat/events.js"
+import { c } from "../../../setup/chat/init.js"
+import { calculateParticipantsPositionsRotations, sortParticipantList } from '../calculations/avatar-positions.js'
+import { calculateLookAngles } from "../calculations/avatar-look-rotations.js"
+import { calculateCameraRotations } from "../calculations/camera-look-rotations.js"
+import { cameraSettings } from '../enter/set-positions-rotations.js'
 
-export default function removeAvatar(u) {
-	chat.participantLeaving = true
-	if (posRot[c.participantList.length-1] === undefined) {
-		calculatePosRot(c.participantList.length-1);
-	}
+const removeAvatar = u => {
+	updateChatState('participantLeaving', true)
 	avatarLeave(u)
-	setNoParticipants(c.participantList.length-1);
-	findPositionOfReducedParticipants(u)
 }
 
-function avatarLeave(u) {
-	console.log('c.participantList:', c.participantList)
+const avatarLeave = u => {
 	let avatarLeaveFinalPos = {
-		x: posRot[c.participantList.length][reversePositions[u]].x*10,
+		x: c.p[u].model.position.x*5,
 		y: 0, 
-		z: posRot[c.participantList.length][reversePositions[u]].z*10
+		z: c.p[u].model.position.z*5
 	}
-	let avatarLeaveTween = new TWEEN.Tween(participants[u].model.position).to(avatarLeaveFinalPos, 1000)
+	let avatarLeaveTween = new TWEEN.Tween(c.p[u].model.position).to(avatarLeaveFinalPos, 3000)
 	avatarLeaveTween.easing(TWEEN.Easing.Cubic.In)
 	avatarLeaveTween.start()
 	avatarLeaveTween.onComplete( function() {
-		moveAvatarsController();
-		moveCameraAndMirrorReduce(u);
+		sortParticipantList();
+		calculateParticipantsPositionsRotations(c.participantList.length)
+		moveAvatarsController(u);
+		moveCameraReduce(u);
 	})
 }
-function moveCameraAndMirrorReduce(u) {
-	console.log('in moveCameraAndMirrorReduce')
-	let newCameraZPos = {z: posRot[c.participantList.length].camera.z}
-	let moveCameraTween = new TWEEN.Tween(camera.position).to(newCameraZPos, 1000).easing(TWEEN.Easing.Quintic.Out)
+
+const moveCameraReduce = u => {
+	let newCameraZPos = {z: cameraSettings[c.participantList.length].radius + cameraSettings[c.participantList.length].cameraZPos}
+	let moveCameraTween = new TWEEN.Tween(c.cameras.main.camera.position).to(newCameraZPos, 3000).easing(TWEEN.Easing.Quintic.Out)
 	moveCameraTween.start()
-	//cameraMeGroup.position.z = newCameraZPos.z
 	moveCameraTween.onComplete(function(object) {
-		group.remove(participants[u].model)
-		delete participants[u]
+		c.pGroup.remove(c.p[u].model)
+		delete c.p[u]
 		c.participantList.forEach(function(p) {
-			if (!c.participantList.includes(participants[p].states.currentlyLookingAt)) {
+			if (!c.participantList.includes(c.p[p].states.currentlyLookingAt)) {
 				
 				if (c.participantList.length > 1){
 					if (p === c.positions[0]) {
@@ -56,15 +51,14 @@ function moveCameraAndMirrorReduce(u) {
 				}
 			}
 		})
-		calculateCameraRotations()
-		calculateLookAngles(false)
+		calculateLookAngles();
+		calculateCameraRotations();
 		c.participantList.forEach(function(p) {
-			avatarLookAt(p, participants[p].states.currentlyLookingAt, 500)
+			avatarLookAt(p, c.p[p].states.currentlyLookingAt, 500)
 		})
-		if (username === host) {
-			chat.participantLeaving = false;
-			displayWaitingList()
-		}
+		updateChatState('participantLeaving', false)
+		displayWaitingList()
 	})
 }
 
+export { removeAvatar }

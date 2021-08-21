@@ -20,7 +20,10 @@
 		<h3 id="otherEnteringText">Please wait</h3>
 	</div>	
 </div>
-<a href="#" data-toggle="modal" data-target="#leaveChatModal" style="position: absolute; top: 5px; right: 5px; width: 100px;" class="btn btn-sm btn-danger btn-block">Leave</a>
+<div id="leaveButtonContainer" style="position: absolute; top: 5px; right: 5px;">
+	<a href="#" data-toggle="modal" data-target="#leaveChatModal" style="width: 100px;" class="btn btn-sm btn-danger btn-block" id="leaveModalButton">Leave</a>
+	<p id="someoneEntering" style="display: none; position absolute">someone is entering...</p>
+</div>
 <div id="allowEntry" style="position:absolute; z-index: 104; top: 50px; display: none;">
 	<div class="card text-white bg-secondary mb-2" style="max-width: 20rem;">
   <div class="card-header">Waiting Room</div>

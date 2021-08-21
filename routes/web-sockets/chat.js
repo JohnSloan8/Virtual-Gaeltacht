@@ -79,27 +79,16 @@ function initWebSocket() {
 
 			// PARTICIPANT LEAVES
 			} else if ( clientData.type === 'removeParticipant' ) {
-				let p = chat.participants.find(e => e.name === clientData.who)
+				let p = chat.participants.find(e => e.name === clientData.who && e.endTime === null)
 				p.endTime = Date.now()
-				ws.close()
-				let currentParticipants = chat.participants.filter(p => p.endTime === null )
-				if (currentParticipants.length > 0) {
-					chat.host = currentParticipants[0].name
-				}
 				chat.save()
-				let participantNames = ""
-				currentParticipants.forEach(function(p) {
-					participantNames += p.name + ","
-				})
-				participantNames = participantNames.slice(0, participantNames.length - 1)
-				clientData['participantNames'] = participantNames
-				clientData['host'] = chat.host
+				console.log('removeParticipant:', chat.participants)
+				clientData['participantList'] = getCurrentParticipants(chat) // participant list
 				wss.clients.forEach(function each(client) {
 					if ( client.readyState === WebSocket.OPEN) {
 						client.send(JSON.stringify(clientData));
 					}
 				});
-
 			// ALL GESTURES
 			} else {
 				wss.clients.forEach(function each(client) {

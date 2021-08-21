@@ -42,10 +42,9 @@ const setupAdmitRefuseEvents = () => {
 }
 
 const setUpLeaveEvent = () => {
-  console.log('setting up leave Event')
   $('#leaveButton').on('click', function(e) {
     e.preventDefault()
-  	removeParticipant(username)
+		socketSend('removeParticipant', true)
   })
 }
 

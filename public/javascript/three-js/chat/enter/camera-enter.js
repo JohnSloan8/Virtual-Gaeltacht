@@ -53,16 +53,21 @@ const cameraEnter = (amount=0.7, duration=3000, easing="cubicIn") => {
 		meEnterTween.start()
 	})
 	//fadeIn of black and then dashboard appearing
-	setTimeout( function(){
+	setTimeout( function() {
 		$('#blackOverlay').fadeIn(100, function(){
-			setPositionOfMainCamera();
-			enterSceneGetReady()
 			$('#blackOverlay').fadeOut(3000)
 		})
+	}, duration*1.967 )
+
+	cameraEnterPositionTween.onComplete( function(){
+		centralPivotGroup.remove(c.cameras.main.camera)
+		scene.add(c.cameras.main.camera)
+		setPositionOfMainCamera();
+		enterSceneGetReady()
 		updateChatState('meHavePosition', true)
 		updateChatState('meEntering', false)
   	updateChatState('newParticipantEntering', false)
-	}, duration*1.95)
+	})
 
 }
 

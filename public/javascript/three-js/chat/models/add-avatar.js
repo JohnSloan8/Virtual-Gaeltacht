@@ -112,4 +112,4 @@ const newAvatarEnter = u => {
 	} )
 }
 
-export { addAvatar }
+export { addAvatar, moveAvatarsController }

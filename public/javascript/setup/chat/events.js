@@ -29,4 +29,15 @@ const highlightExpressionGesture = (emotionGesture, expression, start) => {
 	}
 }
 
-export { displayWaitingList, highlightExpressionGesture }
+const displayLeaveButton = display => {
+  if (display) {
+    $('#leaveModalButton').show()
+    $('#someoneEntering').hide()
+  } else {
+    $('#leaveModalButton').hide()
+    $('#leaveChatModal').modal('hide')
+    $('#someoneEntering').show()
+  }
+}
+
+export { displayWaitingList, highlightExpressionGesture, displayLeaveButton }
