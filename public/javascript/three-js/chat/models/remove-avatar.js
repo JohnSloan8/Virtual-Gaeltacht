@@ -1,6 +1,6 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { moveAvatarsController } from "./add-avatar.js"
-import { updateAvatarState } from "../../../setup/chat/updates.js"
+import { updateAvatarState, updateChatState } from "../../../setup/chat/updates.js"
 import { displayWaitingList } from "../../../setup/chat/events.js"
 import { c } from "../../../setup/chat/init.js"
 import { calculateParticipantsPositionsRotations, sortParticipantList } from '../calculations/avatar-positions.js'

@@ -28,7 +28,7 @@ const updateChatState = (k, v) => {
         displayChoosePositionCircle(c.participantList)
       }
     }
-  } else if (k === 'newParticipantEntering') {
+  } else if (k === 'newParticipantEntering' || k === 'newParticipantEntering') {
     if (v) {
       disableKeyBindings();
       displayLeaveButton(false);

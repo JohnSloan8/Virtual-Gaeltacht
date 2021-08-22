@@ -1,5 +1,5 @@
 import { scene } from "../scene/scene.js"
-import { displayWaitingList } from '../../../setup/chat/events.js'
+import { displayWaitingList, displayLeaveButton } from '../../../setup/chat/events.js'
 import { beginRandomBlinking } from "../animations/blink.js"
 import { beginRandomSwaying } from "../animations/sway.js"
 import { animate } from "../animate.js"
@@ -12,6 +12,7 @@ import { c } from '../../../setup/chat/init.js'
 import { displayChoosePositionCircle } from '../../../setup/chat/choose-position-circle.js'
 import { onWindowResize } from "../scene/scene.js";
 import { stageReady } from "./set-positions-rotations.js"
+import { cameraEnter } from "./camera-enter.js"
 import { loadIndividualGLTF } from "../models/avatar.js"
 import { updateChatState } from '../../../setup/chat/updates.js'
 
@@ -19,14 +20,18 @@ const loadEnter = () => {
 	scene.add(c.cameras.main.camera)
 	scene.add(c.pGroup)
 	//onWindowResize()
-	if (c.firstEntry) {
+	if (!c.participantList.includes(username)) {
     displayChoosePositionCircle([...c.participantList])
 		c.participantList.push(username)
 		stageReady();
 	} else {	
-		stageReady();
-		enterSceneGetReady();
-		animate();
+		if (c.participantList.length === 1) {
+			cameraEnter()
+		} else {
+			stageReady();
+			enterSceneGetReady();
+			animate();
+		}
 	}
 }
 
@@ -40,6 +45,7 @@ const enterSceneGetReady = () => {
 	})
 	displayWaitingList();
 	displayControlPanel();
+	displayLeaveButton(true);
 }
 
 

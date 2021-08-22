@@ -25,7 +25,7 @@ const iterateAvatar = () => {
 		loadAvatar(name, iterateAvatar)
 		avatarCount += 1
 	} else {
-		if (c.firstEntry && c.participantList.length !== 1) {
+		if (c.firstEntry && !c.participantList.includes(username)) {
 			c.p[username] = {}
 			loadAvatar(username, function(){initThreeJs('animations')})
 		} else {

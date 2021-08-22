@@ -62,7 +62,6 @@ const initSocket = () => {
 
     // PARTICIPANT REMOVED
     } else if (serverData.type === "removeParticipant" ) {
-      console.log('removeParticipant serverData:', serverData)
       if (username === serverData.who) {
         window.location.href = '/dashboard'
       } else {

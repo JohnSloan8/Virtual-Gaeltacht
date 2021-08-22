@@ -62,14 +62,14 @@ router.post('/createChat', ensureAuthenticated, (req, res) => {
 
 })
 
-router.post('/joinChat', /*ensureAuthenticated,*/ (req, res) => {
+router.post('/joinChat', ensureAuthenticated, (req, res) => {
 
 	const {url} = req.body;
 	res.redirect('/chat/' + url)
 
 })
 
-router.get('/chat/:id', /*ensureAuthenticated,*/ async (req, res) => {
+router.get('/chat/:id', ensureAuthenticated, async (req, res) => {
 	//let uname = "l"
 	let c = await Chat.findOne({chatURL: req.params.id})
 	if (c) {
