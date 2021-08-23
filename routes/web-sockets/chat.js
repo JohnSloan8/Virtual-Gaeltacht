@@ -25,7 +25,6 @@ function initWebSocket() {
 				clientData['participantList'] = participantList
 				clientData['waitingList'] = getWaitingList(chat)
 				clientData['lookingAt'] = getLookingAt(chat, participantList)
-				clientData['host'] = chat.host
 				ws.send(JSON.stringify(clientData))
 
 			// PARTICIPANT REQUESTS ENTRY
@@ -62,7 +61,7 @@ function initWebSocket() {
 				clientData['participantList'] = getCurrentParticipants(chat) // participant list
 				clientData['waitingList'] = getWaitingList(chat)
 				clientData['lookingAtEntry'] = getLookingAt(chat, clientData['participantList'])
-				clientData['lookingAtEntry'][newParticipant.name] = newParticipant.requirer1
+				clientData['lookingAtEntry'][newParticipant.name] = [newParticipant.requirer1, false]
 				wss.clients.forEach(function each(client) {
 					if (client.readyState === WebSocket.OPEN) {
 						client.send(JSON.stringify(clientData));
@@ -102,6 +101,7 @@ function initWebSocket() {
 					chat.lookingAt.push({
 						who: clientData.who,
 						whom: clientData.key,
+						body: clientData.body,
 						timestamp: new Date(clientData.timestamp)
 					})
 					chat.save();

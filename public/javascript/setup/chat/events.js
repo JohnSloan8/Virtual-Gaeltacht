@@ -20,6 +20,9 @@ const displayWaitingList = () => {
 }
 
 const highlightExpressionGesture = (emotionGesture, expression, start) => {
+  console.log('emotionGesture:', emotionGesture)
+  console.log('expression:', expression)
+  console.log('start:', start)
 	if (start) {
 		$('#' + expression).parent().removeClass('bg-dark')	
 		$('#' + expression).parent().addClass('bg-light')	
@@ -29,13 +32,14 @@ const highlightExpressionGesture = (emotionGesture, expression, start) => {
 	}
 }
 
-const displayLeaveButton = display => {
+const displayLeaveButton = (display, enterLeave) => {
   if (display) {
     $('#leaveModalButton').show()
     $('#someoneEntering').hide()
   } else {
     $('#leaveModalButton').hide()
     $('#leaveChatModal').modal('hide')
+    $('#someoneEntering').text(`${enterLeave}...`)
     $('#someoneEntering').show()
   }
 }

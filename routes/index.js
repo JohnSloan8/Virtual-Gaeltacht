@@ -46,7 +46,6 @@ router.post('/createChat', ensureAuthenticated, (req, res) => {
 		const newChat = new Chat({
 			chatURL: randomURL,
 			createdBy: req.user.name,
-			host: req.user.name,
 			lookingAt: [],
 			participants: []
 		})

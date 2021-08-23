@@ -1,7 +1,6 @@
 import { highlightExpressionGesture } from "../../../setup/chat/events.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { socketSend } from '../../../web-sockets/chat/send.js'
 import { updateAvatarState } from "../../../setup/chat/updates.js"
 import { c } from '../../../setup/chat/init.js'
 
@@ -20,8 +19,7 @@ const gesture = (who, gestureName, duration) => {
 		gestureTweenOut.easing(TWEEN.Easing.Quintic.Out)
 		gestureTweenIn.chain(gestureTweenOut)
 		
-		if ( who === 0 ) {
-			sendGesture(0, gestureName)
+		if ( who === username ) {
 			gestureTweenOut.delay(2000)
 			setTimeout( function(){gestureTweenIn.start()}, 500);
 		} else {
@@ -29,7 +27,7 @@ const gesture = (who, gestureName, duration) => {
 			gestureTweenIn.start()
 		}
 		gestureTweenIn.onStart( function() {
-			if (who === 0 ) {
+			if (who === username ) {
 				highlightExpressionGesture('gesture', gestureName, true)
 			}
 			updateAvatarState(who, 'gesturing', true)

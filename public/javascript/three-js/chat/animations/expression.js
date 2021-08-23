@@ -13,7 +13,6 @@ const allExpression = e => {
 }
 
 const expression = (who, e) => {
-
 	if (!c.p[who].states.changingExpression) {
 		let faceMorphsTo = new Array(c.lenMorphs).fill(0);
 		let faceMorphsHalf = new Array(c.lenMorphs).fill(0);
@@ -24,15 +23,14 @@ const expression = (who, e) => {
 		let expressionIn = new TWEEN.Tween(c.p[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsTo, 500)
 			.easing(easingDict["cubicOut"])
 
-		let expressionOut = new TWEEN.Tween(c.p[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsHalf, 1500)
+		let expressionOut = new TWEEN.Tween(c.p[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsHalf, 1000)
 			.easing(easingDict["cubicOut"])
-			.delay(3000)
+			.delay(2000)
 		
 		expressionIn.chain(expressionOut)
 		expressionIn.start()
 
 		let splitExpressionName = e.split('_')
-		//console.log('splitExpressionName:', splitExpressionName)
 		let baseExpression = splitExpressionName[0]
 		if (splitExpressionName[0] === 'half') {
 			baseExpression = splitExpressionName[1]
@@ -40,6 +38,9 @@ const expression = (who, e) => {
 		expressionIn.onStart( function() {
 			updateAvatarState(who, 'changingExpression', true)
 			updateAvatarState(who, 'expression', 'changing')
+			if (who === username ) {
+				highlightExpressionGesture('emotion', e, true)
+			}
 			if ( jawNeeded[splitExpressionName[0]] || jawNeeded[splitExpressionName[1]] ) {
 				let indexOfMouthOpenInTeeth = c.p[who].movableBodyParts.teeth.morphTargetDictionary["mouthOpen"]
 				// dunno why have to hard code the "0" below
@@ -49,8 +50,8 @@ const expression = (who, e) => {
 			}
 		})
 		expressionOut.onStart( function() {
-			updateAvatarState(who, 'changingExpression', true)
-			updateAvatarState(who, 'expression', 'changing')
+			//updateAvatarState(who, 'changingExpression', true)
+			//updateAvatarState(who, 'expression', 'changing')
 
 			if ( jawNeeded[baseExpression] ) {
 				new TWEEN.Tween(c.p[who].movableBodyParts.teeth.morphTargetInfluences).to({"0": expressionMorphs['half_' + e].jawOpen}, 1500)
@@ -58,9 +59,9 @@ const expression = (who, e) => {
 				.start()
 			}
 		})
-		expressionIn.onComplete( function() {
-			updateAvatarState(who, 'expression', e)
-		})
+		//expressionIn.onComplete( function() {
+			//updateAvatarState(who, 'expression', e)
+		//})
 		expressionOut.onComplete( function() {
 			if (who === username ) {
 				highlightExpressionGesture('emotion', e, false)

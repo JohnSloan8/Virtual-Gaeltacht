@@ -20,7 +20,7 @@ const loadEnter = () => {
 	scene.add(c.cameras.main.camera)
 	scene.add(c.pGroup)
 	//onWindowResize()
-	if (!c.participantList.includes(username)) {
+	if (!c.participantList.includes(username) && c.participantList.length !== 0) {
     displayChoosePositionCircle([...c.participantList])
 		c.participantList.push(username)
 		stageReady();
@@ -41,7 +41,7 @@ const enterSceneGetReady = () => {
 	beginRandomBlinking();
 	beginRandomSwaying();
 	c.participantList.forEach(function(n) {
-		avatarLookAt(n, c.lookingAtEntry[n], 1)
+		avatarLookAt(n, c.lookingAtEntry[n][0], 1, c.lookingAtEntry[n][1])
 	})
 	displayWaitingList();
 	displayControlPanel();

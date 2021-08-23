@@ -68,7 +68,11 @@ const highlightChosenSpace = (r0, r1) => {
   $('#' + r0 + 'Button').css('background-color', 'yellow')
   $('#' + r0 + 'Pos').css('color', 'yellow')
   $('#' + r1 + 'Pos').css('color', 'yellow')
-  $('#choosePositionText').html(`Waiting for <strong style="color: yellow">${r0}</strong> or <strong style="color: yellow">${r1}</strong> to let you in...`)
+  if (r0 === r1) {
+    $('#choosePositionText').html(`Waiting for <strong style="color: yellow">${r0}</strong> to let you in...`)
+  } else {
+    $('#choosePositionText').html(`Waiting for <strong style="color: yellow">${r0}</strong> or <strong style="color: yellow">${r1}</strong> to let you in...`)
+  }
 }
 
 export { displayChoosePositionCircle }

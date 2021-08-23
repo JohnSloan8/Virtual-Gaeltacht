@@ -4,7 +4,9 @@ import { displayChoosePositionCircle } from "./choose-position-circle.js"
 import { displayWaitingList, displayLeaveButton } from './events.js'
 
 const updateAvatarState = (who, k, v) => {
-	c.p[who].states[k] = v
+  if (c.p[who] !== undefined) {
+	  c.p[who].states[k] = v
+  }
 }
 
 const updateChatState = (k, v) => {
@@ -28,13 +30,13 @@ const updateChatState = (k, v) => {
         displayChoosePositionCircle(c.participantList)
       }
     }
-  } else if (k === 'newParticipantEntering' || k === 'newParticipantEntering') {
+  } else if (k === 'newParticipantEntering' || k === 'participantLeaving') {
     if (v) {
       disableKeyBindings();
-      displayLeaveButton(false);
+      displayLeaveButton(false, k);
     } else {
       setupKeyBindings();
-      displayLeaveButton(true);
+      displayLeaveButton(true, k);
     }
   }
 }

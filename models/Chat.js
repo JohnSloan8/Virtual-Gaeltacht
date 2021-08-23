@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const ChatSchema = new mongoose.Schema({
 	chatURL: String,
 	createdBy: String,
-	host: String,
 	startDate: {
 		type: Date,
 		default: Date.now
@@ -27,6 +26,7 @@ const ChatSchema = new mongoose.Schema({
 	lookingAt: [{
 		who: String,
 		whom: String,
+		body: Boolean,
 		timestamp: {
 			type: Date
 		}

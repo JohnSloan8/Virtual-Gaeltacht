@@ -18,7 +18,12 @@ const calculateCameraRotations = () => {
 			let headPos = c.p[n].movableBodyParts.head.getWorldPosition(direction)
 			angleCam.lookAt(headPos)
 			c.cameras.main.rotations[n] = {
-				x: angleCam.rotation.x * 0.1 - 0.125,
+				x: angleCam.rotation.x - 0.05,
+				y: angleCam.rotation.y * 0.15,
+				z: 0
+			}
+			c.cameras.main.rotations[n + '_body'] = {
+				x: angleCam.rotation.x - 0.4,
 				y: angleCam.rotation.y * 0.15,
 				z: 0
 			}

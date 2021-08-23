@@ -15,9 +15,9 @@ const removeAvatar = u => {
 
 const avatarLeave = u => {
 	let avatarLeaveFinalPos = {
-		x: c.p[u].model.position.x*5,
+		x: c.p[u].model.position.x*10,
 		y: 0, 
-		z: c.p[u].model.position.z*5
+		z: c.p[u].model.position.z*10
 	}
 	let avatarLeaveTween = new TWEEN.Tween(c.p[u].model.position).to(avatarLeaveFinalPos, 3000)
 	avatarLeaveTween.easing(TWEEN.Easing.Cubic.In)

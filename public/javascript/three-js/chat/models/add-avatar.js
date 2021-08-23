@@ -93,7 +93,7 @@ const newAvatarEnter = u => {
 		c.p[u].model.visible = true
 	}, 100)
 	let direction = new THREE.Vector3();
-	let focalPoint = c.p[c.lookingAtEntry[u]].movableBodyParts.head.getWorldPosition(direction)
+	let focalPoint = c.p[c.lookingAtEntry[u][0]].movableBodyParts.head.getWorldPosition(direction)
 	enterAvatarTween.onComplete( function() {
 		calculateCameraRotations()
 		calculateLookAngles(false)
@@ -103,9 +103,15 @@ const newAvatarEnter = u => {
 		
 		c.participantList.forEach(function(n) {
 			if (n !== u) {
-				avatarLookAt(n, c.p[n].states.currentlyLookingAt, 1000)
+				if (!c.participantList.includes(c.p[n].states.currentlyLookingAt )) {
+					if (c.participantList.length > 1) {
+						avatarLookAt(n, c.positions[1], 1000)
+					}
+				} else {
+					avatarLookAt(n, c.p[n].states.currentlyLookingAt, 1000)
+				}
 			} else {
-				avatarLookAt(n, c.lookingAtEntry[u], 1000)
+				avatarLookAt(n, c.lookingAtEntry[u][0], 1000)
 			}
 		})	
   	updateChatState('newParticipantEntering', false)

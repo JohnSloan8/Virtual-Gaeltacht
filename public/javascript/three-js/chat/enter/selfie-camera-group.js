@@ -13,7 +13,7 @@ const addSelfieCameraGroup = entrance => {
  
 	let direction = new THREE.Vector3();
 	let headPos = c.p[username].movableBodyParts.head.getWorldPosition(direction)
-	c.cameras.selfie.camera.position.set(0, headPos.y-0.075, selfieCameraOffsetZ);
+	c.cameras.selfie.camera.position.set(0, headPos.y-0.025, selfieCameraOffsetZ);
 	//const selfieCameraHelper = new THREE.CameraHelper(c.cameras.selfie.camera)
 	const geometry = new THREE.PlaneGeometry( 1, 1 );
 	const mirror = new Reflector( geometry, {
@@ -23,7 +23,7 @@ const addSelfieCameraGroup = entrance => {
 		color: 0x889999
 	} );
 	mirror.position.set(0, c.cameras.selfie.camera.position.y, mirrorOffsetZ);
-	mirror.rotation.x = -0.075
+	mirror.rotation.x = -0.025
 	c.selfieGroup = new THREE.Group()
 	//c.selfieGroup.add(c.cameras.selfie.camera)
 	//c.selfieGroup.add(selfieCameraHelper)

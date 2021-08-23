@@ -2,6 +2,7 @@ import { c } from "../../../setup/chat/init.js"
 
 const	initialAvatarStates = {
 	currentlyLookingAt: null,
+	currentlyLookingAtBody: false,
 	previouslyLookingAt: null,
 	expression: 'half_neutral',
 	speaking: false,

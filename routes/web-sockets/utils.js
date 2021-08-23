@@ -22,22 +22,22 @@ module.exports = {
 		let lookingAt = {}
 		participantList_.forEach(function(p) {
 			let personLookingAtAll = chatModel_.lookingAt.filter(lA => lA.who === p && participantList_.includes(lA.whom))
-			//console.log('personLookingAtAll:', personLookingAtAll)
-			let mostRecentWhom = null
+			let mRW = [null, false]
 			if (personLookingAtAll.length > 0) {
-				mostRecentWhom = personLookingAtAll.pop().whom
-				//console.log('mostRecentWhom:', mostRecentWhom)
+				let mostRecentWhom = personLookingAtAll.pop()
+				mRW = [mostRecentWhom.whom, mostRecentWhom.body]
 			} else {
 				if (participantList_.length > 1) {
 					if (participantList_[0] !== p) {
-						mostRecentWhom = participantList_[0]
+						mRW = [participantList_[0], false]
 					} else {
-						mostRecentWhom = participantList_[1]
+						mRW = [participantList_[1], false]
 					}
 				}
 			}
-			lookingAt[p] = mostRecentWhom
+			lookingAt[p] = mRW
 		})
+		console.log('lookingAt:', lookingAt)
 		return lookingAt
 	},
 

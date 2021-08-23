@@ -74,7 +74,7 @@ const initSocket = () => {
 
       // LOOKS
       if (serverData.type === "look" ) {
-        avatarLookAt(serverData.who, serverData.key, 500)
+        avatarLookAt(serverData.who, serverData.key, 500, serverData.body)
       
       // FACIAL EXPRESSIONS
       } else if (serverData.type === "expression" ) {
