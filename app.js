@@ -11,7 +11,8 @@ const MongoStore = require('connect-mongo');
 require('./config/passport')(passport)
 
 // DB Config
-const db = require('./config/keys').MongoURI
+//const db = require('./config/keys').MongoURI
+const db = 'mongodb+srv://john:Mongodbtiger8*@cluster0.4ij60.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
 // Connect to Mongo
 mongoose.connect(db, {

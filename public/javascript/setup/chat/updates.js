@@ -22,7 +22,6 @@ const updateChatState = (k, v) => {
       disableKeyBindings();
       displayLeaveButton(false, k);
       if (!c.meHavePosition) {
-        console.log('in !c.meHavePosition true')
         $('#otherEnteringText').text(`Please wait, ${messages[k]}`)
         $('#otherEnteringOverlay').show()
         $('#otherEnteringOverlay').css('opacity', 0.8)
@@ -31,7 +30,6 @@ const updateChatState = (k, v) => {
       setupKeyBindings();
       setTimeout(function(){displayLeaveButton(true, k)}, 2000);
       if (!c.meHavePosition) {
-        console.log('in !c.meHavePosition false')
         $('#otherEnteringOverlay').hide()
         $('#otherEnteringOverlay').css('opacity', 1)
         $('#choosePositionText').text("Click a new place where you wish to stand")
