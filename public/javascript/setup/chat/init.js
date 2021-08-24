@@ -12,7 +12,7 @@ let c
 const propogateC = sD_ => {
   c = {
     p: {}, // participants
-    newParticipantEntering: true,
+    participantEntering: true,
     meEntering: false,
     meHavePosition: true,
     participantLeaving: false,

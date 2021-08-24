@@ -10,7 +10,15 @@ import { cameraSettings } from '../enter/set-positions-rotations.js'
 
 const removeAvatar = u => {
 	updateChatState('participantLeaving', true)
-	avatarLeave(u)
+	if (!c.meHavePosition) {
+		setTimeout( function() {
+			c.pGroup.remove(c.p[u].model)
+			delete c.p[u]
+			updateChatState('participantLeaving', false)
+		}, 7000 )
+	} else {
+		avatarLeave(u)
+	}
 }
 
 const avatarLeave = u => {
@@ -23,6 +31,8 @@ const avatarLeave = u => {
 	avatarLeaveTween.easing(TWEEN.Easing.Cubic.In)
 	avatarLeaveTween.start()
 	avatarLeaveTween.onComplete( function() {
+		c.pGroup.remove(c.p[u].model)
+		delete c.p[u]
 		sortParticipantList();
 		calculateParticipantsPositionsRotations(c.participantList.length)
 		moveAvatarsController(u);
@@ -35,8 +45,6 @@ const moveCameraReduce = u => {
 	let moveCameraTween = new TWEEN.Tween(c.cameras.main.camera.position).to(newCameraZPos, 3000).easing(TWEEN.Easing.Quintic.Out)
 	moveCameraTween.start()
 	moveCameraTween.onComplete(function(object) {
-		c.pGroup.remove(c.p[u].model)
-		delete c.p[u]
 		c.participantList.forEach(function(p) {
 			if (!c.participantList.includes(c.p[p].states.currentlyLookingAt)) {
 				

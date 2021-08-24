@@ -9,36 +9,36 @@ const updateAvatarState = (who, k, v) => {
   }
 }
 
+const messages = {
+  'participantEntering': 'someone is entering...',
+  'participantLeaving': 'someone is leaving...'
+}
 const updateChatState = (k, v) => {
 	c[k] = v
-  if (k === 'newParticipantEntering') {
+  console.log('k:', k)
+  console.log('v:', v)
+  if (k === 'participantEntering' || k === "participantLeaving") {
     if (v) {
       disableKeyBindings();
-      displayLeaveButton(false);
+      displayLeaveButton(false, k);
       if (!c.meHavePosition) {
-        $('#otherEnteringText').text(`Please wait, someone else is joining...`)
+        console.log('in !c.meHavePosition true')
+        $('#otherEnteringText').text(`Please wait, ${messages[k]}`)
         $('#otherEnteringOverlay').show()
         $('#otherEnteringOverlay').css('opacity', 0.8)
       }
     } else {
       setupKeyBindings();
-      displayLeaveButton(true);
+      setTimeout(function(){displayLeaveButton(true, k)}, 2000);
       if (!c.meHavePosition) {
+        console.log('in !c.meHavePosition false')
         $('#otherEnteringOverlay').hide()
         $('#otherEnteringOverlay').css('opacity', 1)
         $('#choosePositionText').text("Click a new place where you wish to stand")
         displayChoosePositionCircle(c.participantList)
       }
     }
-  } else if (k === 'newParticipantEntering' || k === 'participantLeaving') {
-    if (v) {
-      disableKeyBindings();
-      displayLeaveButton(false, k);
-    } else {
-      setupKeyBindings();
-      displayLeaveButton(true, k);
-    }
   }
 }
 
-export { updateAvatarState, updateChatState }
+export { updateAvatarState, updateChatState, messages }

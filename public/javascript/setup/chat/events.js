@@ -1,4 +1,5 @@
 import { c } from './init.js'
+import { messages } from "./updates.js"
 
 const displayWaitingList = () => {
   $('#allowEntry').hide();
@@ -20,9 +21,6 @@ const displayWaitingList = () => {
 }
 
 const highlightExpressionGesture = (emotionGesture, expression, start) => {
-  console.log('emotionGesture:', emotionGesture)
-  console.log('expression:', expression)
-  console.log('start:', start)
 	if (start) {
 		$('#' + expression).parent().removeClass('bg-dark')	
 		$('#' + expression).parent().addClass('bg-light')	
@@ -39,7 +37,7 @@ const displayLeaveButton = (display, enterLeave) => {
   } else {
     $('#leaveModalButton').hide()
     $('#leaveChatModal').modal('hide')
-    $('#someoneEntering').text(`${enterLeave}...`)
+    $('#someoneEntering').text(`${messages[enterLeave]}...`)
     $('#someoneEntering').show()
   }
 }

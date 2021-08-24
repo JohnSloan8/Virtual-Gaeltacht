@@ -66,7 +66,7 @@ const cameraEnter = (amount=0.7, duration=3000, easing="cubicIn") => {
 		enterSceneGetReady()
 		updateChatState('meHavePosition', true)
 		updateChatState('meEntering', false)
-  	updateChatState('newParticipantEntering', false)
+  	updateChatState('participantEntering', false)
 	})
 
 }

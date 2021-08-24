@@ -15,12 +15,12 @@ import { updateChatState } from '../../../setup/chat/updates.js'
 //import { displayWaitingList } from "../../../web-sockets/chat/events.js"
 
 const addAvatar = u => {
-  updateChatState('newParticipantEntering', true)
+  updateChatState('participantEntering', true)
 	let avatarVisibility = false
 	if (!c.meHavePosition) {
 		avatarVisibility = true
 		setTimeout(function(){
-			updateChatState('newParticipantEntering', false)
+			updateChatState('participantEntering', false)
 		}, 6000)
 	}
 	c.p[u] = {
@@ -114,7 +114,7 @@ const newAvatarEnter = u => {
 				avatarLookAt(n, c.lookingAtEntry[u][0], 1000)
 			}
 		})	
-  	updateChatState('newParticipantEntering', false)
+  	updateChatState('participantEntering', false)
 	} )
 }
 
