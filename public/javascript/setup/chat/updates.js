@@ -15,8 +15,8 @@ const messages = {
 }
 const updateChatState = (k, v) => {
 	c[k] = v
-  console.log('k:', k)
-  console.log('v:', v)
+  //console.log('k:', k)
+  //console.log('v:', v)
   if (k === 'participantEntering' || k === "participantLeaving") {
     if (v) {
       disableKeyBindings();

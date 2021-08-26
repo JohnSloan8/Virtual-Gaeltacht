@@ -24,7 +24,7 @@ const calculateLookAngles = firstLoad => {
 			yRotation = c.p[n].posRot.rotation.y
 		} else {
 			focalPoint = c.cameras.main.camera.getWorldPosition(direction)
-			console.log('camera focal point:', focalPoint)
+			//console.log('camera focal point:', focalPoint)
 			yRotation = -Math.PI
 		}
 		cubeGroup.position.set(focalPoint.x, focalPoint.y, focalPoint.z)

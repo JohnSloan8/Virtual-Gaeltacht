@@ -16,7 +16,7 @@ const stageReady = () => {
 const setPositionsRotationsOfAvatars = () => {
 	c.participantList.forEach(function(n) {
 		if (n !== username) {
-			console.log('n:', n)
+			//console.log('n:', n)
 			c.p[n].model.rotation.set(0, c.p[n].posRot.rotation.y, 0);
 			c.p[n].model.position.set(c.p[n].posRot.position.x, 0, c.p[n].posRot.position.z);
 		}
@@ -26,9 +26,9 @@ const setPositionsRotationsOfAvatars = () => {
 const setPositionOfMainCamera = () => {
 	let direction = new THREE.Vector3();
 	let headPos = c.p[username].movableBodyParts.head.getWorldPosition(direction)
-	console.log('headPos.y', headPos.y)
+	//console.log('headPos.y', headPos.y)
 	let zPos = cameraSettings[c.participantList.length].cameraZPos+cameraSettings[c.participantList.length].radius
-	console.log('zPos', zPos)
+	//console.log('zPos', zPos)
 	c.cameras.main.camera.position.set(0, headPos.y+0.1, zPos)
 	c.cameras.main.camera.fov = cameraSettings[c.participantList.length].cameraFov
 }

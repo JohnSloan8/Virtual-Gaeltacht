@@ -3,7 +3,6 @@ const router = express.Router()
 const {ensureAuthenticated, loggedIn} = require('../config/auth')
 const path = require('path')
 const randomWords = require('random-words')
-const initWebSocket = require('./web-sockets/chat.js')
 
 // Models
 const User = require('../models/User')
@@ -81,7 +80,5 @@ router.get('/chat/:id', ensureAuthenticated, async (req, res) => {
 		res.redirect('/dashboard')
 	}
 })
-
-initWebSocket()
 
 module.exports = router

@@ -45,7 +45,7 @@ const avatarLookAt = (who, toWhom, duration, body=false) => {
 
 		let direction = new THREE.Vector3();
 		let focalPoint;
-		console.log('toWhom:', toWhom)
+		//console.log('toWhom:', toWhom)
 		if (toWhom === username) {
 			focalPoint = c.cameras.main.camera.getWorldPosition(direction)
 		} else {

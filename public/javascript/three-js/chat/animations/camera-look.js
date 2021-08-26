@@ -55,7 +55,7 @@ const cameraLookAt = (toWhom, duration, body) => {
   if (body) {
     toWhom += '_body'
   }
-  console.log('toWhom:', toWhom)
+  //console.log('toWhom:', toWhom)
 	if (duration === 1) {
     let cM = c.cameras.main.rotations[toWhom]
     c.cameras.main.camera.rotation.set(cM.x, cM.y, cM.z)

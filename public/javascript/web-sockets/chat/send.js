@@ -14,7 +14,7 @@ const socketSend = (key, val, arg1) => {
     data.body = arg1
   }
   
-  socket.send( JSON.stringify(data))
+  socket.emit( 'message', data)
 
 }
 

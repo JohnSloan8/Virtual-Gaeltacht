@@ -1,7 +1,4 @@
-import { initSocket } from '../../web-sockets/chat/receive.js'
 import { initThreeJs } from '../../three-js/chat/init.js'
-
-initSocket()
 
 const resolveNewConnection = serverData_ => {
   propogateC(serverData_)

@@ -11,7 +11,7 @@ const setupAllClickEvents = () => {
 
 const setupGestureClickEvents = () => {
 	$('.emotion-image').on('click', function(e){
-		console.log('clicked:', e.target.id)
+		//console.log('clicked:', e.target.id)
 		let k
 		let v
 		if (e.target.id.slice(e.target.id.length-4) === "pose") {

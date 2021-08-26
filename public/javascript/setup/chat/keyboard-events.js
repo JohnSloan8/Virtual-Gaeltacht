@@ -5,12 +5,12 @@ import { updateAvatarState } from "./updates.js"
 import { c } from './init.js'
 
 const setupKeyBindings = () => {
-  console.log('in setupKeyBindings')
+  //console.log('in setupKeyBindings')
   document.addEventListener("keydown", setKeys)
 }
 
 const disableKeyBindings = () => {
-  console.log('in disableKeyBindings')
+  //console.log('in disableKeyBindings')
   document.removeEventListener("keydown", setKeys)
 }
 
