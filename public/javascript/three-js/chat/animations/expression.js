@@ -50,18 +50,12 @@ const expression = (who, e) => {
 			}
 		})
 		expressionOut.onStart( function() {
-			//updateAvatarState(who, 'changingExpression', true)
-			//updateAvatarState(who, 'expression', 'changing')
-
 			if ( jawNeeded[baseExpression] ) {
 				new TWEEN.Tween(c.p[who].movableBodyParts.teeth.morphTargetInfluences).to({"0": expressionMorphs['half_' + e].jawOpen}, 1500)
 				.easing(easingDict["cubicOut"])
 				.start()
 			}
 		})
-		//expressionIn.onComplete( function() {
-			//updateAvatarState(who, 'expression', e)
-		//})
 		expressionOut.onComplete( function() {
 			if (who === username ) {
 				highlightExpressionGesture('emotion', e, false)

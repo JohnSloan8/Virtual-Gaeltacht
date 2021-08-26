@@ -1,17 +1,13 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
-import { easingDict, easings } from "../animations/easings.js"
-import { updateAvatarState } from "../models/states.js"
+import { easingDict, easings } from "./easings.js"
+import { updateAvatarState } from "../../../setup/chat/updates.js"
 import { c } from '../../../setup/chat/init.js'
 
-window.startMouthing = startMouthing
 function startMouthing(who) {
-	//need to stop blinking
-	//c.p[who].states.expression = "neutral"
 	updateAvatarState(who, 'speaking', true)
 	mouth(who)
 }
 
-window.stopMouthing = stopMouthing
 function stopMouthing(who) {
 	updateAvatarState(who, 'speaking', false)
 }
@@ -74,4 +70,4 @@ function getRandomEasing() {
 	return easings[Math.floor(Math.random()*easings.length)]
 }
 
-export { mouth }
+export { mouth, startMouthing, stopMouthing }
