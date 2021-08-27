@@ -11,7 +11,7 @@ body {overflow: hidden}
 			<div class="col-md-6 m-auto">
 				<div class="card card-body text-center">
 					<h1 class= "text-center"><small>Welcome</small> <strong><%= name %></strong></h1>
-					<div class="container">
+					<div class="container" id="joinChatButtonsContainer">
 						<div class="row">
 							<div class="col-sm d-flex justify-content-center">
 								<a href="#" data-toggle="modal" data-target="#createChatModal" class="btn btn-lg btn-primary btn-block">Create chat</a>
@@ -31,5 +31,7 @@ body {overflow: hidden}
 
 <script>
 	var userName = "<%= name %>"
+	var invitedChat = "<%= invitedChat %>"
+	var inviter = "<%= inviter %>"
 </script>
 <script src="/javascript/three-js/dashboard/main.js" type="module"></script>

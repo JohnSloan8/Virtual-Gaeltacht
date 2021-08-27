@@ -6,6 +6,18 @@ init();
 
 function init() {
 	loadScene()
+	console.log('invitedChat: ', invitedChat)
+	if (invitedChat !== 'false') {
+		$('#joinChatButtonsContainer').append(
+			`<div class="row mt-2">
+				<div class="col-sm d-flex justify-content-center">
+					<a href="#" data-toggle="modal" data-target="#joinInvitedChatModal" class="btn btn-lg btn-success btn-block">Join ${inviter}'s chat</a>
+				</div>
+			</div>`
+		)
+		$('#invitationSentence').html(`You were invited to to join ${invitedChat} by ${inviter}`)
+		$('#invitedUrl').val(invitedChat)
+	}
 	//setUpAvatar();
 }
 

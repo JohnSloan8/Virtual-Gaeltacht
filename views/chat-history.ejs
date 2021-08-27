@@ -1,0 +1,19 @@
+
+<div class="list-group">
+<% for (let i=0; i<basicChatData.length; i++) { %>
+  <a href=<%= "/chats/chat-history/" + basicChatData[i].chatURL%> class="mt-2 list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1"><%= basicChatData[i].chatURL %></h5>
+      <small><%= basicChatData[i].startDate %>-<%= basicChatData[i].endDate%> &nbsp(<%= basicChatData[i].dateFromNow %>)</small>
+    </div>
+    <p class="mb-1"> participants:&nbsp
+      <% for (let j=0; j<basicChatData[i].participants.length; j++) { %>
+        <span style="color: yellow"><%= basicChatData[i].participants[j] %></span>
+        ,&nbsp
+      <% } %>
+    </p>
+  </a>
+<% } %>
+</div>
+
+

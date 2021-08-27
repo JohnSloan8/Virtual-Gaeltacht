@@ -59,6 +59,7 @@ app.use(express.static('public'))
 // ROUTES
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
+app.use('/chats', require('./routes/chats'))
 
 const PORT = process.env.PORT || 5000
 
@@ -135,8 +136,11 @@ io.on('connection', socket => {
 			} else if ( clientData.type === 'removeParticipant' ) {
 				let p = chat.participants.find(e => e.name === clientData.who && e.endTime === null)
 				p.endTime = Date.now()
+				if ( chat.participants.filter(e => e.endTime === null).length === 0 ) {
+					console.log('chat ended')
+					chat.endDate = Date.now()
+				}
 				chat.save()
-				console.log('removeParticipant:', chat.participants)
 				clientData['participantList'] = getCurrentParticipants(chat) // participant list
 				io.in(path.basename(clientData.chatID)).emit('message', clientData)
 

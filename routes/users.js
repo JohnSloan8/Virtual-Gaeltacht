@@ -2,11 +2,10 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
-const {ensureAuthenticated, ensureNotAuthenticated, loggedIn} = require('../config/auth')
+const {ensureAuthenticated, ensureNotAuthenticated, loggedIn, removeInvite} = require('../config/auth')
 const https = require('https');
 const fs = require('fs');
-const path = require('path')
-
+const path = require('path');
 
 // User Model
 const User = require('../models/User')
@@ -82,6 +81,7 @@ router.post('/register', ensureNotAuthenticated, async (req, res) => {
 
 //LOGIN
 router.get('/login', ensureNotAuthenticated, (req, res) => {
+	console.log('req.session:', req.session)
 	res.render('login', {
 		loggedIn: loggedIn(req)
 	})
@@ -97,7 +97,7 @@ router.post('/login', ensureNotAuthenticated, (req, res, next) => {
 })
 
 // LOGOT Handle
-router.get('/logout', ensureAuthenticated, (req, res) => {
+router.get('/logout', [removeInvite, ensureAuthenticated], (req, res) => {
 	req.logout();
 	req.flash('succes_msg', 'you have been logged out')
 	res.redirect('/')
@@ -144,6 +144,7 @@ router.post('/avatar', ensureAuthenticated, (req, res) => {
 	let dest = path.dirname(require.main.filename) + '/public/avatars/'
 	download(avatarURL, dest, req.user.name, res)
 })
+
 
 module.exports = router
 

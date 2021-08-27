@@ -38,6 +38,28 @@
 	</div>
 </div>
 
+<div class="modal" id="joinInvitedChatModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="invitationSentence"></h5>
+			</div>
+			<div class="modal-body">
+				<form action="/joinInvitedChat" method="POST">
+						<input
+							type="text"
+							id="invitedUrl"
+							name="invitedUrl"
+							value=""
+							hidden
+						/>
+					<button class="btn btn-primary btn-block" id="joinInvitedChatButton">Join</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal" id="leaveChatModal">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -46,6 +68,20 @@
 			</div>
 			<div class="modal-body">
 				<button class="btn btn-primary btn-block" id="leaveButton">Leave</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="inviteChatModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Invitation Link</h5>
+			</div>
+			<div class="modal-body">
+				<p id="invitation"></p>
+				<button class="btn btn-success btn-block" id="copyInviteButton">Copy Invitation</button>
 			</div>
 		</div>
 	</div>

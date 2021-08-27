@@ -6,6 +6,10 @@ const ChatSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
+	endDate: {
+		type: Date,
+		default: null
+	},
 	participants: [{
 		name: String,
 		startTime: {
