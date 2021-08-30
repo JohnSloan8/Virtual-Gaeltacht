@@ -4,12 +4,16 @@ import { updateAvatarState } from "../../../setup/chat/updates.js"
 import { c } from '../../../setup/chat/init.js'
 
 function startMouthing(who) {
-	updateAvatarState(who, 'speaking', true)
-	mouth(who)
+	if (!c.p[who].states.speaking) {
+		updateAvatarState(who, 'speaking', true)
+		mouth(who)
+	}
 }
 
 function stopMouthing(who) {
-	updateAvatarState(who, 'speaking', false)
+	if (c.p[who].states.speaking) {
+		updateAvatarState(who, 'speaking', false)
+	}
 }
 
 window.mouth = mouth
@@ -24,7 +28,7 @@ function mouth(who, final=false) {
 	randomMouthingDuration = 100 + Math.random()*250
 
 	//don't need this cause only gonne use neutral expression
-	console.log('randomViseme:', c.p[who].states.expression + "_" + randomViseme)
+	//console.log('randomViseme:', c.p[who].states.expression + "_" + randomViseme)
 	
 	if ( final ) {
 		faceMorphsTo[c.p[who].movableBodyParts.face.morphTargetDictionary[c.p[who].states.expression]] = 1;

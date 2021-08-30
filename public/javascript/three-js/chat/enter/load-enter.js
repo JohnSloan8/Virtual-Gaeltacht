@@ -15,6 +15,7 @@ import { stageReady } from "./set-positions-rotations.js"
 import { cameraEnter } from "./camera-enter.js"
 import { loadIndividualGLTF } from "../models/avatar.js"
 import { updateChatState } from '../../../setup/chat/updates.js'
+import { initPeer } from '../../../peer-js/init.js'
 
 const loadEnter = () => {
 	scene.add(c.cameras.main.camera)
@@ -36,6 +37,7 @@ const loadEnter = () => {
 }
 
 const enterSceneGetReady = () => {
+	initPeer();
 	setupKeyBindings();
 	setupAllClickEvents()
 	beginRandomBlinking();

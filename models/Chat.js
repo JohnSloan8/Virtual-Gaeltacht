@@ -55,6 +55,11 @@ const ChatSchema = new mongoose.Schema({
 		timestamp: {
 			type: Date
 		}
+	}],
+	speaking: [{
+		who: String,
+		startTime: Date,
+		endTime: Date
 	}]
 })
 

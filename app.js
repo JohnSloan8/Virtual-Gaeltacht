@@ -71,6 +71,7 @@ const { getCurrentParticipants, getLookingAt, getWaitingList, addParticipantToCh
 const io = require('socket.io')(server)
 
 const chats = {}
+const speakingTimer = {} // check if speaking event longer than 3 seconds
 io.on('connection', socket => {
 	
 	socket.on('message', async clientData => {
@@ -91,10 +92,19 @@ io.on('connection', socket => {
 			clientData['waitingList'] = getWaitingList(chat)
 			clientData['lookingAt'] = getLookingAt(chat, participantList)
 			socket.emit('message', clientData)
+			saveChat(chat)
+			speakingTimer[clientData.who] = {
+				bool: false,
+				originalStartTime: null,
+				startTime: null,
+				finishTime: null
+			}
 
 		// PARTICIPANT REQUESTS ENTRY
 		} else { 
 			chat = chats[clientData.chatID]
+			let reallySave = true
+			chat === undefined ? await Chat.findOne({chatURL: path.basename(clientData.chatID)}) : chat
 			if ( clientData.type === 'requestEnter' ) {
 				console.log('in request enter')
 				if (!chat.waitingList.some(n => n.name === clientData.who)) {
@@ -104,7 +114,6 @@ io.on('connection', socket => {
 						requirer1: clientData.key[1],
 						entering: false
 					})
-					chat.save()
 				}
 				clientData['waitingList'] = getWaitingList(chat)
 				socket.to(path.basename(clientData.chatID)).emit('message', clientData);
@@ -140,7 +149,6 @@ io.on('connection', socket => {
 					console.log('chat ended')
 					chat.endDate = Date.now()
 				}
-				chat.save()
 				clientData['participantList'] = getCurrentParticipants(chat) // participant list
 				io.in(path.basename(clientData.chatID)).emit('message', clientData)
 
@@ -156,39 +164,93 @@ io.on('connection', socket => {
 						body: clientData.body,
 						timestamp: new Date(clientData.timestamp)
 					})
-					chat.save();
 
 				// FACIAL EXPRESSION
 				} else if (clientData.type === "expression") {
 					chat.expressions.push({
 						who: clientData.who,
-						expression: clientData.expression,
+						expression: clientData.key,
 						timestamp: new Date(clientData.timestamp)
 					})
-					chat.save();
 
 				// ARM GESTURE
 				} else if (clientData.type === "gesture") {
 					chat.gestures.push({
 						who: clientData.who,
-						gesture: clientData.gesture,
+						gesture: clientData.key,
 						timestamp: new Date(clientData.timestamp)
 					})
-					chat.save();
 
 				// NOD OR SHAKE HEAD
 				} else if (clientData.type === "nodShake") {
 					chat.nodShakes.push({
 						who: clientData.who,
-						nodShake: clientData.nodShake,
+						nodShake: clientData.key,
 						timestamp: new Date(clientData.timestamp)
 					})
-					chat.save();
+				} else if (clientData.type === "speaking") {
+					//console.log('in speaking:', clientData.who, clientData.key)
+					checkIfSpeakingLongerThanNSeconds(clientData.who, clientData.key, 3000, chat)
+					reallySave = false
 				}
 			}
+			saveChat(chat, reallySave)
 		}
 	})
 })
 
+const checkIfSpeakingLongerThanNSeconds = (who, speaking, timeLimit, chat) => {
+	console.log('check N seconds - who:', who, speaking)
+	if (!speakingTimer[who].bool) {
+		if (speaking) {
+			speakingTimer[who].bool = true
+			speakingTimer[who].startTime = new Date()
+			let gap = speakingTimer[who].startTime - speakingTimer[who].finishTime
+			console.log('gap:', gap)
+			if (gap > timeLimit) {
+				speakingTimer[who].originalStartTime = new Date()
+			}
+		}
+	} else {
+		if (!speaking) {
+			speakingTimer[who].bool = false
+			speakingTimer[who].finishTime = new Date()
+			let speakingTime = speakingTimer[who].finishTime - speakingTimer[who].startTime
+			console.log('speakingTime:', speakingTime)
+			if (speakingTime > timeLimit) {	
+				setTimeout( function(){confirmStoreSpeaking(who, speakingTimer[who], chat)}, timeLimit )
+			}
+		}
+	}
+}
 
+const confirmStoreSpeaking = (who, speakingData, chat) => {
+	console.log('iin confirmStoreSpeaking')
+	let timeElapsed = new Date() - speakingData.finishTime
+	if (!speakingTimer[who].bool && timeElapsed > 2900 ) {
+		let speakingTime = speakingTimer[who].finishTime - speakingTimer[who].originalStartTime
+		console.log('totalspeakingTime:', speakingTime)
+		console.log('finishTime:', speakingTimer[who].finishTime)
+		chat.speaking.push({
+			who: who,
+			startTime: speakingData.originalStartTime,
+			endTime:	speakingData.finishTime
+		})
+		saveChat(chat, true)
+		console.log('storing chat')
+	}
+}
+
+// this avoids the parrallel save error with mongoose
+const saveChat = async (chat, reallySave) => {
+	if (reallySave) {
+		try {
+			await chat.save()
+		} catch (err) {
+			console.log('error')
+			console.log(err)
+			setTimeout( function() {saveChat(chat), 200})
+		}		
+	}
+}
 

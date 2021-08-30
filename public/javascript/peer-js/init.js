@@ -1,5 +1,6 @@
 import { c } from '../setup/chat/init.js'
 import { startMouthing, stopMouthing } from '../three-js/chat/animations/mouth.js'
+import { socketSend } from "../web-sockets/chat/send.js"
 
 let myID = window.location.pathname + '-' + username 
 myID = myID.slice(6, myID.length).replaceAll('-', '') 
@@ -20,51 +21,6 @@ const initPeer = () => {
       addAudioStream(call.peer, stream, false)
     })
 
-    let audioContext = new AudioContext();
-    let analyser = audioContext.createAnalyser();
-    let microphone = audioContext.createMediaStreamSource(stream);
-    let javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
-
-    analyser.smoothingTimeConstant = 0.8;
-    analyser.fftSize = 1024;
-
-    microphone.connect(analyser);
-    analyser.connect(javascriptNode);
-    javascriptNode.connect(audioContext.destination);
-
-    setTimeout( function() {
-      let count = 0
-      let totalAverage = 0
-      javascriptNode.onaudioprocess = function() {
-        var array = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(array);
-        var values = 0;
-
-        var length = array.length;
-        for (var i = 0; i < length; i++) {
-          values += (array[i]);
-        }
-        var average = values / length;
-        totalAverage += average
-        count += 1
-        if (count === 7) {
-          if (totalAverage > 70) {
-            if (!c.p[username].states.speaking) {
-              startMouthing(username)
-            }
-            console.log('talking')
-          } else {
-            if (c.p[username].states.speaking) {
-              stopMouthing(username)
-            }
-            console.log('not talking')
-          }
-          count = 0
-          totalAverage = 0
-        }
-        //console.log('volumen:', Math.round(average))
-      }
-    }, 3000)
   })
 }
 
@@ -76,6 +32,7 @@ const addAudioStream = (userID, stream, muted) => {
   thisAudio.muted = muted
   thisAudio.addEventListener('loadedmetadata', () => {
     thisAudio.play()
+    addVolumeDetector(stream)
   })
 }
 
@@ -103,5 +60,52 @@ const connectToUser = (p, stream) => {
   })
 }
 
+const addVolumeDetector = stream => {
+  let audioContext = new AudioContext();
+  let analyser = audioContext.createAnalyser();
+  let microphone = audioContext.createMediaStreamSource(stream);
+  let javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+
+  analyser.smoothingTimeConstant = 0.8;
+  analyser.fftSize = 1024;
+
+  microphone.connect(analyser);
+  analyser.connect(javascriptNode);
+  javascriptNode.connect(audioContext.destination);
+
+  let count = 0
+  let totalAverage = 0
+  javascriptNode.onaudioprocess = function() {
+    var array = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(array);
+    var values = 0;
+
+    var length = array.length;
+    for (var i = 0; i < length; i++) {
+      values += (array[i]);
+    }
+    var average = values / length;
+    totalAverage += average
+    if (count === 10) {
+      console.log('totalAverage:', totalAverage)
+      if (totalAverage > 150) {
+        if (!c.p[username].states.speaking) {
+          console.log('speaking')
+          startMouthing(username)
+          socketSend('speaking', true) 
+        }
+      } else if (totalAverage < 75){
+        if (c.p[username].states.speaking) {
+          console.log('not speaking')
+          stopMouthing(username)
+          socketSend('speaking', false)
+        }
+      }
+      count = 0
+      totalAverage = 0
+    }
+    count += 1
+  }
+}
 
 export { initPeer }

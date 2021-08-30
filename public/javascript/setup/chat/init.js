@@ -1,10 +1,8 @@
 import { initThreeJs } from '../../three-js/chat/init.js'
-import { initPeer } from '../../peer-js/init.js'
 import { initInvite } from './invite.js'
 
 const resolveNewConnection = serverData_ => {
   propogateC(serverData_)
-  initPeer()
   initThreeJs('scene')
   initInvite()
 }

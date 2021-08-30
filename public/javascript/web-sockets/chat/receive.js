@@ -9,6 +9,7 @@ import { gesture } from "../../three-js/chat/animations/gesture.js"
 import { avatarNodShake } from "../../three-js/chat/animations/nod-shake.js"
 import { addAvatar } from "../../three-js/chat/models/add-avatar.js"
 import { removeAvatar } from "../../three-js/chat/models/remove-avatar.js"
+import { startMouthing, stopMouthing } from '../../three-js/chat/animations/mouth.js'
 
 // CREATE WEBSOCKET CONNECTION
 const socket = io('/')
@@ -86,6 +87,14 @@ socket.on('message', serverData => {
     // NODS OR SHAKES HEAD
     } else if (serverData.type === "nodShake" ) {
       avatarNodShake(serverData.who, serverData.key)
+
+    // Speaking
+    } else if (serverData.type === "speaking" ) {
+      if (serverData.key) {
+        startMouthing(serverData.who, serverData.key)
+      } else {
+        stopMouthing(serverData.who, serverData.key)
+      }
     }
   }
 });
