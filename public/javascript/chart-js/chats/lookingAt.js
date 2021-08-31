@@ -28,11 +28,10 @@ const getTimeXAxisLabels = () => {
 const getDatasets = () => {
   let datasets = []
   let chatParticipants = getChatParticipants() // returns a Set to iterate through
-  //Object.keys(chatParticipants).forEach( p => {
+  Object.keys(chatParticipants).forEach( p => {
     let thisDataset = {
-      //label: p,
-      label: "john",
-      data: getAttendanceData("john", chatParticipants["john"]),
+      label: p,
+      data: getAttendanceData(p, chatParticipants[p]),
       borderColor: 'rgb(75, 192, 192)',
       borderWidth: 5,
       //segment: {
@@ -41,7 +40,7 @@ const getDatasets = () => {
       //}
     }
     datasets.push(thisDataset)
-  //})
+  })
   console.log('datasets:', datasets)
   return datasets
 }
