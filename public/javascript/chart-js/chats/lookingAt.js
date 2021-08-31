@@ -1,5 +1,9 @@
+let chartData = {}
+
 const displayLookingAtChart = () => {
-  var ctx = document.getElementById('myChart').getContext('2d');
+  var ctx = document.getElementById('mainChart').getContext('2d');
+  getChatParticipants();
+  setChartHeight();
   var myChart = new Chart(ctx, {
     type: 'line',
     data: getLookingAtData(),
@@ -7,60 +11,72 @@ const displayLookingAtChart = () => {
   });
 }
 
-const getLookingAtData = () => {
-  let data = {
-    labels: getTimeXAxisLabels(),
-    datasets: getDatasets()
-  }
-  console.log('data:', data)
-  return data
+const getChatParticipants = () => {
+  let participantSet = new Set(chatData.participants.map(p => p.name))
+  chartData.participants = [...participantSet]
+  chartData.participantColours = {}
+  chartData.participants.forEach(p => {
+    chartData.participantColours[p] = "rgba(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + ", 1)"
+  })
+  console.log('color', chartData.participantColours)
 }
 
-const getTimeXAxisLabels = () => {
-  let minutesInTens = Math.ceil((new Date(chatData.endDate).getTime() - new Date(chatData.startDate).getTime())/600000)
-  let labels = [0,1,2,3,4,5,6,7,8,9,10]
-  labels = labels.map(n => n*minutesInTens)
-  //let labels = [new Date(chatData.startDate), new Date(chatData.endDate)] 
-  //let labels = ['2020-02-15 18:37:41', '2020-02-15 18:37:42'] 
-  return labels
+const setChartHeight = () => {
+  chartData.height = chartData.participants.length * 30
+  chartData.DOMElement = document.getElementById('mainChart')
+  chartData.DOMElement.height = chartData.height
+}
+
+const getLookingAtData = () => {
+  let data = {
+    datasets: getDatasets()
+  }
+  return data
 }
 
 const getDatasets = () => {
   let datasets = []
-  let chatParticipants = getChatParticipants() // returns a Set to iterate through
-  Object.keys(chatParticipants).forEach( p => {
-    let thisDataset = {
+  chartData.participants.forEach( p => {
+    let speakingDataset = {
       label: p,
-      data: getAttendanceData(p, chatParticipants[p]),
-      borderColor: 'rgb(75, 192, 192)',
-      borderWidth: 5,
-      //segment: {
-        ////borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, 'rgb(192,75,75)'),
-        ////borderDash: ctx => skipped(ctx, [6, 6]),
-      //}
+      data: getSpeakingData(p),
+      borderColor: "yellow",
+      borderWidth: 50,
+      pointRadius: 0,
+      fill: false,
     }
-    datasets.push(thisDataset)
+    let attendanceDataset = {
+      label: p,
+      data: getAttendanceData(p),
+      borderColor: "rgba(200,200,200,0.3)",
+      borderWidth: 50,
+      pointRadius: 0,
+      fill: false,
+    }
+    datasets.push(attendanceDataset)
+    datasets.push(speakingDataset)
   })
   console.log('datasets:', datasets)
   return datasets
 }
 
-const getChatParticipants = () => {
-  let participantOrderDictionary = {} 
-  let participantSet = new Set(chatData.participants.map(p => p.name))
-  let participantArray = [...participantSet]
-  participantArray.forEach((n, i) => {
-    participantOrderDictionary[n] = i
-  })
-  return participantOrderDictionary
-}
-
-const getAttendanceData = (p, yVal) => {
+const getAttendanceData = p => {
   let data = []
   let thisParticipantsAttendanceData = chatData.participants.filter(n => n.name === p)
   thisParticipantsAttendanceData.forEach( a => {
-    data.push({x: (new Date(a.startTime).getTime() - new Date(chatData.startDate).getTime())/60000, y: yVal})
-    data.push({x: (new Date(a.endTime).getTime() - new Date(chatData.startDate).getTime())/60000, y: yVal})
+    data.push({x: new Date(a.startTime), y: p})
+    data.push({x: new Date(a.endTime), y: p})
+    data.push({x: NaN, y: NaN})
+  })
+  return data
+}
+
+const getSpeakingData = p => {
+  let data = []
+  let thisParticipantsSpeakingData = chatData.speaking.filter(n => n.who === p)
+  thisParticipantsSpeakingData.forEach( s => {
+    data.push({x: new Date(s.startTime), y: p})
+    data.push({x: new Date(s.endTime), y: p})
     data.push({x: NaN, y: NaN})
   })
   return data
@@ -71,7 +87,17 @@ const getOptions = () => {
     scales: {
       xAxes: [{
         type: 'time',
-        distribution: 'linear'
+        distribution: 'linear',
+        time: {
+          min: new Date(chatData.startDate), 
+          max: new Date(chatData.endDate) 
+        },
+        bounds: 'ticks',
+        color: 'white'
+      }],
+      yAxes: [{
+        type: 'category',
+        labels: chartData.participants
       }]
     }
   }
