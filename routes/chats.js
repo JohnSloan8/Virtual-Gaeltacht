@@ -40,13 +40,15 @@ router.get('/chat-history', ensureAuthenticated, async (req, res) => {
 	})
 })
 
-router.get('/chat-history/:id', ensureAuthenticated, async (req, res) => {
-	let c = await Chat.findOne({chatURL: req.params.id})
+router.get('/chat-history/:id', ensureAuthenticated, (req, res) => {
 	res.render('chats', {
 		loggedIn: loggedIn(req),
-		allChatData: c
 	})
 })
 
+router.get('/chat-history/:id/api', ensureAuthenticated, async (req, res) => {
+	let c = await Chat.findOne({chatURL: req.params.id})
+	res.json({ chatData: c })
+})
 
 module.exports = router

@@ -72,6 +72,7 @@ const io = require('socket.io')(server)
 
 const chats = {}
 const speakingTimer = {} // check if speaking event longer than 3 seconds
+const lookingTimer = {} // check if speaking event longer than 3 seconds
 io.on('connection', socket => {
 	
 	socket.on('message', async clientData => {
@@ -98,6 +99,9 @@ io.on('connection', socket => {
 				originalStartTime: null,
 				startTime: null,
 				finishTime: null
+			}
+			lookingTimer[clientData.who] = {
+				time: null
 			}
 
 		// PARTICIPANT REQUESTS ENTRY
@@ -158,13 +162,8 @@ io.on('connection', socket => {
 
 				// LOOK
 				if (clientData.type === "look") {
-					chat.lookingAt.push({
-						who: clientData.who,
-						whom: clientData.key,
-						body: clientData.body,
-						timestamp: new Date(clientData.timestamp)
-					})
-
+					checkIfReallyLooking(clientData, 500, chat)
+					reallySave = false
 				// FACIAL EXPRESSION
 				} else if (clientData.type === "expression") {
 					chat.expressions.push({
@@ -200,27 +199,30 @@ io.on('connection', socket => {
 })
 
 const checkIfSpeakingLongerThanNSeconds = (who, speaking, timeLimit, chat) => {
-	console.log('check N seconds - who:', who, speaking)
-	if (!speakingTimer[who].bool) {
-		if (speaking) {
-			speakingTimer[who].bool = true
-			speakingTimer[who].startTime = new Date()
-			let gap = speakingTimer[who].startTime - speakingTimer[who].finishTime
-			console.log('gap:', gap)
-			if (gap > timeLimit) {
-				speakingTimer[who].originalStartTime = new Date()
+	try {
+		if (!speakingTimer[who].bool) {
+			if (speaking) {
+				speakingTimer[who].bool = true
+				speakingTimer[who].startTime = new Date()
+				let gap = speakingTimer[who].startTime - speakingTimer[who].finishTime
+				console.log('gap:', gap)
+				if (gap > timeLimit) {
+					speakingTimer[who].originalStartTime = new Date()
+				}
+			}
+		} else {
+			if (!speaking) {
+				speakingTimer[who].bool = false
+				speakingTimer[who].finishTime = new Date()
+				let speakingTime = speakingTimer[who].finishTime - speakingTimer[who].startTime
+				console.log('speakingTime:', speakingTime)
+				if (speakingTime > timeLimit) {	
+					setTimeout( function(){confirmStoreSpeaking(who, speakingTimer[who], chat)}, timeLimit )
+				}
 			}
 		}
-	} else {
-		if (!speaking) {
-			speakingTimer[who].bool = false
-			speakingTimer[who].finishTime = new Date()
-			let speakingTime = speakingTimer[who].finishTime - speakingTimer[who].startTime
-			console.log('speakingTime:', speakingTime)
-			if (speakingTime > timeLimit) {	
-				setTimeout( function(){confirmStoreSpeaking(who, speakingTimer[who], chat)}, timeLimit )
-			}
-		}
+	} catch {
+		console.log('error in saving speak')
 	}
 }
 
@@ -239,6 +241,30 @@ const confirmStoreSpeaking = (who, speakingData, chat) => {
 		saveChat(chat, true)
 		console.log('storing chat')
 	}
+}
+
+const checkIfReallyLooking = (clientData, delay, chat) => {
+	lookingTimer[clientData.who] = {
+		who: clientData.who,
+		whom: clientData.key,
+		body: clientData.body,
+		time: new Date()
+	}
+	setTimeout( function() {
+		let timeElapsed = new Date() - lookingTimer[clientData.who].time
+		console.log('timeElapsed', timeElapsed)
+		if (timeElapsed > delay-100) {
+			if (lookingTimer[clientData.who]['currentlySavedLookingAt'])
+			chat.lookingAt.push({
+				who: clientData.who,
+				whom: clientData.key,
+				body: clientData.body,
+				timestamp: lookingTimer[clientData.who].time
+			})
+			lookingTimer[clientData.who]['currentlySavedLookingAt'] = clientData.key
+			saveChat(chat, true)
+		}
+	}, delay )
 }
 
 // this avoids the parrallel save error with mongoose
