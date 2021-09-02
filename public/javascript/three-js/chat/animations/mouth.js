@@ -14,7 +14,6 @@ function mouth(who, final=false) {
 	randomViseme =  getRandomViseme(who);
 	faceMorphsTo = new Array(c.lenMorphs).fill(0);
 	randomMouthingDuration = 100 + Math.random()*250
-	console.log('in mouth')
 
 	//don't need this cause only gonne use neutral expression
 	//console.log('randomViseme:', c.p[who].states.expression + "_" + randomViseme)

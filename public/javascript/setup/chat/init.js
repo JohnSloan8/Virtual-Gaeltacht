@@ -22,6 +22,7 @@ const propogateC = sD_ => {
     lookingAtEntry: sD_.lookingAt,
     waitingList: sD_.waitingList,
     firstEntry: sD_.firstEntry,
+    connectedStreams: []
   }
   c.participantList.forEach(function(n){
     c.p[n] = {}

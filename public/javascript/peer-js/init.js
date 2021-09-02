@@ -6,7 +6,7 @@ let myID = window.location.pathname + '-' + username
 myID = myID.slice(6, myID.length).replaceAll('-', '') 
 let peer = new Peer(myID)
 peer.on('open', myID => {
-  console.log('My peer ID is: ' + myID);
+  console.log('Peer opened. ID is: ' + myID);
 })
 
 const initPeer = () => {
@@ -26,6 +26,7 @@ const initPeer = () => {
 
 const addAudioStream = (userID, stream, muted) => {
   let thisAudio = document.createElement('audio')
+  //console.log('audio stream added:', userID)
   thisAudio.id = userID
   $('#audioElements').append(thisAudio)
   thisAudio.srcObject = stream
@@ -35,28 +36,29 @@ const addAudioStream = (userID, stream, muted) => {
     if (userID === myID) {
       addVolumeDetector(stream)
       showMuteButton(stream);
-    }
+    } 
   })
 }
 
 const checkForOtherPeersAndConnect = stream => {
   c.participantList.forEach( p => {
-    console.log('username:', username)
-    console.log('p:', p)
     if (p !== username) {
-      connectToUser(p, stream)
+      if (!c.connectedStreams.includes(p)) {
+        connectToUser(p, stream)
+      }
     }
   })
+  setTimeout( function(){ checkForOtherPeersAndConnect(stream) }, 5000 )
 }
 
 const connectToUser = (p, stream) => {
   let otherID = window.location.pathname + '-' + p
   otherID = otherID.slice(6, otherID.length).replaceAll('-', '') 
   const call = peer.call(otherID, stream)
-  console.log('call:', call)
   call.on('stream', otherAudioStream => {
-    console.log('otherStream')
-    addAudioStream(otherID, otherAudioStream)
+    console.log('adding stream:', otherID)
+    addAudioStream(otherID, otherAudioStream, false)
+    c.connectedStreams.push(p)
   })
   call.on('close', () => {
     audio.remove()
@@ -90,16 +92,15 @@ const addVolumeDetector = stream => {
     var average = values / length;
     totalAverage += average
     if (count === 10) {
-      console.log('totalAverage:', totalAverage)
       if (totalAverage > 150) {
         if (!c.p[username].states.speaking) {
-          console.log('speaking')
+          //console.log('speaking')
 		      updateAvatarState(username, 'speaking', true)
           socketSend('speaking', true) 
         }
       } else if (totalAverage < 75){
         if (c.p[username].states.speaking) {
-          console.log('not speaking')
+          //console.log('not speaking')
 		      updateAvatarState(username, 'speaking', false)
           socketSend('speaking', false)
         }

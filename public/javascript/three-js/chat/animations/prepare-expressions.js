@@ -41,7 +41,6 @@ const addHalfAndBlinkExpressions = () => {
 }
 
 const createExpressions = n => {
-	console.log('createExpressions')
 	Object.entries(expressionMorphs).forEach( function(e) {
 		let lengthArray = c.p[n].movableBodyParts.face.morphTargetInfluences.length
 		c.p[n].movableBodyParts.face.morphTargetDictionary[e[0]] = lengthArray
