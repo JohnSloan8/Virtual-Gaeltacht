@@ -62,6 +62,7 @@ const expressionMorphs = {
 		"jawForward": 0.5,
 	}
 }
+window.expressionMorphs = expressionMorphs
 
 var jawNeeded = {
 	"smile": false,

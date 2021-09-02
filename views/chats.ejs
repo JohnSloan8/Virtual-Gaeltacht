@@ -1,20 +1,14 @@
 <div class="card mb-3 mt-2">
-  <h3 class="card-header">allChatData</h3>
-  <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <h6 class="card-subtitle text-muted">Support card subtitle</h6>
+  <h3 class="card-header" id="chatID"></h3>
+  <div class="card-body mt-4">
+    <h4 class="card-title mb-4">Speaking</h4>
+    <canvas id="speakingChart" width="400" height="400"></canvas>
   </div>
-  <div class="card-body">
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <canvas id="mainChart" width="400" height="400"></canvas>
+  <div class="card-body mt-4">
+    <h4 class="card-title">Looking</h4>
+    <canvas id="lookingAtChart" width="400" height="400"></canvas>
   </div>
 </div>
-<script>
-var chatData
- fetch(window.location.href + '/api')
-  .then(response => response.json())
-  .then(data => chatData = data.chatData);
-</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.bundle.min.js"></script>
 <script src="/javascript/chart-js/chats/init.js" type="module" defer></script>
 

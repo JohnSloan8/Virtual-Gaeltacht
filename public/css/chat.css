@@ -54,3 +54,12 @@
 .allow-entry-right {
   right: 2px
 }
+
+#muteButton {
+  top: 50px;
+  left: 20px;
+}
+
+#muteButton:hover {
+  cursor: pointer;
+}

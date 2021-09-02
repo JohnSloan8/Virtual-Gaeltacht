@@ -1,7 +1,46 @@
 import { displayLookingAtChart } from './lookingAt.js'
+import { displaySpeakingChart } from './speaking.js'
+
+var chatData
+const chartData = {}
+const getChatData = () => {
+ fetch(window.location.href + '/api')
+  .then(response => response.json())
+  .then(data => {
+    chatData = data.chatData
+    initCharts();  
+  });
+}
+getChatData();
 
 const initCharts = () => {
-    displayLookingAtChart()
+  displayNameAndDateOfChat()
+  getChatParticipants()
+  displaySpeakingChart()
+  displayLookingAtChart()
+  window.chartData = chartData
+  window.chatData = chatData
 }
 
-initCharts()
+const displayNameAndDateOfChat = () => {
+  $('#chatID').text(chatData.chatURL)
+}
+
+const getChatParticipants = () => {
+  let participantSet = new Set(chatData.participants.map(p => p.name))
+  chartData.participants = [...participantSet]
+  chartData.lookingAt = {}
+  chartData.participantColours = {}
+  chartData.participants.forEach(p => {
+    chartData.participantColours[p] = "rgba(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + ", 1)"
+    
+    chartData.lookingAt[p] = {}
+    chartData.participants.forEach(q => {
+        if (p !== q) {
+            chartData.lookingAt[p][q] = []
+        }
+    })
+  })
+}
+
+export { chatData, chartData }

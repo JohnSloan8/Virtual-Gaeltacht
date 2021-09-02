@@ -90,6 +90,7 @@ io.on('connection', socket => {
 				participantList = getCurrentParticipants(chat) // participant list
 			}
 			clientData['participantList'] = participantList
+			console.log('pl:', clientData['participantList'])
 			clientData['waitingList'] = getWaitingList(chat)
 			clientData['lookingAt'] = getLookingAt(chat, participantList)
 			socket.emit('message', clientData)
@@ -254,15 +255,16 @@ const checkIfReallyLooking = (clientData, delay, chat) => {
 		let timeElapsed = new Date() - lookingTimer[clientData.who].time
 		console.log('timeElapsed', timeElapsed)
 		if (timeElapsed > delay-100) {
-			if (lookingTimer[clientData.who]['currentlySavedLookingAt'])
-			chat.lookingAt.push({
-				who: clientData.who,
-				whom: clientData.key,
-				body: clientData.body,
-				timestamp: lookingTimer[clientData.who].time
-			})
-			lookingTimer[clientData.who]['currentlySavedLookingAt'] = clientData.key
-			saveChat(chat, true)
+			if (!lookingTimer[clientData.who]['currentlySavedLookingAt']) {
+				chat.lookingAt.push({
+					who: clientData.who,
+					whom: clientData.key,
+					body: clientData.body,
+					timestamp: lookingTimer[clientData.who].time
+				})
+				lookingTimer[clientData.who]['currentlySavedLookingAt'] = clientData.key
+				saveChat(chat, true)
+			}
 		}
 	}, delay )
 }

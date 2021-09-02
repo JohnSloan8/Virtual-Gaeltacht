@@ -32,7 +32,10 @@ const addAudioStream = (userID, stream, muted) => {
   thisAudio.muted = muted
   thisAudio.addEventListener('loadedmetadata', () => {
     thisAudio.play()
-    addVolumeDetector(stream)
+    if (userID === myID) {
+      addVolumeDetector(stream)
+      showMuteButton(stream);
+    }
   })
 }
 
@@ -106,6 +109,22 @@ const addVolumeDetector = stream => {
     }
     count += 1
   }
+}
+
+const showMuteButton = stream => {
+  $('#muteButton').show()
+
+  $('#muteButton').click( () => {
+    if (stream.getAudioTracks()[0].enabled) {
+      stream.getAudioTracks()[0].enabled = false
+      $('#muteButton').removeClass('fa-microphone')
+      $('#muteButton').addClass('fa-microphone-slash')
+    } else {
+      stream.getAudioTracks()[0].enabled = true
+      $('#muteButton').addClass('fa-microphone')
+      $('#muteButton').removeClass('fa-microphone-slash')
+    }
+  })
 }
 
 export { initPeer }

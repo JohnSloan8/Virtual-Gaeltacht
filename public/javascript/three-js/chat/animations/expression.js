@@ -69,5 +69,6 @@ const expression = (who, e) => {
 		console.log('cannot express while already expressing')
 	}
 }
+window.expression = expression
 
 export { expression }
