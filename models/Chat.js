@@ -16,7 +16,8 @@ const ChatSchema = new mongoose.Schema({
 			type: Date, 
 			default: Date.now
 		}, 
-		endTime: Date
+		endTime: Date,
+		socketID: String
 	}],
 	waitingList: [{
 		name: String,

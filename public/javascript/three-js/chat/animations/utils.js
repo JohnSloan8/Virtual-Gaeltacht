@@ -21,7 +21,7 @@ function allMakeRandomExpression(jittered=true) {
 		let eM = Object.keys(expressionMorphs)
 		console.log('eM:', eM)
 		let randomExpression = eM[Math.floor(Math.random()*eM.length)];
-		setTimeout(function(){expression(i, randomExpression)}, Math.random()*500)
+		setTimeout(function(){expression(i, randomExpression, 500)}, Math.random()*500)
 	}
 }
 

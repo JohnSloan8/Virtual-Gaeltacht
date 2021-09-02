@@ -4,6 +4,13 @@ import { displayChoosePositionCircle } from "./choose-position-circle.js"
 import { displayWaitingList, displayLeaveButton } from './events.js'
 
 const updateAvatarState = (who, k, v) => {
+  if (k === 'speaking') {
+    if (v) {
+      if ( !c.p[who].states.mouthing && !c.p[who].states.changingExpression ) {
+        mouth(who)
+      }
+    }
+  }
   if (c.p[who] !== undefined) {
 	  c.p[who].states[k] = v
   }

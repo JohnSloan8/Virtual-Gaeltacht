@@ -14,7 +14,7 @@ const displaySpeakingChart = () => {
 
 const setChartHeight = () => {
   let width = $('#chatID').width()
-  chartData.height = chartData.participants.length * 30 
+  chartData.height = chartData.participants.length * 33 
   chartData.DOMElement = document.getElementById('speakingChart')
   chartData.DOMElement.height = chartData.height
 }
@@ -67,7 +67,15 @@ const getAttendanceData = p => {
   chartData.attendanceData = chatData.participants.filter(n => n.name === p)
   chartData.attendanceData.forEach( a => {
     data.push({x: new Date(a.startTime), y: p})
-    data.push({x: new Date(a.endTime), y: p})
+    let endTime = a.endTime
+    if (a.endTime === null) {
+      if (chatData.endDate !== null) {
+        endTime = chatData.endDate
+      } else {
+        endTime = new Date()
+      }
+    }
+    data.push({x: new Date(endTime), y: p})
     data.push({x: NaN, y: NaN})
   })
   return data
@@ -125,10 +133,7 @@ const getOptions = () => {
         },
         ticks: {
           fontSize: 20,
-          fontColor: 'white',
-          callback: function(tickValue, index, ticks) {
-                        return tickValue;
-                    }
+          fontColor: 'yellow',
         }
       }]
     },

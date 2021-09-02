@@ -9,31 +9,39 @@ const prepareAllExpressions = () => {
 	c.participantList.forEach(function(p) {
 		createExpressions(p)
 	})
+	if (!c.participantList.includes(username)) {
+		createExpressions(username)
+	}
 	c.lenMorphs = c.p[username].movableBodyParts.face.morphTargetInfluences.length
 }
 
 const addHalfAndBlinkExpressions = () => {
 	//let partKey = participants[1].movableBodyParts.face.morphTargetDictionary["eyesClosed"]
 	Object.entries(expressionMorphs).forEach( function(e) {
-		expressionMorphs["half_"+e[0]] = {}
+		//expressionMorphs["half_"+e[0]] = {}
 		for (let key in expressionMorphs[e[0]]) {
-			expressionMorphs["half_"+e[0]][key] = expressionMorphs[e[0]][key]/2
+			expressionMorphs[e[0]][key] = expressionMorphs[e[0]][key]/1.5 
+			//expressionMorphs["half_"+e[0]][key] = expressionMorphs[e[0]][key]/2
 		}
-		expressionMorphs["full_"+e[0] + "_blink"] = Object.assign({}, expressionMorphs[e[0]])
-		expressionMorphs["full_"+e[0] + "_blink"]["eyesClosed"] = 0.85
-		expressionMorphs["half_"+e[0] + "_blink"] = Object.assign({}, expressionMorphs["half_"+e[0]])
-		expressionMorphs["half_"+e[0] + "_blink"]["eyesClosed"] = 0.75
+		expressionMorphs[e[0] + "_blink"] = Object.assign({}, expressionMorphs[e[0]])
+		expressionMorphs[e[0] + "_blink"]["eyesClosed"] = 0.85
+		//expressionMorphs["half_"+e[0] + "_blink"] = Object.assign({}, expressionMorphs["half_"+e[0]])
+		//expressionMorphs["half_"+e[0] + "_blink"]["eyesClosed"] = 0.75
 
 		// don't need cause half surprise mouthing doesn't close lips
 		c.mouthedVisemes.forEach(function(vis) {
-			expressionMorphs["half_"+e[0]+"_"+vis] = Object.assign({}, expressionMorphs["half_"+e[0]]) 
-			expressionMorphs["half_"+e[0]+"_"+vis][vis] = 0.667
-			expressionMorphs["half_"+e[0]+"_"+vis]['jawOpen'] = 0.1
+			expressionMorphs[e[0]+"_"+vis] = Object.assign({}, expressionMorphs["half_"+e[0]]) 
+			expressionMorphs[e[0]+"_"+vis][vis] = 0.667
+			expressionMorphs[e[0]+"_"+vis]['jawOpen'] = 0.1
+			//expressionMorphs["half_"+e[0]+"_"+vis] = Object.assign({}, expressionMorphs["half_"+e[0]]) 
+			//expressionMorphs["half_"+e[0]+"_"+vis][vis] = 0.667
+			//expressionMorphs["half_"+e[0]+"_"+vis]['jawOpen'] = 0.1
 		})
 	})
 }
 
 const createExpressions = n => {
+	console.log('createExpressions')
 	Object.entries(expressionMorphs).forEach( function(e) {
 		let lengthArray = c.p[n].movableBodyParts.face.morphTargetInfluences.length
 		c.p[n].movableBodyParts.face.morphTargetDictionary[e[0]] = lengthArray

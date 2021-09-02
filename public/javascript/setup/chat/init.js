@@ -13,6 +13,7 @@ const propogateC = sD_ => {
     p: {}, // participants
     participantEntering: true,
     meEntering: false,
+    meEntered: false,
     meHavePosition: true,
     participantLeaving: false,
     positions: {},

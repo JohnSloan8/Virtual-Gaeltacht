@@ -5,6 +5,7 @@ import { calculateLookAngles } from "../calculations/avatar-look-rotations.js"
 import { calculateCameraRotations } from "../calculations/camera-look-rotations.js"
 import { randomSway, randomNeckTurn } from "../animations/sway.js"
 import { avatarLookAt } from "../animations/avatar-look.js"
+import { expression } from "../animations/expression.js"
 import { randomBlink } from "../animations/blink.js"
 import { createExpressions } from "../animations/prepare-expressions.js"
 import { loadIndividualGLTF } from "../models/avatar.js"
@@ -32,6 +33,7 @@ const addAvatar = u => {
 	///need to add model first
 	loadIndividualGLTF(u, avatarVisibility, function(u){
 		createExpressions(u)
+		expression(u, c.p[u].states.expression, 1)
 		if (c.meHavePosition) {
 			moveAvatarsController(u);
 			moveCamera(u);

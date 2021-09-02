@@ -17,7 +17,7 @@ const initCharts = () => {
   displayNameAndDateOfChat()
   getChatParticipants()
   displaySpeakingChart()
-  displayLookingAtChart()
+  //displayLookingAtChart()
   window.chartData = chartData
   window.chatData = chatData
 }

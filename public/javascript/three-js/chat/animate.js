@@ -9,7 +9,7 @@ const animate = () => {
 			p.mixer.update(mixerUpdateDelta);
 		}
 	})
-	stats.update();
+	//stats.update();
 	TWEEN.update();
 
 	renderer.setViewport(0, 0, windowWidth, windowHeight);

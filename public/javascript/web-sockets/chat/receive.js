@@ -2,6 +2,7 @@ import { c } from '../../setup/chat/init.js'
 import { cameraEnter } from '../../three-js/chat/enter/camera-enter.js'
 import { displayWaitingList } from '../../setup/chat/events.js'
 import { displayChoosePositionCircle } from '../../setup/chat/choose-position-circle.js'
+import { updateAvatarState } from '../../setup/chat/updates.js'
 import { resolveNewConnection } from "../../setup/chat/init.js"
 import { avatarLookAt } from "../../three-js/chat/animations/avatar-look.js"
 import { expression } from "../../three-js/chat/animations/expression.js"
@@ -9,7 +10,6 @@ import { gesture } from "../../three-js/chat/animations/gesture.js"
 import { avatarNodShake } from "../../three-js/chat/animations/nod-shake.js"
 import { addAvatar } from "../../three-js/chat/models/add-avatar.js"
 import { removeAvatar } from "../../three-js/chat/models/remove-avatar.js"
-import { startMouthing, stopMouthing } from '../../three-js/chat/animations/mouth.js'
 
 // CREATE WEBSOCKET CONNECTION
 const socket = io('/')
@@ -63,14 +63,14 @@ socket.on('message', serverData => {
   // PARTICIPANT REMOVED
   } else if (serverData.type === "removeParticipant" ) {
     if (username === serverData.who) {
-      window.location.href = '/dashboard'
+      window.location.href = '/chats/chat-history/' + window.location.pathname.slice(6)
     } else {
       c.participantList = serverData.participantList
       removeAvatar(serverData.who)
     }
 
   // OTHER PARTICIPANT ACTIONS
-  } else if (c.participantList !== undefined) {
+  } else if (c.participantList !== undefined && c.meEntered) {
 
     // LOOKS
     if (serverData.type === "look" ) {
@@ -78,7 +78,7 @@ socket.on('message', serverData => {
     
     // FACIAL EXPRESSIONS
     } else if (serverData.type === "expression" ) {
-      expression(serverData.who, serverData.key)
+      expression(serverData.who, serverData.key, 500)
     
     // GESTURES
     } else if (serverData.type === "gesture" ) {
@@ -91,9 +91,9 @@ socket.on('message', serverData => {
     // Speaking
     } else if (serverData.type === "speaking" ) {
       if (serverData.key) {
-        startMouthing(serverData.who, serverData.key)
+        updateAvatarState(serverData.who, 'speaking', true)
       } else {
-        stopMouthing(serverData.who, serverData.key)
+        updateAvatarState(serverData.who, 'speaking', false)
       }
     }
   }

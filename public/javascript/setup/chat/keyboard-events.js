@@ -15,7 +15,8 @@ const disableKeyBindings = () => {
 }
 
 const setKeys = event => {
-  if ( ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes( event.key ) ) {
+  console.log('event.key:', event.key)
+  if ( ['w', 'a', 's', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes( event.key ) ) {
     event.preventDefault();
     lookControl(username, event.key)
   }
@@ -29,28 +30,28 @@ const lookControl = (who, k) => {
     }
     let change = true
     let body = c.p[who].states.currentlyLookingAtBody
-    if ( k === 'ArrowLeft' ) {
+    if ( k === 'ArrowLeft' || k === 'a') {
       if (body) {
         body = false
         positionOfLookAt = Math.abs(positionOfLookAt) - 1;
       } else {
         positionOfLookAt -= 1;
       }
-    } else if ( k === 'ArrowRight' ) {
+    } else if ( k === 'ArrowRight' || k === 'd' ) {
       if (body) {
         body = false
         positionOfLookAt = Math.abs(positionOfLookAt) + 1;
       } else {
         positionOfLookAt += 1;
       }
-    } else if ( k === 'ArrowDown' ) {
+    } else if ( k === 'ArrowDown' || k === 's' ) {
       if (positionOfLookAt > 0) {
         positionOfLookAt *= -1;
         body = true
       } else {
         change = false
       }
-    } else if ( k === 'ArrowUp' ) {
+    } else if ( k === 'ArrowUp' || k === 'w' ) {
       if (positionOfLookAt < 0) {
         positionOfLookAt *= -1;
         body = false

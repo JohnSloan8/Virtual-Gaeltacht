@@ -44,10 +44,13 @@ const enterSceneGetReady = () => {
 	beginRandomSwaying();
 	c.participantList.forEach(function(n) {
 		avatarLookAt(n, c.lookingAtEntry[n][0], 1, c.lookingAtEntry[n][1])
+		expression(n, c.p[n].states.expression, 1)
 	})
 	displayWaitingList();
 	displayControlPanel();
 	displayLeaveButton(true);
+	$("#inviteButtonContainer").show();
+	c.meEntered = true
 }
 
 

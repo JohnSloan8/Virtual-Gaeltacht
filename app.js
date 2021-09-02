@@ -153,9 +153,10 @@ io.on('connection', socket => {
 				if ( chat.participants.filter(e => e.endTime === null).length === 0 ) {
 					console.log('chat ended')
 					chat.endDate = Date.now()
+				} else {
+					clientData['participantList'] = getCurrentParticipants(chat) // participant list
+					io.in(path.basename(clientData.chatID)).emit('message', clientData)
 				}
-				clientData['participantList'] = getCurrentParticipants(chat) // participant list
-				io.in(path.basename(clientData.chatID)).emit('message', clientData)
 
 			// ALL GESTURES
 			} else {

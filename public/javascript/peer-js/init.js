@@ -1,6 +1,6 @@
 import { c } from '../setup/chat/init.js'
-import { startMouthing, stopMouthing } from '../three-js/chat/animations/mouth.js'
 import { socketSend } from "../web-sockets/chat/send.js"
+import { updateAvatarState } from "../setup/chat/updates.js"
 
 let myID = window.location.pathname + '-' + username 
 myID = myID.slice(6, myID.length).replaceAll('-', '') 
@@ -94,13 +94,13 @@ const addVolumeDetector = stream => {
       if (totalAverage > 150) {
         if (!c.p[username].states.speaking) {
           console.log('speaking')
-          startMouthing(username)
+		      updateAvatarState(username, 'speaking', true)
           socketSend('speaking', true) 
         }
       } else if (totalAverage < 75){
         if (c.p[username].states.speaking) {
           console.log('not speaking')
-          stopMouthing(username)
+		      updateAvatarState(username, 'speaking', false)
           socketSend('speaking', false)
         }
       }
@@ -113,6 +113,7 @@ const addVolumeDetector = stream => {
 
 const showMuteButton = stream => {
   $('#muteButton').show()
+  stream.getAudioTracks()[0].enabled = false
 
   $('#muteButton').click( () => {
     if (stream.getAudioTracks()[0].enabled) {

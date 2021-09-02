@@ -11,7 +11,7 @@ const setupScene = () => {
 	renderer.setClearColor( 0xffffff, 0 )
 	clock = new THREE.Clock();
 	scene = new THREE.Scene();
-	stats = new Stats();
+	//stats = new Stats();
 	renderer.setPixelRatio(window.devicePixelRatio);
 	windowWidth = window.innerWidth
 	windowHeight = window.innerHeight
@@ -20,7 +20,7 @@ const setupScene = () => {
 	renderer.shadowMap.enabled = true;
 
 	container.appendChild(renderer.domElement);
-	container.appendChild(stats.dom);
+	//container.appendChild(stats.dom);
 
 	controlPanelHeight = $('#controlPanel').height()
 	resizeFrame()

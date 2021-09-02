@@ -1,20 +1,7 @@
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { easingDict, easings } from "./easings.js"
-import { updateAvatarState } from "../../../setup/chat/updates.js"
 import { c } from '../../../setup/chat/init.js'
-
-function startMouthing(who) {
-	if (!c.p[who].states.speaking) {
-		updateAvatarState(who, 'speaking', true)
-		mouth(who)
-	}
-}
-
-function stopMouthing(who) {
-	if (c.p[who].states.speaking) {
-		updateAvatarState(who, 'speaking', false)
-	}
-}
+import { updateAvatarState } from "../../../setup/chat/updates.js"
 
 window.mouth = mouth
 let randomViseme
@@ -23,9 +10,11 @@ let randomMouthingDuration
 let randomEasing
 let mouthingIn
 function mouth(who, final=false) {
+	c.p[who].states.mouthing = true
 	randomViseme =  getRandomViseme(who);
 	faceMorphsTo = new Array(c.lenMorphs).fill(0);
 	randomMouthingDuration = 100 + Math.random()*250
+	console.log('in mouth')
 
 	//don't need this cause only gonne use neutral expression
 	//console.log('randomViseme:', c.p[who].states.expression + "_" + randomViseme)
@@ -52,6 +41,8 @@ function mouth(who, final=false) {
 		} else {
 			if (!final) {
 				mouth(who, true)
+			} else {
+				c.p[who].states.mouthing = false
 			}
 		}
 	})
@@ -74,4 +65,4 @@ function getRandomEasing() {
 	return easings[Math.floor(Math.random()*easings.length)]
 }
 
-export { mouth, startMouthing, stopMouthing }
+export { mouth }

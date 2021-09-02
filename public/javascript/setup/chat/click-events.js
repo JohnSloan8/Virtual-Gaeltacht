@@ -25,7 +25,7 @@ const setupGestureClickEvents = () => {
 		} else {
 			k = 'expression'
 			v = e.target.id
-			expression(username, v)
+			expression(username, v, 500)
 		}
 		socketSend(k, v)
 	})

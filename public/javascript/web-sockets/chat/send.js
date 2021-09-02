@@ -15,7 +15,6 @@ const socketSend = (key, val, arg1) => {
   }
   
   socket.emit( 'message', data)
-
 }
 
 export { socketSend }
