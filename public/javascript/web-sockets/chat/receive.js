@@ -4,6 +4,7 @@ import { displayWaitingList } from '../../setup/chat/events.js'
 import { displayChoosePositionCircle } from '../../setup/chat/choose-position-circle.js'
 import { updateAvatarState } from '../../setup/chat/updates.js'
 import { resolveNewConnection } from "../../setup/chat/init.js"
+import { checkForOtherPeersAndConnect } from "../../peer-js/init.js"
 import { avatarLookAt } from "../../three-js/chat/animations/avatar-look.js"
 import { expression } from "../../three-js/chat/animations/expression.js"
 import { gesture } from "../../three-js/chat/animations/gesture.js"
@@ -27,15 +28,15 @@ socket.emit('message', {
 
 // LISTEN FOR MESSAGES
 socket.on('message', serverData => {
-  console.log('server message:', serverData)
+  //console.log('server message:', serverData)
 
   // NEW CONNECTION
   if (serverData.type === "newConnection" ) {
     resolveNewConnection(serverData) 
+    checkForOtherPeersAndConnect()
 
   // REQUESTED ENTRY
   } else if (serverData.type === "requestEnter" ) {
-    console.log('entry requested:', serverData.waitingList)
     c.waitingList = serverData.waitingList
     displayWaitingList()
 
@@ -56,7 +57,6 @@ socket.on('message', serverData => {
         $('#choosePositionText').html(`Your request was refused or timed out. You can try again.`)
         displayChoosePositionCircle(serverData.participantList)
       }
-      console.log('waitingList:', c.waitingList)
       displayWaitingList()
     }
 

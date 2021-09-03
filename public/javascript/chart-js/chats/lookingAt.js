@@ -5,9 +5,16 @@ import { chatData, chartData } from "./init.js"
 const displayLookingAtChart = () => {
   var ctx = document.getElementById('lookingAtChart').getContext('2d');
   setChartHeight();
+  createLookingAtData();
   thisChart = new Chart(ctx, {
     type: 'bar',
-    data: getData(),
+    data: {
+      labels: Object.keys(chartData.lookingAtData),
+      datasets: [{
+        data: Object.values(chartData.lookingAtData),
+        backgroundColor: '#7f99c7'
+      }],
+    },
     options: getOptions()
   });
 }
@@ -18,48 +25,121 @@ const setChartHeight = () => {
   chartData.DOMElement.height = chartData.height
 }
 
-const getData = () => {
-  let data = {
-    datasets: getDatasets(),
-    labels: chatData.participants
+const createLookingAtData = () => {
+  getEmptySpeakingDict()
+}
+window.createLookingAtData = createLookingAtData
+
+const getEmptySpeakingDict = () => {
+  chartData.speakingDict = {}
+  let startUnixTime = Math.floor(new Date(chatData.startDate).getTime()/1000)
+  let endUnixTime = Math.floor(new Date(chatData.endDate).getTime()/1000)
+  if (startUnixTime !== null && endUnixTime !== null) {
+    for (let i=startUnixTime; i<=endUnixTime; i++) {
+      chartData.speakingDict[i] = []
+    }
+    addSpeakers()
+  } else {
+    console.log('start or end time is null')
   }
-  return data
 }
 
-const getDatasets = () => {
-  let datasets = []
+const addSpeakers = () => {
+  chatData.speaking.forEach( s => {
+    let startUnixTime = Math.floor(new Date(s.startTime).getTime()/1000)
+    let endUnixTime = Math.floor(new Date(s.endTime).getTime()/1000)
+    for (let i=startUnixTime; i<=endUnixTime; i++) {
+      chartData.speakingDict[i].push(s.who)
+    }
+  } )
+  addLookingDict()
+}
+
+const addLookingDict = () => {
+  chartData.lookingAtDict = {}
   chartData.participants.forEach( p => {
-    let lookingDataset = {
-      label: p,
-      type: "bar",
-      data: getLookingData(p),
-      stack: "base",
-      backgroundColor: "yellow"
-    }
-    datasets.push(lookingDataset)
+    chartData.lookingAtDict[p] = {}
+    let thisParticipantsLookingData = chatData.lookingAt.filter(n => n.who === p)
+    thisParticipantsLookingData.forEach( (l, i) => {
+      let startUnixTime = Math.floor(new Date(l.timestamp).getTime()/1000)
+      let endUnixTime
+      if (thisParticipantsLookingData[i+1] !== undefined) {
+         endUnixTime = Math.floor(new Date(thisParticipantsLookingData[i+1].timestamp).getTime()/1000)
+      } else {
+         endUnixTime = Math.floor(new Date(chatData.participants.find(m => m.name === p).endTime).getTime()/1000)
+      }
+      for (let i=startUnixTime; i<=endUnixTime; i++) {
+        chartData.lookingAtDict[p][i] = l.whom
+      }
+    })
   })
-  console.log('datasets:', datasets)
-  return datasets
+  fillSpeakingDict()
+}
+
+const fillSpeakingDict = () => {
+  chartData.lookingAtSpeakerBooleanDict = {}
+  for (const [name, lookingAtData] of Object.entries(chartData.lookingAtDict)) {
+    chartData.lookingAtSpeakerBooleanDict[name] = []
+    for (const [time, whom] of Object.entries(lookingAtData)) {
+      if (chartData.speakingDict[time] !== undefined) {
+        if (!chartData.speakingDict[time].includes(name) && chartData.speakingDict[time].length !== 0) {
+          if (chartData.speakingDict[time].includes(whom)) {
+            chartData.lookingAtSpeakerBooleanDict[name].push(true)
+          } else {
+            chartData.lookingAtSpeakerBooleanDict[name].push(false)
+          }
+        }
+      } 
+    }
+  }
+  outputDataForChart()
+}
+
+const outputDataForChart = () => {
+  chartData.lookingAtData = {};
+  const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+
+  for (const [name, arr] of Object.entries(chartData.lookingAtSpeakerBooleanDict)) {
+    let trues = countOccurrences(arr, true)
+    let percentTrue = Math.ceil(100 * trues / arr.length)
+    chartData.lookingAtData[name] = percentTrue  
+  }
 }
 
 
-const getLookingData = p => {
 
-  let thisParticipantsLookingData = chatData.lookingAt.filter(n => n.who === p)
-  thisParticipantsLookingData.forEach( (l, i) => {
-    if (i !== 0) {
-      let startTime = l.timestamp
-      let endTime = thisParticipantsLookingData[i-1].timestamp
-      let who = thisParticipantsLookingData[i-1].whom
 
-      chartData.lookingAt[p][who].push({
-        startTime: startTime,
-        endTime: endTime,
-      })
-      //data.push({x: new Date(l.timestamp), y: l.whom})
-    }
-  })
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//const getSpeakingDict = p => {
+
+  //let thisParticipantsLookingData = chatData.lookingAt.filter(n => n.who === p)
+  //thisParticipantsLookingData.forEach( (l, i) => {
+    //if (i !== 0) {
+      //let startTime = l.timestamp
+      //let endTime = thisParticipantsLookingData[i-1].timestamp
+      //let who = thisParticipantsLookingData[i-1].whom
+
+      //chartData.lookingAt[p][who].push({
+        //startTime: startTime,
+        //endTime: endTime,
+      //})
+      ////data.push({x: new Date(l.timestamp), y: l.whom})
+    //}
+  //})
+//}
 
 const checkWhenLookingWithoutSpeaking = () => {
 
@@ -124,51 +204,38 @@ const getOptions = () => {
   let options = {
     scales: {
       xAxes: [{
-        stacked: true
-        //type: 'time',
-        //distribution: 'linear',
-        //gridLines: {
-          //drawBorder: false,
-        //},
-        //time: {
-          //min: new Date(chatData.startDate), 
-          //max: new Date(chatData.endDate) 
-        //},
-        //ticks: {
-          //fontSize: 16,
-          //fontColor: "white",
-          //padding: 0,
-          //beginAtZero: true
-        //},
+        gridLines: {
+          display: false,
+        },
+        ticks: {
+          fontSize: 20,
+          fontColor: "white",
+          padding: 0,
+        },
       }],
       yAxes: [{
-        stacked: true
-        //type: 'category',
-        //labels: chartData.participants,
-        //gridLines: {
-          //display: false,
-          //drawBorder: false,
-        //},
-        //ticks: {
-          //fontSize: 20,
-          //fontColor: 'white',
-          //callback: function(tickValue, index, ticks) {
-                        //return tickValue;
-                    //}
-        //}
+        ticks: {
+          fontSize: 16,
+          fontColor: 'white',
+          beginAtZero: true,
+          stepSize: 20,
+          min: 0,
+          max: 100,
+        },
+        scaleLabel: {
+          display: true,
+          labelString: '% time looking at a speaker',
+          fontColor: 'white',
+          fontSize: 14
+        }
       }]
-    //},
-    //layout: {
-      //padding: 30
-    //},
-    //legend: {
-      //display: false
-    //},
-    //elements: {
-      //line: {
-        //tension: 0
-      //}
-    }
+    },
+    layout: {
+      padding: 30
+    },
+    legend: {
+      display: false
+    },
   }
   return options
 }

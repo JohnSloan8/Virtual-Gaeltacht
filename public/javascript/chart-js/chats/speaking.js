@@ -34,7 +34,7 @@ const getDatasets = () => {
       label: p,
       data: getSpeakingData(p),
       borderColor: 'yellow',
-      borderWidth: width/20,
+      borderWidth: width/5,
       pointRadius: 0,
       fill: false,
     }
@@ -42,7 +42,7 @@ const getDatasets = () => {
       label: p,
       data: getAttendanceData(p),
       borderColor: "rgba(200,200,200,0.3)",
-      borderWidth: width/20,
+      borderWidth: width/5,
       pointRadius: 0,
       fill: false,
     }
@@ -133,7 +133,7 @@ const getOptions = () => {
         },
         ticks: {
           fontSize: 20,
-          fontColor: 'yellow',
+          fontColor: 'white',
         }
       }]
     },

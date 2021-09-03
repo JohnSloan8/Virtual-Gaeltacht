@@ -90,7 +90,6 @@ io.on('connection', socket => {
 				participantList = getCurrentParticipants(chat) // participant list
 			}
 			clientData['participantList'] = participantList
-			console.log('pl:', clientData['participantList'])
 			clientData['waitingList'] = getWaitingList(chat)
 			clientData['lookingAt'] = getLookingAt(chat, participantList)
 			socket.emit('message', clientData)
@@ -207,7 +206,6 @@ const checkIfSpeakingLongerThanNSeconds = (who, speaking, timeLimit, chat) => {
 				speakingTimer[who].bool = true
 				speakingTimer[who].startTime = new Date()
 				let gap = speakingTimer[who].startTime - speakingTimer[who].finishTime
-				console.log('gap:', gap)
 				if (gap > timeLimit) {
 					speakingTimer[who].originalStartTime = new Date()
 				}
@@ -217,7 +215,6 @@ const checkIfSpeakingLongerThanNSeconds = (who, speaking, timeLimit, chat) => {
 				speakingTimer[who].bool = false
 				speakingTimer[who].finishTime = new Date()
 				let speakingTime = speakingTimer[who].finishTime - speakingTimer[who].startTime
-				console.log('speakingTime:', speakingTime)
 				if (speakingTime > timeLimit) {	
 					setTimeout( function(){confirmStoreSpeaking(who, speakingTimer[who], chat)}, timeLimit )
 				}
@@ -229,11 +226,9 @@ const checkIfSpeakingLongerThanNSeconds = (who, speaking, timeLimit, chat) => {
 }
 
 const confirmStoreSpeaking = (who, speakingData, chat) => {
-	console.log('iin confirmStoreSpeaking')
 	let timeElapsed = new Date() - speakingData.finishTime
 	if (!speakingTimer[who].bool && timeElapsed > 2900 ) {
 		let speakingTime = speakingTimer[who].finishTime - speakingTimer[who].originalStartTime
-		console.log('totalspeakingTime:', speakingTime)
 		console.log('finishTime:', speakingTimer[who].finishTime)
 		chat.speaking.push({
 			who: who,
@@ -241,7 +236,6 @@ const confirmStoreSpeaking = (who, speakingData, chat) => {
 			endTime:	speakingData.finishTime
 		})
 		saveChat(chat, true)
-		console.log('storing chat')
 	}
 }
 
@@ -254,7 +248,6 @@ const checkIfReallyLooking = (clientData, delay, chat) => {
 	}
 	setTimeout( function() {
 		let timeElapsed = new Date() - lookingTimer[clientData.who].time
-		console.log('timeElapsed', timeElapsed)
 		if (timeElapsed > delay-100) {
 			if (!lookingTimer[clientData.who]['currentlySavedLookingAt']) {
 				chat.lookingAt.push({

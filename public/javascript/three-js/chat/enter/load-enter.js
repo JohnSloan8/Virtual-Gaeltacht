@@ -51,6 +51,7 @@ const enterSceneGetReady = () => {
 	displayLeaveButton(true);
 	$("#inviteButtonContainer").show();
 	c.meEntered = true
+	socketSend('look', c.lookingAtEntry[username][0], false)
 }
 
 

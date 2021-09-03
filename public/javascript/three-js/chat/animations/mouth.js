@@ -10,41 +10,43 @@ let randomMouthingDuration
 let randomEasing
 let mouthingIn
 function mouth(who, final=false) {
-	c.p[who].states.mouthing = true
-	randomViseme =  getRandomViseme(who);
-	faceMorphsTo = new Array(c.lenMorphs).fill(0);
-	randomMouthingDuration = 100 + Math.random()*250
+	if ( c.p[who] !== undefined ) {
+		updateAvatarState(who, 'mouthing', true)
+		randomViseme =  getRandomViseme(who);
+		faceMorphsTo = new Array(c.lenMorphs).fill(0);
+		randomMouthingDuration = 100 + Math.random()*250
 
-	//don't need this cause only gonne use neutral expression
-	//console.log('randomViseme:', c.p[who].states.expression + "_" + randomViseme)
-	
-	if ( final ) {
-		faceMorphsTo[c.p[who].movableBodyParts.face.morphTargetDictionary[c.p[who].states.expression]] = 1;
-		randomMouthingDuration = 300
-	} else {
-		randomMouthingDuration = 100 + Math.random()*300
-		faceMorphsTo[c.p[who].movableBodyParts.face.morphTargetDictionary[c.p[who].states.expression + "_" + randomViseme]] = 1
-		//faceMorphsTo[c.p[who].movableBodyParts.face.morphTargetDictionary[randomViseme]] = 0.5;
-	}
-
-	randomEasing = getRandomEasing()
-
-	mouthingIn = new TWEEN.Tween(c.p[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsTo, randomMouthingDuration)
-		.easing(easingDict[randomEasing])
-		.start()
-	updateAvatarState(who, 'speakingViseme', randomViseme)
-
-	mouthingIn.onComplete( function() {
-		if ( c.p[who].states.speaking ) {
-			mouth(who)
+		//don't need this cause only gonne use neutral expression
+		//console.log('randomViseme:', c.p[who].states.expression + "_" + randomViseme)
+		
+		if ( final ) {
+			faceMorphsTo[c.p[who].movableBodyParts.face.morphTargetDictionary[c.p[who].states.expression]] = 1;
+			randomMouthingDuration = 300
 		} else {
-			if (!final) {
-				mouth(who, true)
-			} else {
-				c.p[who].states.mouthing = false
-			}
+			randomMouthingDuration = 100 + Math.random()*300
+			faceMorphsTo[c.p[who].movableBodyParts.face.morphTargetDictionary[c.p[who].states.expression + "_" + randomViseme]] = 1
+			//faceMorphsTo[c.p[who].movableBodyParts.face.morphTargetDictionary[randomViseme]] = 0.5;
 		}
-	})
+
+		randomEasing = getRandomEasing()
+
+		mouthingIn = new TWEEN.Tween(c.p[who].movableBodyParts.face.morphTargetInfluences).to(faceMorphsTo, randomMouthingDuration)
+			.easing(easingDict[randomEasing])
+			.start()
+		updateAvatarState(who, 'speakingViseme', randomViseme)
+
+		mouthingIn.onComplete( function() {
+			if ( c.p[who].states.speaking ) {
+				mouth(who)
+			} else {
+				if (!final) {
+					mouth(who, true)
+				} else {
+					updateAvatarState(who, 'mouthing', false)
+				}
+			}
+		})
+	}
 }
 
 function getRandomViseme(who) {

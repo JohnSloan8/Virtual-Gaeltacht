@@ -14,8 +14,9 @@ const initPeer = () => {
     video: false,
     audio: true
   }).then(stream => {
+    c.myStream = stream
     addAudioStream(myID, stream, true)
-    checkForOtherPeersAndConnect(stream)
+    checkForOtherPeersAndConnect()
     peer.on('call', call => {
       call.answer(stream)
       addAudioStream(call.peer, stream, false)
@@ -40,15 +41,14 @@ const addAudioStream = (userID, stream, muted) => {
   })
 }
 
-const checkForOtherPeersAndConnect = stream => {
+const checkForOtherPeersAndConnect = () => {
   c.participantList.forEach( p => {
     if (p !== username) {
       if (!c.connectedStreams.includes(p)) {
-        connectToUser(p, stream)
+        connectToUser(p, c.myStream)
       }
     }
   })
-  setTimeout( function(){ checkForOtherPeersAndConnect(stream) }, 5000 )
 }
 
 const connectToUser = (p, stream) => {
@@ -129,4 +129,4 @@ const showMuteButton = stream => {
   })
 }
 
-export { initPeer }
+export { initPeer, checkForOtherPeersAndConnect }
