@@ -39,7 +39,6 @@ const avatarNodShake = (who, nodShake) => {
 			}
 		})
 
-		let direction = new THREE.Vector3();
 		start.onUpdate(function (object) {
 			c.p[who].movableBodyParts.leftEye.lookAt(c.p[who].states.focalPoint)
 			c.p[who].movableBodyParts.rightEye.lookAt(c.p[who].states.focalPoint)
