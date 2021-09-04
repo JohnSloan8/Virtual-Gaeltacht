@@ -154,8 +154,8 @@ io.on('connection', socket => {
 					chat.endDate = Date.now()
 				} else {
 					clientData['participantList'] = getCurrentParticipants(chat) // participant list
-					io.in(path.basename(clientData.chatID)).emit('message', clientData)
 				}
+				io.in(path.basename(clientData.chatID)).emit('message', clientData)
 
 			// ALL GESTURES
 			} else {
@@ -250,6 +250,13 @@ const checkIfReallyLooking = (clientData, delay, chat) => {
 		let timeElapsed = new Date() - lookingTimer[clientData.who].time
 		if (timeElapsed > delay-100) {
 			if (!lookingTimer[clientData.who]['currentlySavedLookingAt']) {
+				// for first look
+				if (chat.lookingAt.length === 1) {
+					if (chat.lookingAt[0].who !== clientData.who) {
+						chat.lookingAt[0].whom = clientData.who,
+						chat.lookingAt.timestamp = new Date()
+					}
+				}
 				chat.lookingAt.push({
 					who: clientData.who,
 					whom: clientData.key,
@@ -257,6 +264,7 @@ const checkIfReallyLooking = (clientData, delay, chat) => {
 					timestamp: lookingTimer[clientData.who].time
 				})
 				lookingTimer[clientData.who]['currentlySavedLookingAt'] = clientData.key
+				
 				saveChat(chat, true)
 			}
 		}

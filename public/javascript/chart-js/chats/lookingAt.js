@@ -33,7 +33,17 @@ window.createLookingAtData = createLookingAtData
 const getEmptySpeakingDict = () => {
   chartData.speakingDict = {}
   let startUnixTime = Math.floor(new Date(chatData.startDate).getTime()/1000)
-  let endUnixTime = Math.floor(new Date(chatData.endDate).getTime()/1000)
+  let endUnixTime
+  if (chatData.endDate !== null) {
+    endUnixTime = Math.floor(new Date(chatData.endDate).getTime()/1000)
+  } else {
+    let thisParticipant = chatData.participants.find(p => p.name === username)
+    if (thisParticipant.endTime !== null) {
+      endUnixTime = Math.floor(new Date(thisParticipant.endTime).getTime()/1000)
+    } else {
+      endUnixTime = Math.floor(new Date().getTime()/1000)
+    }
+  }
   if (startUnixTime !== null && endUnixTime !== null) {
     for (let i=startUnixTime; i<=endUnixTime; i++) {
       chartData.speakingDict[i] = []
@@ -47,7 +57,16 @@ const getEmptySpeakingDict = () => {
 const addSpeakers = () => {
   chatData.speaking.forEach( s => {
     let startUnixTime = Math.floor(new Date(s.startTime).getTime()/1000)
-    let endUnixTime = Math.floor(new Date(s.endTime).getTime()/1000)
+    let endUnixTime 
+    if (s.endTime !== null) {
+      endUnixTime = Math.floor(new Date(s.endTime).getTime()/1000)
+    } else {
+      if (chatData.endDate !== null) {
+        endUnixTime = Math.floor(new Date(chatData.endDate).getTime()/1000)
+      } else {
+        endUnixTime = Math.floor(new Date().getTime()/1000)
+      }
+    }
     for (let i=startUnixTime; i<=endUnixTime; i++) {
       chartData.speakingDict[i].push(s.who)
     }
@@ -64,10 +83,15 @@ const addLookingDict = () => {
       let startUnixTime = Math.floor(new Date(l.timestamp).getTime()/1000)
       let endUnixTime
       if (thisParticipantsLookingData[i+1] !== undefined) {
-         endUnixTime = Math.floor(new Date(thisParticipantsLookingData[i+1].timestamp).getTime()/1000)
+        endUnixTime = Math.floor(new Date(thisParticipantsLookingData[i+1].timestamp).getTime()/1000)
       } else {
-         endUnixTime = Math.floor(new Date(chatData.participants.find(m => m.name === p).endTime).getTime()/1000)
-      }
+        let endTime = chatData.participants.find(m => m.name === p).endTime
+        if (endTime === null) {
+          endUnixTime = Math.floor(new Date().getTime()/1000)
+        } else {
+          endUnixTime = Math.floor(new Date(endTime).getTime()/1000)
+        }
+      }  
       for (let i=startUnixTime; i<=endUnixTime; i++) {
         chartData.lookingAtDict[p][i] = l.whom
       }

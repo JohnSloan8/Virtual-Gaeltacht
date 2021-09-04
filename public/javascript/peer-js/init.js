@@ -49,6 +49,7 @@ const checkForOtherPeersAndConnect = () => {
       }
     }
   })
+  setTimeout( checkForOtherPeersAndConnect, 5000 )
 }
 
 const connectToUser = (p, stream) => {

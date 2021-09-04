@@ -16,6 +16,7 @@ import { cameraEnter } from "./camera-enter.js"
 import { loadIndividualGLTF } from "../models/avatar.js"
 import { updateChatState } from '../../../setup/chat/updates.js'
 import { initPeer } from '../../../peer-js/init.js'
+import { socketSend } from "../../../web-sockets/chat/send.js"
 
 const loadEnter = () => {
 	scene.add(c.cameras.main.camera)

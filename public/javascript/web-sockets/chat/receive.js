@@ -4,7 +4,6 @@ import { displayWaitingList } from '../../setup/chat/events.js'
 import { displayChoosePositionCircle } from '../../setup/chat/choose-position-circle.js'
 import { updateAvatarState } from '../../setup/chat/updates.js'
 import { resolveNewConnection } from "../../setup/chat/init.js"
-import { checkForOtherPeersAndConnect } from "../../peer-js/init.js"
 import { avatarLookAt } from "../../three-js/chat/animations/avatar-look.js"
 import { expression } from "../../three-js/chat/animations/expression.js"
 import { gesture } from "../../three-js/chat/animations/gesture.js"
@@ -33,7 +32,6 @@ socket.on('message', serverData => {
   // NEW CONNECTION
   if (serverData.type === "newConnection" ) {
     resolveNewConnection(serverData) 
-    checkForOtherPeersAndConnect()
 
   // REQUESTED ENTRY
   } else if (serverData.type === "requestEnter" ) {
@@ -74,6 +72,7 @@ socket.on('message', serverData => {
 
     // LOOKS
     if (serverData.type === "look" ) {
+      console.log('serverData:', serverData)
       avatarLookAt(serverData.who, serverData.key, 500, serverData.body)
     
     // FACIAL EXPRESSIONS

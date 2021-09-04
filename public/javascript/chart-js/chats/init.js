@@ -3,11 +3,16 @@ import { displaySpeakingChart } from './speaking.js'
 
 var chatData
 const chartData = {}
+var username
 const getChatData = () => {
  fetch(window.location.href + '/api')
   .then(response => response.json())
   .then(data => {
-    chatData = data.chatData
+    chatData = data.chatData;
+    username = data.username;
+    window.username = username
+    window.chartData = chartData
+    window.chatData = chatData
     initCharts();  
   });
 }
@@ -18,8 +23,6 @@ const initCharts = () => {
   getChatParticipants()
   displaySpeakingChart()
   displayLookingAtChart()
-  window.chartData = chartData
-  window.chatData = chatData
 }
 
 const displayNameAndDateOfChat = () => {
