@@ -1,3 +1,4 @@
+import { background } from "../scene/settings.js";
 import { scene } from "../scene/scene.js"
 import { displayWaitingList, displayLeaveButton } from '../../../setup/chat/events.js'
 import { beginRandomBlinking } from "../animations/blink.js"
@@ -58,7 +59,9 @@ const enterSceneGetReady = () => {
 
 
 const displayControlPanel = () => {
-	$('#controlPanelOverlay').show()
+	if (background.displayControlPanel) {
+		$('#controlPanelOverlay').show()
+	}
 	addSelfieCameraGroup();
 	onWindowResize()
   $('#loadOverlay').hide()

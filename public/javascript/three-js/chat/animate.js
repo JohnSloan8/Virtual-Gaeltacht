@@ -1,3 +1,4 @@
+import { background } from "./scene/settings.js";
 import { renderer, scene, stats, clock, windowWidth, windowHeight, controlPanelHeight } from "./scene/scene.js"
 import { c } from "../../setup/chat/init.js"
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
@@ -18,7 +19,7 @@ const animate = () => {
 	c.cameras.main.camera.updateProjectionMatrix()	
 	renderer.render(scene, c.cameras.main.camera);
 
-	if (!c.meEntering) {
+	if (!c.meEntering && background.displayControlPanel) {
 		renderer.setViewport(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
 		renderer.setScissor(windowWidth*0.375, controlPanelHeight, windowWidth*0.25, windowHeight*0.25);
 		renderer.setScissorTest( true );
