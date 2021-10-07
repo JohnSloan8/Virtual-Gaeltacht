@@ -55,7 +55,7 @@ function loadIndividualGLTF() {
 		model = gltf.scene;
 		model.receiveShadow = true;
 		scene.add( model );
-		camera.position.set(0, 2.5, 5)
+		camera.position.set(0, 3.5, 4.5)
 		controls = new OrbitControls(camera, renderer.domElement);
 		controls.target.set(0, 0.5, 0);
 		controls.update();
