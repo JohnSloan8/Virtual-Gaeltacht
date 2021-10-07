@@ -31,7 +31,7 @@ function loadScene() {
 		0.01,
 		100
 	);
-	scene.background = new THREE.Color('#4e5d6c');
+	scene.background = new THREE.Color('#2b3e50');
 	//scene.background = new THREE.Color('#000000');
 
 	hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.3);
@@ -45,7 +45,7 @@ function loadScene() {
 	
 	loadIndividualGLTF();
 	addGaeltacht();
-	addText();
+	//addText();
 }
 
 function loadIndividualGLTF() {
@@ -65,7 +65,7 @@ function loadIndividualGLTF() {
 
 function addGaeltacht() {
 	let geometry = new THREE.CylinderGeometry( 0.15, 0.15, 0.025, 32 )
-	let material = new THREE.MeshLambertMaterial( { color: 0x008800 } );
+	let material = new THREE.MeshLambertMaterial( { color: 0x11a822 } );
 	let cylinder = new THREE.Mesh( geometry, material );
 	cylinder.position.y += 0.6
 	cylinder.position.x -= 0.7
