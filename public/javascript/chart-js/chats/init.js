@@ -5,7 +5,7 @@ var chatData
 const chartData = {}
 var username
 const getChatData = () => {
- fetch(window.location.href + '/api')
+ fetch(window.location.href)
   .then(response => response.json())
   .then(data => {
     chatData = data.chatData;

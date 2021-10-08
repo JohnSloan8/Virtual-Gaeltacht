@@ -1,17 +1,16 @@
-<%- include('./partials/welcome-overlays') %>
-<%- include('./partials/messages') %>
 <link href="/css/welcome.css" rel="stylesheet">
 <div id="mapCanvas" style="position:absolute; height: 100%; width: 100%; z-index: -1; left: 0; top: 0;"></div>
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
     <div class="card card-body text-center" style="border: none;">
       <h1 class="celtic celtic-h1">The Virtual Gaeltacht</h1>
+      <h1 class="celtic celtic-p">Failte chuig an metaverse as Gaeilge</h1>
       <div class="row mt-2">
         <div class="col-md-6 m-auto">
-          <a href="#" data-toggle="modal" data-target="#registerModal" class="btn btn-info btn-block celtic celtic-small-p"><strong>Register</strong></a>
+          <a href="/users/register" class="btn btn-info btn-block celtic celtic-small-p"><strong>Register</strong></a>
         </div>
         <div class="col-md-6 m-auto">
-          <a href="#" data-toggle="modal" data-target="#loginModal" class="btn btn-success btn-block celtic celtic-small-p"><strong>Log in</strong></a>
+          <a href="/users/login" class="btn btn-success btn-block celtic celtic-small-p"><strong>Login</strong></a>
         </div>
         </div>
       </div>

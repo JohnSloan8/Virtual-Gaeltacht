@@ -33,9 +33,9 @@ router.post('/register', ensureNotAuthenticated, async (req, res) => {
 	}
 
 	// check password length
-	//if (password.length < 6) {
-		//errors.push({msg: "password should be at least 6 characters"})
-	//}
+	if (password.length < 6) {
+		errors.push({msg: "password should be at least 6 characters"})
+	}
 
 	let nameExists = await User.exists({name: name})
 	if ( nameExists ) {
@@ -91,7 +91,7 @@ router.get('/login', ensureNotAuthenticated, (req, res) => {
 router.post('/login', ensureNotAuthenticated, (req, res, next) => {
 	passport.authenticate('local', {
 		successRedirect: '/dashboard',
-    failureRedirect: '/users/login',
+    failureRedirect: 'login',
   	failureFlash: true 
 	})(req, res, next);
 })

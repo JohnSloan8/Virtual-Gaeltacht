@@ -100,4 +100,11 @@ router.get('/chat/:id', [isInvited, ensureAuthenticated], async (req, res) => {
 	}
 })
 
+router.get('/gaeltacht', ensureAuthenticated, async (req, res) => {
+	res.render('gaeltacht', {
+		loggedIn: loggedIn(req),
+		name: req.user.name,
+	})
+})
+
 module.exports = router

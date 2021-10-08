@@ -1,0 +1,14 @@
+<link href="/css/chat.css" rel="stylesheet">
+<div id="gaeltachtCanvas" style="position:absolute; height: 100%; width: 100%; z-index: -1; left: 0; top: 0;"></div>
+<div id="blackOverlay" style="position:absolute; height: 100%; width: 100%; z-index: 101; left: 0; top: 0; background-color: black; display: none"></div>
+<div id="loadOverlay" class="bg-secondary" style="position:absolute; height: 100%; width: 100%; z-index: 103; left: 0; top: 0;">
+	<div class="d-flex align-items-center justify-content-center" style="position:absolute; height: 100%; width: 100%; left: 0; top: 0;">
+		<h3 id="loadingText">Initialising...</h3>
+	</div>	
+</div>
+<script src="/socket.io/socket.io.js" defer></script>
+<script src="/javascript/three-js/gaeltacht/init.js" type="module"></script>
+<script>
+	var username = "<%- name %>"
+	document.getElementById('navbar').style.visibility = 'hidden'
+</script>

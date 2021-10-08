@@ -75,6 +75,7 @@ const speakingTimer = {} // check if speaking event longer than 3 seconds
 const lookingTimer = {} // check if speaking event longer than 3 seconds
 io.on('connection', socket => {
 	
+	console.log('in here')
 	socket.on('message', async clientData => {
 		console.log('clientData: ', clientData.type)
 
@@ -284,3 +285,14 @@ const saveChat = async (chat, reallySave) => {
 	}
 }
 
+io.on('connection-gaeltacht', socket => {
+	
+	socket.on('message', async worldData => {
+		console.log(' world clientData: ', worldData.type)
+
+		// NEW CONNECTION
+		if ( worldData.type === 'newConnection' ) {
+			console.log('new connection')
+		}
+	})
+})
