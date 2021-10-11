@@ -1,0 +1,32 @@
+@font-face {
+  font-family: celticFont;
+  src: url(celtic.ttf);
+}
+
+.celtic {
+  font-family: celticFont;
+}
+
+.celtic-h1 {
+  font-size: 52px;
+}
+
+.celtic-h3 {
+  font-size: 40px;
+}
+
+.celtic-color {
+  color: #4fb862;
+}
+
+.celtic-p {
+  font-size: 30px;
+}
+
+.celtic-small-p {
+  font-size: 24px;
+}
+
+.modal {
+  top: 80px;
+}

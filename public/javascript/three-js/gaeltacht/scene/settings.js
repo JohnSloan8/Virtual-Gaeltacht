@@ -1,0 +1,20 @@
+const showAxesHelper = true
+const showColumn = false
+const showShadows = false
+const orbitControls = true
+
+const background = {
+	displayGround: true,
+	displayFog: false,
+	skyColor: 0x87ceeb,
+	groundColor: 0x1b3f01,
+}
+
+export {
+	showAxesHelper,
+	showColumn,
+	orbitControls,
+	background,
+	showShadows,
+}
+
