@@ -3,6 +3,11 @@
   src: url(celtic.ttf);
 }
 
+.basic-link {
+  color: deepskyblue;
+  text-decoration: underline;
+}
+
 .celtic {
   font-family: celticFont;
 }
