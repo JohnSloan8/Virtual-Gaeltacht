@@ -6,7 +6,6 @@ const {ensureAuthenticated, ensureNotAuthenticated, loggedIn} = require('../conf
 
 router.get('/chat-history', ensureAuthenticated, async (req, res) => {
 	let myChats = await Chat.find({"participants.name": req.user.name})
-	console.log('myChats:', myChats)
 	let basicChatData = []
 	myChats.forEach( c => {
 
