@@ -21,7 +21,6 @@ router.get('/about', (req, res) => {
 })
 
 router.get('/dashboard', ensureAuthenticated, async (req, res) => {
-	console.log('invitedChat:', req.session.invitedChat)
 	let invitedChat = false
 	let inviter = false
 	if (req.session.invitedChat !== undefined) {
