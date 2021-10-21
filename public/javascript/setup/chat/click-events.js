@@ -18,6 +18,9 @@ const setupGestureClickEvents = () => {
 			k = 'gesture'
 			v = e.target.id
 			gesture(username, v, 1000)
+			if (v === "right_hand_up_pose") {
+				$('#' + v).hide()
+			}
 		} else if (e.target.id.slice(e.target.id.length-4) === "head") {
 			k = 'nodShake'
 			v = e.target.id.slice(0, e.target.id.length-5);

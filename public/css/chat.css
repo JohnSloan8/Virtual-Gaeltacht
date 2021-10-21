@@ -56,10 +56,15 @@
 }
 
 #muteButton {
-  top: 50px;
-  left: 20px;
+  text-align: center;
+  width: 100%;
+  margin-top: 7.5%;
 }
 
 #muteButton:hover {
   cursor: pointer;
+}
+
+.fa-microphone-slash {
+  color: red;
 }

@@ -20,10 +20,10 @@ const gesture = (who, gestureName, duration) => {
 		gestureTweenIn.chain(gestureTweenOut)
 		
 		if ( who === username ) {
-			gestureTweenOut.delay(2000)
+			gestureTweenOut.delay(1500)
 			setTimeout( function(){gestureTweenIn.start()}, 500);
 		} else {
-			gestureTweenOut.delay(1200)
+			gestureTweenOut.delay(1000)
 			gestureTweenIn.start()
 		}
 		gestureTweenIn.onStart( function() {

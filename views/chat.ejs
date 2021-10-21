@@ -47,23 +47,22 @@
   </div>
 </div>
 </div>
-<i class="fas fa-microphone-slash fa-3x" id="muteButton" style="position: absolute; z-index 109; display: none"></i>
 <div id="controlPanelOverlay" style="position:absolute; height: 0%; width: 100%; z-index: 100; left: 0; bottom: 0; display: none;">
+	<!--<img src="/images/person-raising-hand_1f64b.png" class="mx-auto d-block emotion-image" id="right_hand_up_pose" />-->
 	<div class="frame frameSide bg-dark" id="frameLeftSkew"></div>
 	<div class="frame frameSide bg-dark" id="frameLeft"></div>
-	<div class="frame frameSide bg-dark" id="frameRightSkew"></div>
+	<div class="frame frameSide bg-dark" id="frameRightSkew">
+		<div style="position: absolute;">
+			<i class="fas fa-hand-paper fa-3x emotion-image" id="right_hand_up_pose" style="z-index 10009; position: absolute; right: 60px; top: 20px;"></i>
+		</div>	
+	</div>
 	<div class="frame frameSide bg-dark" id="frameRight"></div>
 	<div class="frame bg-dark" id="frameTop"></div>
-	<div class="mx-auto" id="controlPanel" style="position:absolute; width: 100%; bottom: 0;">
-		<div class="row p-0 mx-auto">
-			<div class="col-sm-1 emotion-gesture-button emotion-button p-1 bg-dark">
-			</div>
+	<div id="controlPanel" style="position:absolute; width: 100%; bottom: 0;">
+		<div class="row p-0 m-0 justify-content-sm-center">
 			<div class="col-sm-1 emotion-gesture-button emotion-button emotion-button-live p-1 bg-dark">
 				<img src="/images/astonished-face_1f632.png" class="mx-auto d-block emotion-image"  id="surprise"/>
 			</div>
-			<div class="col-sm-1 emotion-gesture-button emotion-button emotion-button-live p-1 bg-dark">
-				<img src="/images/slightly-frowning-face_1f641.png" class="mx-auto d-block emotion-image" id="sad" />
-			</div>	
 			<div class="col-sm-1 emotion-gesture-button emotion-button emotion-button-live p-1 bg-dark">
 				<img src="/images/grinning-face-with-big-eyes_1f603.png" class="mx-auto d-block emotion-image" id="bigSmile"/>
 			</div>
@@ -73,23 +72,29 @@
 			<div class="col-sm-1 emotion-gesture-button nod-shake-button p-1 bg-dark">
 				<img src="/images/arrowUpDown.png" class="mx-auto d-block emotion-image" id="nod_head" />
 			</div>
+			<div class="col-sm-1 emotion-gesture-button gesture-button p-1 bg-dark">
+				<i class="fas fa-microphone-slash fa-3x" id="muteButton" style="z-index 109; position: absolute; display: none"></i>
+			</div>
 			<div class="col-sm-1 emotion-gesture-button nod-shake-button p-1 bg-dark">
 				<img src="/images/arrowLeftRight.png" class="mx-auto d-block emotion-image" id="shake_head" />
 			</div>
-			<div class="col-sm-1 emotion-gesture-button gesture-button gesture-button-live p-1 bg-dark">
-				<img src="/images/person-raising-hand_1f64b.png" class="mx-auto d-block emotion-image" id="right_hand_up_pose" />
-			</div>
-			<div class="col-sm-1 emotion-gesture-button gesture-button gesture-button-live p-1 bg-dark">
-				<img src="/images/man-gesturing-no_1f645-200d-2642-fe0f.png" class="mx-auto d-block emotion-image" id="x_pose" />
-			</div>
-			<div class="col-sm-1 emotion-gesture-button gesture-button gesture-button-live p-1 bg-dark">
-				<img src="/images/person-shrugging_1f937.png" class="mx-auto d-block emotion-image" id="dunno_pose" />
-			</div>
-			<div class="col-sm-1 emotion-gesture-button gesture-button gesture-button-live p-1 bg-dark">
-				<img src="/images/woman-facepalming_1f926-200d-2640-fe0f.png" class="mx-auto d-block emotion-image" id="face_palm_pose" />
+			<div class="col-sm-1 emotion-gesture-button emotion-button emotion-button-live p-1 bg-dark">
+				<img src="/images/slightly-frowning-face_1f641.png" class="mx-auto d-block emotion-image" id="sad" />
 			</div>	
-			<div class="col-sm-1 emotion-gesture-button gesture-button p-1 bg-dark">
+			<div class="col-sm-1 emotion-gesture-button emotion-button emotion-button-live p-1 bg-dark">
+				<img src="/images/slightly-frowning-face_1f641.png" class="mx-auto d-block emotion-image" id="sad" />
+			</div>	
+			<div class="col-sm-1 emotion-gesture-button gesture-button gesture-button-live p-1 bg-dark">
 			</div>
+			<!--<div class="col-sm-1 emotion-gesture-button gesture-button gesture-button-live p-1 bg-dark">-->
+				<!--<img src="/images/man-gesturing-no_1f645-200d-2642-fe0f.png" class="mx-auto d-block emotion-image" id="x_pose" />-->
+			<!--</div>-->
+			<!--<div class="col-sm-1 emotion-gesture-button gesture-button gesture-button-live p-1 bg-dark">-->
+				<!--<img src="/images/person-shrugging_1f937.png" class="mx-auto d-block emotion-image" id="dunno_pose" />-->
+			<!--</div>-->
+			<!--<div class="col-sm-1 emotion-gesture-button gesture-button gesture-button-live p-1 bg-dark">-->
+				<!--<img src="/images/woman-facepalming_1f926-200d-2640-fe0f.png" class="mx-auto d-block emotion-image" id="face_palm_pose" />-->
+			<!--</div>	-->
 		</div>
 	</div>
 </div>

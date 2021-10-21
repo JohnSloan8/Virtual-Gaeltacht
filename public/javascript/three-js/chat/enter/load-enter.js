@@ -27,13 +27,13 @@ const loadEnter = () => {
 		c.participantList.push(username)
 		stageReady();
 	} else {	
-		if (c.participantList.length === 1) {
-			cameraEnter()
-		} else {
+		//if (c.participantList.length === 1) {
+			//cameraEnter()
+		//} else {
 			stageReady();
 			enterSceneGetReady();
 			animate();
-		}
+		//}
 	}
 }
 

@@ -22,11 +22,15 @@ const displayWaitingList = () => {
 
 const highlightExpressionGesture = (emotionGesture, expression, start) => {
 	if (start) {
-		$('#' + expression).parent().removeClass('bg-dark')	
-		$('#' + expression).parent().addClass('bg-light')	
-	} else {
-		$('#' + expression).parent().removeClass('bg-light')	
-		$('#' + expression).parent().addClass('bg-dark')	
+      $('#' + expression).parent().removeClass('bg-dark')	
+      $('#' + expression).parent().addClass('bg-light')	
+  } else {
+    if (expression === "right_hand_up_pose") {
+      $('#' + expression).show()
+    } else {
+      $('#' + expression).parent().removeClass('bg-light')	
+      $('#' + expression).parent().addClass('bg-dark')	
+	  }
 	}
 }
 
