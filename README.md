@@ -1,3 +1,3 @@
 # the Virtual Gaeltacht 
 
-virtual-gaeltacht.com/about 
+https://virtual-gaeltacht.com/about 
