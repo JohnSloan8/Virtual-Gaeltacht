@@ -1,3 +1,3 @@
-# Simple Log In - `Attempt 2` 
+# the Virtual Gaeltacht 
 
-This project follows the tutorial [Node.js with Passport Authentication](https://www.youtube.com/watch?v=6FOq4cUdH8k).
+A follow on from a PhD research project on the use of avatar facial expressions in language learning. 
