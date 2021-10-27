@@ -1,5 +1,5 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.125/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
+//import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.125/examples/jsm/loaders/GLTFLoader.js";
 import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.5.0/dist/tween.esm.js'
 import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.125/src/loaders/FontLoader.js';
@@ -56,9 +56,10 @@ function loadIndividualGLTF() {
 		model.receiveShadow = true;
 		scene.add( model );
 		camera.position.set(0, 3.5, 4.5)
-		controls = new OrbitControls(camera, renderer.domElement);
-		controls.target.set(0, 0.5, 0);
-		controls.update();
+		camera.lookAt(0, 0.5, 0)
+		//controls = new OrbitControls(camera, renderer.domElement);
+		//controls.target.set(0, 0.5, 0);
+		//controls.update();
 		animate()
 	})
 }
