@@ -2,6 +2,50 @@ const expressionMorphs = {
 	"neutral": {
 		"browOuterUpLeft": 0, //need this for preparing expressions
 	},
+	"grimace": {
+		"eyeBlinkLeft": 0.1,
+		"eyeBlinkRight": 0.1,
+		"browInnerUp": -0.1,
+		"browOuterUpLeft": -0.1,
+		"browOuterUpRight": -0.1,
+		"eyeSquintLeft": 0.2,
+		"eyeSquintRight": 0.2,
+		"jawForward": -0.25,
+		"mouthFrownLeft": -0.5,
+		"mouthFrownRight": -0.5,
+		"mouthShrugLower": -0.5,
+		"mouthShrugUpper": 1.0,
+		"noseSneerLeft": 0.33,
+		"noseSneerRight": 0.33,
+		"mouthLowerDownLeft": 0.5,
+		"mouthLowerDownRight": 0.5,
+		"mouthLeft": 0.2,
+		"mouthRight": 0.2,
+		"cheekPuff": -0.25,
+		"cheekSquintLeft": 0.5,
+		"cheekSquintRight": 0.5,
+		"jawOpen": 0.25,
+		"mouthFunnel": -0.5,
+		"mouthRollLower": 0.3,
+		"mouthRollUpper": -0.2,
+		"mouthUpperUpLeft": 0.5,
+		"mouthUpperUpRight": 0.5,
+	},
+	"confused": {
+		"browDownRight": 0.76,
+		"browInnerUp": -0.15,
+		"browOuterUpLeft": 0.5,
+		"eyeWideRight": -0.1,
+		"eyeWideLeft": 0.1,
+		"jawRight": 0.6,
+		"mouthFrownLeft": 0.5,
+		"noseSneerRight": 0.33,
+		"mouthLowerDownRight": -0.5,
+		"cheekSquintRight": 0.5,
+		"mouthDimpleRight": 0.5,
+		"mouthPressRight": 0.5,
+		"eyesClosed": 0.1,
+	},
 	"sad": {
 		"browOuterUpLeft": -0.25,
 		"browOuterUpRight": -0.25,
@@ -69,6 +113,7 @@ var jawNeeded = {
 	"bigSmile": true,
 	"surprise": true,
 	"sad": false,
+	"grimace": false
 }
 
 export { expressionMorphs, jawNeeded }

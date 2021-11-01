@@ -24,7 +24,12 @@ const addHalfAndBlinkExpressions = () => {
 			//expressionMorphs["half_"+e[0]][key] = expressionMorphs[e[0]][key]/2
 		}
 		expressionMorphs[e[0] + "_blink"] = Object.assign({}, expressionMorphs[e[0]])
+		expressionMorphs[e[0] + "_wink"] = Object.assign({}, expressionMorphs[e[0]])
 		expressionMorphs[e[0] + "_blink"]["eyesClosed"] = 0.85
+		expressionMorphs[e[0] + "_wink"]["eyeBlinkLeft"] = 0.95
+		expressionMorphs[e[0] + "_wink"]["cheekSquintLeft"] = 1.25
+		expressionMorphs[e[0] + "_wink"]["noseSneerLeft"] = 0.33
+		expressionMorphs[e[0] + "_wink"]["browOuterUpLeft"] = -0.2
 		//expressionMorphs["half_"+e[0] + "_blink"] = Object.assign({}, expressionMorphs["half_"+e[0]])
 		//expressionMorphs["half_"+e[0] + "_blink"]["eyesClosed"] = 0.75
 
@@ -46,6 +51,7 @@ const createExpressions = n => {
 		c.p[n].movableBodyParts.face.morphTargetDictionary[e[0]] = lengthArray
 		Object.entries(e[1]).forEach( function(m, ind) {
 			let morphId = c.p[n].movableBodyParts.face.morphTargetDictionary[m[0]]
+			//console.log('m', m)
 			let copyPosition = c.p[n].movableBodyParts.face.geometry.morphAttributes.position[morphId].array.map(function(n) {
 				return n * m[1]
 			}) 

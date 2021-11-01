@@ -20,13 +20,19 @@ const randomBlink = who => {
 	}, randomDelay)
 }
 
-const blink = (who, delay=0) => {
+const blink = (who, delay=0, wink=false, duration=100) => {
 	if ( !c.p[who].states.changingExpression && !c.p[who].states.blinking ) {
 		let lenMorphs = c.p[who].movableBodyParts.face.morphTargetInfluences.length
 		let blinkTo = new Array(lenMorphs).fill(0);
 		let partKey = c.p[who].movableBodyParts.face.morphTargetDictionary[c.p[who].states.expression + "_blink"]
+		if (wink) {
+			duration = 200
+			delay = 50
+			partKey = c.p[who].movableBodyParts.face.morphTargetDictionary[c.p[who].states.expression + "_wink"]
+		}
+
 		blinkTo[partKey] = 1
-		let blinking = new TWEEN.Tween(c.p[who].movableBodyParts.face.morphTargetInfluences).to(blinkTo, 100)
+		let blinking = new TWEEN.Tween(c.p[who].movableBodyParts.face.morphTargetInfluences).to(blinkTo, duration)
 			.easing(easingDict["cubicOut"])
 			.yoyo(true)
 			.repeat(1)
